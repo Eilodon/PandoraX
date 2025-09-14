@@ -1,0 +1,25 @@
+name: pandora_workspace
+environment:
+  sdk: ">=3.9.2 <4.0.0"
+dev_dependencies:
+  melos: ^7.1.1
+workspace:
+  - packages/note_data
+  - packages/note_domain
+  - packages/pandora
+  - packages/pandora_ui
+  - packages/notes_app
+melos:
+  scripts:
+    get:
+      run: melos exec -- "flutter pub get"
+      description: Get all Flutter dependencies.
+    analyze:
+      run: melos exec -- "flutter analyze"
+      description: Analyze all packages.
+    test:
+      run: melos exec -- "flutter test"
+      description: Run all tests.
+    build_runner:
+      run: melos exec -- "flutter pub run build_runner build --delete-conflicting-outputs"
+      description: Run build_runner for code generation in all packages.

@@ -1,0 +1,187 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+env:
+  FLUTTER_VERSION: '3.24.0'
+  DART_VERSION: '3.5.0'
+
+jobs:
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: ${{ env.FLUTTER_VERSION }}
+        channel: 'stable'
+        cache: true
+        
+    - name: Setup Melos
+      run: dart pub global activate melos
+      
+    - name: Install dependencies
+      run: melos bootstrap
+      
+    - name: Verify formatting
+      run: melos run format --check
+      
+    - name: Analyze code
+      run: melos run analyze
+      
+    - name: Run tests
+      run: melos run test
+      
+    - name: Run tests with coverage
+      run: melos run test:coverage
+      
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage/lcov.info
+        flags: unittests
+        name: codecov-umbrella
+        fail_ci_if_error: false
+
+  build:
+    name: Build
+    runs-on: ubuntu-latest
+    needs: test
+    
+    strategy:
+      matrix:
+        platform: [android, ios, web, windows, macos, linux]
+        
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: ${{ env.FLUTTER_VERSION }}
+        channel: 'stable'
+        cache: true
+        
+    - name: Setup Melos
+      run: dart pub global activate melos
+      
+    - name: Install dependencies
+      run: melos bootstrap
+      
+    - name: Build ${{ matrix.platform }}
+      run: melos run build:${{ matrix.platform }}
+      
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: build-${{ matrix.platform }}
+        path: packages/pandora/build/
+
+  security:
+    name: Security Audit
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: ${{ env.FLUTTER_VERSION }}
+        channel: 'stable'
+        
+    - name: Setup Melos
+      run: dart pub global activate melos
+      
+    - name: Install dependencies
+      run: melos bootstrap
+      
+    - name: Run security audit
+      run: melos run security
+      
+    - name: Run dependency check
+      run: |
+        cd packages/pandora
+        flutter pub deps --json > deps.json
+        flutter pub audit
+
+  quality:
+    name: Code Quality
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: ${{ env.FLUTTER_VERSION }}
+        channel: 'stable'
+        
+    - name: Setup Melos
+      run: dart pub global activate melos
+      
+    - name: Install dependencies
+      run: melos bootstrap
+      
+    - name: Run linting
+      run: melos run lint
+      
+    - name: Check code formatting
+      run: melos run format --check
+      
+    - name: Generate code metrics
+      run: |
+        cd packages/pandora
+        flutter pub global activate dart_code_metrics
+        metrics lib --reporter=console
+        metrics lib --reporter=html --output-directory=metrics
+
+  release:
+    name: Release
+    runs-on: ubuntu-latest
+    needs: [test, build, security, quality]
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: ${{ env.FLUTTER_VERSION }}
+        channel: 'stable'
+        
+    - name: Setup Melos
+      run: dart pub global activate melos
+      
+    - name: Install dependencies
+      run: melos bootstrap
+      
+    - name: Create Release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ github.run_number }}
+        release_name: Release v${{ github.run_number }}
+        body: |
+          ## Changes in this Release
+          - Automated build and test
+          - All platforms supported
+          - Security audit passed
+        draft: false
+        prerelease: false

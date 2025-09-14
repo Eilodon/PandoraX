@@ -1,0 +1,76 @@
+name: pandora
+packages:
+  - packages/**
+
+scripts:
+  get:
+    run: melos exec -- "flutter pub get"
+    description: Get all Flutter dependencies.
+  analyze:
+    run: melos exec -- "flutter analyze"
+    description: Analyze all packages.
+  test:
+    run: melos exec -- "flutter test"
+    description: Run all tests.
+  test:coverage:
+    run: melos exec -- "flutter test --coverage"
+    description: Run all tests with coverage.
+  build_runner:
+    run: melos exec -- "flutter pub run build_runner build --delete-conflicting-outputs"
+    description: Run build_runner for code generation in all packages.
+  clean:
+    run: melos exec -- "flutter clean"
+    description: Clean all Flutter projects.
+  format:
+    run: melos exec -- "dart format ."
+    description: Format all Dart code.
+  lint:
+    run: melos exec -- "dart analyze --fatal-infos"
+    description: Run linting with strict rules.
+  security:
+    run: melos exec -- "dart pub audit"
+    description: Run security audit on all packages.
+  build:android:
+    run: |
+      cd packages/pandora
+      flutter build apk --release
+    description: Build Android APK.
+  build:ios:
+    run: |
+      cd packages/pandora
+      flutter build ios --release --no-codesign
+    description: Build iOS app (no code signing).
+  build:web:
+    run: |
+      cd packages/pandora
+      flutter build web --release
+    description: Build web app.
+  build:windows:
+    run: |
+      cd packages/pandora
+      flutter build windows --release
+    description: Build Windows app.
+  build:macos:
+    run: |
+      cd packages/pandora
+      flutter build macos --release
+    description: Build macOS app.
+  build:linux:
+    run: |
+      cd packages/pandora
+      flutter build linux --release
+    description: Build Linux app.
+  integration:test:
+    run: |
+      cd packages/pandora
+      flutter test integration_test/
+    description: Run integration tests.
+  version:patch:
+    run: melos version --no-git-tag-version
+    description: Bump patch version for all packages.
+  version:minor:
+    run: melos version minor --no-git-tag-version
+    description: Bump minor version for all packages.
+  version:major:
+    run: melos version major --no-git-tag-version
+    description: Bump major version for all packages.
