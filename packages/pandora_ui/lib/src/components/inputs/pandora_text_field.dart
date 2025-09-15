@@ -72,11 +72,8 @@ class PandoraTextField extends StatefulWidget {
     this.cursorHeight,
     this.cursorRadius,
     this.cursorColor,
-    this.selectionHeightStyle = BoxHeightStyle.tight,
-    this.selectionWidthStyle = BoxWidthStyle.tight,
     this.keyboardAppearance,
     this.scrollPadding = const EdgeInsets.all(20.0),
-    this.dragStartBehavior = DragStartBehavior.start,
     this.enableInteractiveSelection,
     this.selectionControls,
     this.onTap,
@@ -126,7 +123,6 @@ class PandoraTextField extends StatefulWidget {
     this.focusedHelperColor,
     this.errorHelperColor,
     this.disabledHelperColor,
-    this.cursorColor,
     this.selectionColor,
     this.padding,
     this.margin,
@@ -177,11 +173,8 @@ class PandoraTextField extends StatefulWidget {
   final double? cursorHeight;
   final Radius? cursorRadius;
   final Color? cursorColor;
-  final BoxHeightStyle selectionHeightStyle;
-  final BoxWidthStyle selectionWidthStyle;
   final Brightness? keyboardAppearance;
   final EdgeInsets scrollPadding;
-  final DragStartBehavior dragStartBehavior;
   final bool? enableInteractiveSelection;
   final TextSelectionControls? selectionControls;
   final GestureTapCallback? onTap;
@@ -231,7 +224,6 @@ class PandoraTextField extends StatefulWidget {
   final Color? focusedHelperColor;
   final Color? errorHelperColor;
   final Color? disabledHelperColor;
-  final Color? cursorColor;
   final Color? selectionColor;
   final EdgeInsets? padding;
   final EdgeInsets? margin;
@@ -431,11 +423,8 @@ class _PandoraTextFieldState extends State<PandoraTextField>
               cursorHeight: widget.cursorHeight,
               cursorRadius: widget.cursorRadius,
               cursorColor: widget.cursorColor ?? colors.cursorColor,
-              selectionHeightStyle: widget.selectionHeightStyle,
-              selectionWidthStyle: widget.selectionWidthStyle,
               keyboardAppearance: widget.keyboardAppearance,
               scrollPadding: widget.scrollPadding,
-              dragStartBehavior: widget.dragStartBehavior,
               enableInteractiveSelection: widget.enableInteractiveSelection,
               selectionControls: widget.selectionControls,
               onTap: widget.onTap,

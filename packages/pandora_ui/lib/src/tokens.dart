@@ -16,7 +16,14 @@ class AppColors {
   static const Color secureOnDevice = Color(0xFF81C784); // Green
   static const Color secureHybrid = Color(0xFF64B5F6);   // Blue
   static const Color secureCloud = Color(0xFF9575CD);    // Purple
+  
+  // Warning colors
+  static const Color warning500 = Color(0xFFFF9800);
 }
+
+// --- Pandora Colors (comprehensive color system) ---
+// Note: PandoraColors is now defined in color_tokens.dart to avoid conflicts
+// This file only contains the legacy AppColors and PTokens for backward compatibility
 
 // --- Hệ thống Tokens ---
 class PTokens {
@@ -63,8 +70,17 @@ class _Typography {
   const _Typography();
   // Dựa trên phân tích từ PDF
   final TextStyle label = const TextStyle(fontSize: 13, fontWeight: FontWeight.w500, color: AppColors.onSurface);
+  final TextStyle labelLarge = const TextStyle(fontSize: 14, fontWeight: FontWeight.w500, color: AppColors.onSurface);
   final TextStyle body = const TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: AppColors.onSurfaceVariant);
+  final TextStyle bodySmall = const TextStyle(fontSize: 12, fontWeight: FontWeight.w400, color: AppColors.onSurfaceVariant);
+  final TextStyle bodyMedium = const TextStyle(fontSize: 15, fontWeight: FontWeight.w400, color: AppColors.onSurfaceVariant);
+  final TextStyle bodyLarge = const TextStyle(fontSize: 16, fontWeight: FontWeight.w400, color: AppColors.onSurfaceVariant);
   final TextStyle title = const TextStyle(fontSize: 17, fontWeight: FontWeight.w600, color: AppColors.onSurface);
+  final TextStyle titleLarge = const TextStyle(fontSize: 22, fontWeight: FontWeight.w600, color: AppColors.onSurface);
+  final TextStyle titleMedium = const TextStyle(fontSize: 20, fontWeight: FontWeight.w600, color: AppColors.onSurface);
+  final TextStyle titleSmall = const TextStyle(fontSize: 16, fontWeight: FontWeight.w600, color: AppColors.onSurface);
+  final TextStyle headlineSmall = const TextStyle(fontSize: 24, fontWeight: FontWeight.w700, color: AppColors.onSurface);
+  final TextStyle labelSmall = const TextStyle(fontSize: 10, fontWeight: FontWeight.w500, color: AppColors.onSurfaceVariant);
 }
 
 class _Icon {

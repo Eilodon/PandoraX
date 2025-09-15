@@ -3,6 +3,7 @@ import '../../tokens/color_tokens.dart';
 import '../../tokens/spacing_tokens.dart';
 import '../../tokens/border_tokens.dart';
 import '../../tokens/shadow_tokens.dart';
+import '../../tokens/typography_tokens.dart';
 import '../../utils/pandora_extensions.dart';
 
 /// Pandora 4 Card
@@ -217,7 +218,6 @@ class _PandoraCardState extends State<PandoraCard>
                 borderRadius: borderRadius,
                 splashColor: colors.splashColor,
                 highlightColor: colors.hoverColor,
-                behavior: widget.behavior,
                 child: Container(
                   padding: widget.padding ?? dimensions.padding,
                   alignment: widget.alignment ?? Alignment.center,

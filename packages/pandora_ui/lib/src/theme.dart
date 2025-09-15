@@ -38,7 +38,7 @@ ThemeData createPandoraTheme() {
       ),
     ),
     // Card Theme
-    cardTheme: CardTheme(
+    cardTheme: CardThemeData(
       color: AppColors.surface,
       elevation: PTokens.elevation.card,
       shape: RoundedRectangleBorder(
@@ -138,7 +138,7 @@ ThemeData createPandoraTheme() {
     // Icon Theme
     iconTheme: const IconThemeData(
       color: AppColors.onSurface,
-      size: PTokens.icon.size,
+      size: 20.0,
     ),
     // Divider Theme
     dividerTheme: const DividerThemeData(
@@ -162,16 +162,16 @@ ThemeData createPandoraTheme() {
       selectedItemColor: AppColors.primary,
       unselectedItemColor: AppColors.onSurfaceVariant,
       type: BottomNavigationBarType.fixed,
-      elevation: PTokens.elevation.chip,
+      elevation: 2.0,
     ),
     // Floating Action Button Theme
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
       backgroundColor: AppColors.primary,
       foregroundColor: AppColors.onPrimary,
-      elevation: PTokens.elevation.card,
+      elevation: 6.0,
     ),
     // Dialog Theme
-    dialogTheme: DialogTheme(
+    dialogTheme: DialogThemeData(
       backgroundColor: AppColors.surface,
       shape: RoundedRectangleBorder(
         borderRadius: PTokens.radius.card,
@@ -188,7 +188,7 @@ ThemeData createPandoraTheme() {
           top: Radius.circular(16),
         ),
       ),
-      elevation: PTokens.elevation.card,
+      elevation: 6.0,
     ),
     // Switch Theme
     switchTheme: SwitchThemeData(
@@ -244,7 +244,7 @@ ThemeData createPandoraTheme() {
       circularTrackColor: AppColors.onSurfaceVariant,
     ),
     // Tab Bar Theme
-    tabBarTheme: const TabBarTheme(
+    tabBarTheme: const TabBarThemeData(
       labelColor: AppColors.primary,
       unselectedLabelColor: AppColors.onSurfaceVariant,
       indicator: UnderlineTabIndicator(
@@ -297,7 +297,7 @@ ThemeData createPandoraLightTheme() {
         color: Color(0xFF212121),
       ),
     ),
-    cardTheme: CardTheme(
+    cardTheme: CardThemeData(
       color: Colors.white,
       elevation: PTokens.elevation.card,
       shape: RoundedRectangleBorder(

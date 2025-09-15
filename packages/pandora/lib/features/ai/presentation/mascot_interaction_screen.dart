@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pandora_ui/pandora_ui.dart';
-import '../../widgets/mascot_widget.dart';
-import '../../services/mascot_service.dart';
+import '../../../widgets/mascot_widget.dart';
+import '../../../services/mascot_service.dart';
+import '../../../services/mascot_enums.dart';
 
 class MascotInteractionScreen extends ConsumerStatefulWidget {
   const MascotInteractionScreen({super.key});
@@ -41,9 +42,8 @@ class _MascotInteractionScreenState extends ConsumerState<MascotInteractionScree
               flex: 3,
               child: Center(
                 child: MascotWidget(
-                  size: 200,
+                  size: MascotSize.large,
                   showMessage: true,
-                  enableInteraction: true,
                 ),
               ),
             ),
@@ -171,9 +171,9 @@ class _MascotInteractionScreenState extends ConsumerState<MascotInteractionScree
                       children: [
                         Text('Animation: '),
                         PandoraChip(
-                          label: mascotState.animation.name,
+                          label: mascotState.currentAnimation.name,
                           variant: PandoraChipVariant.filled,
-                          color: PandoraColors.primary500,
+                          backgroundColor: PandoraColors.primary500,
                         ),
                       ],
                     ),
@@ -184,14 +184,13 @@ class _MascotInteractionScreenState extends ConsumerState<MascotInteractionScree
                         PandoraChip(
                           label: mascotState.mood.name,
                           variant: PandoraChipVariant.outlined,
-                          color: _getMoodColor(mascotState.mood),
                         ),
                       ],
                     ),
-                    if (mascotState.message.isNotEmpty) ...[
+                    if (mascotState.currentMessage != null && mascotState.currentMessage!.isNotEmpty) ...[
                       const SizedBox(height: PTokens.spacingSm),
                       Text(
-                        'Message: ${mascotState.message}',
+                        'Message: ${mascotState.currentMessage}',
                         style: PTokens.typography.bodySmall,
                       ),
                     ],
@@ -247,6 +246,10 @@ class _MascotInteractionScreenState extends ConsumerState<MascotInteractionScree
         return PandoraColors.error600;
       case MascotMood.proud:
         return PandoraColors.secondary600;
+      case MascotMood.sad:
+        return PandoraColors.error700;
+      case MascotMood.thinking:
+        return PandoraColors.info600;
     }
   }
 }

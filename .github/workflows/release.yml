@@ -1,0 +1,273 @@
+name: Release Pipeline
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: 'Release version (e.g., v1.0.0)'
+        required: true
+        type: string
+
+env:
+  FLUTTER_VERSION: '3.24.0'
+  JAVA_VERSION: '17'
+
+jobs:
+  prepare-release:
+    name: Prepare Release
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.version.outputs.version }}
+      changelog: ${{ steps.changelog.outputs.changelog }}
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+        
+    - name: Get version
+      id: version
+      run: |
+        if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+          echo "version=${{ github.event.inputs.version }}" >> $GITHUB_OUTPUT
+        else
+          echo "version=${GITHUB_REF#refs/tags/}" >> $GITHUB_OUTPUT
+        fi
+        
+    - name: Generate changelog
+      id: changelog
+      run: |
+        echo "changelog<<EOF" >> $GITHUB_OUTPUT
+        echo "## What's New in ${{ steps.version.outputs.version }}" >> $GITHUB_OUTPUT
+        echo "" >> $GITHUB_OUTPUT
+        echo "### 🚀 New Features" >> $GITHUB_OUTPUT
+        echo "- Enhanced AI chat experience with Google Gemini" >> $GITHUB_OUTPUT
+        echo "- Real-time speech recognition" >> $GITHUB_OUTPUT
+        echo "- Cloud sync with Firebase" >> $GITHUB_OUTPUT
+        echo "- Smart notifications" >> $GITHUB_OUTPUT
+        echo "" >> $GITHUB_OUTPUT
+        echo "### 🐛 Bug Fixes" >> $GITHUB_OUTPUT
+        echo "- Performance optimizations" >> $GITHUB_OUTPUT
+        echo "- UI/UX improvements" >> $GITHUB_OUTPUT
+        echo "- Stability enhancements" >> $GITHUB_OUTPUT
+        echo "" >> $GITHUB_OUTPUT
+        echo "### 🔧 Technical Improvements" >> $GITHUB_OUTPUT
+        echo "- CI/CD pipeline automation" >> $GITHUB_OUTPUT
+        echo "- Comprehensive testing coverage" >> $GITHUB_OUTPUT
+        echo "- Security enhancements" >> $GITHUB_OUTPUT
+        echo "EOF" >> $GITHUB_OUTPUT
+
+  test-release:
+    name: Test Release Build
+    runs-on: ubuntu-latest
+    needs: prepare-release
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: ${{ env.JAVA_VERSION }}
+        
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: ${{ env.FLUTTER_VERSION }}
+        channel: 'stable'
+        cache: true
+        
+    - name: Get dependencies
+      run: |
+        cd packages/pandora
+        flutter pub get
+        
+    - name: Run all tests
+      run: |
+        cd packages/pandora
+        flutter test --coverage
+        
+    - name: Run integration tests
+      run: |
+        cd packages/pandora
+        flutter test integration_test/
+        
+    - name: Run security audit
+      run: |
+        cd packages/pandora
+        flutter pub audit
+        
+    - name: Run static analysis
+      run: |
+        cd packages/pandora
+        flutter analyze --fatal-infos
+
+  build-android-release:
+    name: Build Android Release
+    runs-on: ubuntu-latest
+    needs: [prepare-release, test-release]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: ${{ env.JAVA_VERSION }}
+        
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: ${{ env.FLUTTER_VERSION }}
+        channel: 'stable'
+        cache: true
+        
+    - name: Get dependencies
+      run: |
+        cd packages/pandora
+        flutter pub get
+        
+    - name: Build Android App Bundle
+      run: |
+        cd packages/pandora
+        flutter build appbundle --release
+        
+    - name: Build APK
+      run: |
+        cd packages/pandora
+        flutter build apk --release --split-per-abi
+        
+    - name: Upload Android artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: android-release-${{ needs.prepare-release.outputs.version }}
+        path: |
+          packages/pandora/build/app/outputs/bundle/release/
+          packages/pandora/build/app/outputs/flutter-apk/
+        retention-days: 90
+
+  build-ios-release:
+    name: Build iOS Release
+    runs-on: macos-latest
+    needs: [prepare-release, test-release]
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: ${{ env.FLUTTER_VERSION }}
+        channel: 'stable'
+        cache: true
+        
+    - name: Get dependencies
+      run: |
+        cd packages/pandora
+        flutter pub get
+        
+    - name: Build iOS
+      run: |
+        cd packages/pandora
+        flutter build ios --release --no-codesign
+        
+    - name: Upload iOS artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: ios-release-${{ needs.prepare-release.outputs.version }}
+        path: packages/pandora/build/ios/
+        retention-days: 90
+
+  create-release:
+    name: Create GitHub Release
+    runs-on: ubuntu-latest
+    needs: [prepare-release, build-android-release, build-ios-release]
+    if: always() && (needs.build-android-release.result == 'success' || needs.build-ios-release.result == 'success')
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Download Android artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: android-release-${{ needs.prepare-release.outputs.version }}
+        path: ./android-artifacts
+        
+    - name: Download iOS artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: ios-release-${{ needs.prepare-release.outputs.version }}
+        path: ./ios-artifacts
+        
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        tag_name: ${{ needs.prepare-release.outputs.version }}
+        name: Release ${{ needs.prepare-release.outputs.version }}
+        body: ${{ needs.prepare-release.outputs.changelog }}
+        files: |
+          ./android-artifacts/**/*
+          ./ios-artifacts/**/*
+        draft: false
+        prerelease: false
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  deploy-play-store:
+    name: Deploy to Play Store
+    runs-on: ubuntu-latest
+    needs: [create-release]
+    if: github.ref_type == 'tag' && startsWith(github.ref, 'refs/tags/v')
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Download Android artifacts
+      uses: actions/download-artifact@v4
+      with:
+        name: android-release-${{ needs.prepare-release.outputs.version }}
+        path: ./android-artifacts
+        
+    - name: Setup Google Play Console
+      uses: r0adkll/upload-google-play@v1
+      with:
+        serviceAccountJsonPlainText: ${{ secrets.GOOGLE_PLAY_SERVICE_ACCOUNT_JSON }}
+        packageName: com.pandora.notes
+        releaseFiles: ./android-artifacts/packages/pandora/build/app/outputs/bundle/release/*.aab
+        track: internal
+        status: completed
+        inAppUpdatePriority: 2
+        userFraction: 1.0
+        releaseName: ${{ needs.prepare-release.outputs.version }}
+        whatsNewDirectory: ./release-notes/
+
+  notify-deployment:
+    name: Notify Deployment
+    runs-on: ubuntu-latest
+    needs: [deploy-play-store]
+    if: always()
+    
+    steps:
+    - name: Notify Success
+      if: needs.deploy-play-store.result == 'success'
+      run: |
+        echo "✅ Release ${{ needs.prepare-release.outputs.version }} deployed successfully!"
+        echo "📱 Android: Available on Play Store (Internal Track)"
+        echo "🍎 iOS: Build artifacts ready for App Store submission"
+        
+    - name: Notify Failure
+      if: needs.deploy-play-store.result == 'failure'
+      run: |
+        echo "❌ Release ${{ needs.prepare-release.outputs.version }} deployment failed!"
+        echo "Please check the logs for details."

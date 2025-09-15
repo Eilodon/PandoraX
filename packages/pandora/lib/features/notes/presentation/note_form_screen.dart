@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:note_domain/note_domain.dart';
 import '../application/note_form/note_form_providers.dart';
 import '../application/note_form/note_form_state.dart';
 import '../../../../services/notification_service.dart';
@@ -265,11 +266,11 @@ class _NoteFormScreenState extends ConsumerState<NoteFormScreen> {
         // Lập lịch thông báo nếu có nhắc nhở
         if (_reminderTime != null) {
           try {
-            await NotificationService.scheduleNoteReminder(
-              noteId: widget.note?.id.hashCode ?? DateTime.now().millisecondsSinceEpoch,
+            await NotificationService().scheduleNoteReminder(
+              id: widget.note?.id.hashCode ?? DateTime.now().millisecondsSinceEpoch,
               title: _titleController.text,
-              content: _contentController.text,
-              reminderTime: _reminderTime!,
+              body: _contentController.text,
+              scheduledDate: _reminderTime!,
             );
           } catch (e) {
             if (mounted) {

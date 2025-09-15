@@ -1,303 +1,228 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:lottie/lottie.dart';
-import 'package:pandora_ui/pandora_ui.dart';
 import '../services/mascot_service.dart';
+import '../services/mascot_enums.dart';
+import 'package:pandora_ui/pandora_ui.dart';
 
-class MascotWidget extends ConsumerStatefulWidget {
-  final double size;
-  final bool showMessage;
-  final bool enableInteraction;
+/// Mascot Widget
+/// 
+/// The main mascot character that users can interact with
+class MascotWidget extends ConsumerWidget {
+  final MascotSize size;
+  final MascotPosition position;
   final VoidCallback? onTap;
   final VoidCallback? onLongPress;
   final VoidCallback? onDoubleTap;
-  final Function(DragEndDetails)? onPanEnd;
+  final bool showMessage;
+  final Duration animationDuration;
 
   const MascotWidget({
     super.key,
-    this.size = 120.0,
-    this.showMessage = true,
-    this.enableInteraction = true,
+    this.size = MascotSize.medium,
+    this.position = MascotPosition.floating,
     this.onTap,
     this.onLongPress,
     this.onDoubleTap,
-    this.onPanEnd,
+    this.showMessage = true,
+    this.animationDuration = const Duration(milliseconds: 500),
   });
 
   @override
-  ConsumerState<MascotWidget> createState() => _MascotWidgetState();
-}
-
-class _MascotWidgetState extends ConsumerState<MascotWidget>
-    with TickerProviderStateMixin {
-  late AnimationController _bounceController;
-  late AnimationController _pulseController;
-  late Animation<double> _bounceAnimation;
-  late Animation<double> _pulseAnimation;
-
-  @override
-  void initState() {
-    super.initState();
-    
-    _bounceController = AnimationController(
-      duration: const Duration(milliseconds: 600),
-      vsync: this,
-    );
-    
-    _pulseController = AnimationController(
-      duration: const Duration(milliseconds: 1000),
-      vsync: this,
-    );
-
-    _bounceAnimation = Tween<double>(
-      begin: 0.0,
-      end: 1.0,
-    ).animate(CurvedAnimation(
-      parent: _bounceController,
-      curve: Curves.elasticOut,
-    ));
-
-    _pulseAnimation = Tween<double>(
-      begin: 1.0,
-      end: 1.1,
-    ).animate(CurvedAnimation(
-      parent: _pulseController,
-      curve: Curves.easeInOut,
-    ));
-
-    _pulseController.repeat(reverse: true);
-  }
-
-  @override
-  void dispose() {
-    _bounceController.dispose();
-    _pulseController.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final mascotState = ref.watch(mascotServiceProvider);
-
+    
     if (!mascotState.isVisible) {
       return const SizedBox.shrink();
     }
 
-    return GestureDetector(
-      onTap: widget.enableInteraction ? _handleTap : widget.onTap,
-      onLongPress: widget.enableInteraction ? _handleLongPress : widget.onLongPress,
-      onDoubleTap: widget.enableInteraction ? _handleDoubleTap : widget.onDoubleTap,
-      onPanEnd: widget.enableInteraction ? _handlePanEnd : widget.onPanEnd,
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          // Mascot Animation
-          AnimatedBuilder(
-            animation: Listenable.merge([_bounceAnimation, _pulseAnimation]),
-            builder: (context, child) {
-              return Transform.scale(
-                scale: _bounceAnimation.value * _pulseAnimation.value,
-                child: _buildMascotAnimation(mascotState.animation),
-              );
-            },
-          ),
-          
-          const SizedBox(height: PTokens.spacingSm),
-          
-          // Message Bubble
-          if (widget.showMessage && mascotState.showMessage && mascotState.message.isNotEmpty)
-            _buildMessageBubble(mascotState.message, mascotState.mood),
-        ],
+    return Positioned(
+      top: _getTopPosition(context),
+      right: _getRightPosition(context),
+      child: GestureDetector(
+        onTap: () {
+          ref.read(mascotServiceProvider.notifier).handleInteraction(MascotInteraction.tap);
+          onTap?.call();
+        },
+        onLongPress: () {
+          ref.read(mascotServiceProvider.notifier).handleInteraction(MascotInteraction.longPress);
+          onLongPress?.call();
+        },
+        onDoubleTap: () {
+          ref.read(mascotServiceProvider.notifier).handleInteraction(MascotInteraction.doubleTap);
+          onDoubleTap?.call();
+        },
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            if (showMessage && mascotState.currentMessage != null) ...[
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                margin: const EdgeInsets.only(bottom: 8),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).brightness == Brightness.dark
+                      ? PandoraColors.neutral800
+                      : PandoraColors.surface,
+                  borderRadius: BorderRadius.circular(20),
+                  boxShadow: [
+                    BoxShadow(
+                      color: PandoraColors.shadowColor,
+                      blurRadius: 8,
+                      offset: const Offset(0, 2),
+                    ),
+                  ],
+                ),
+                child: Text(
+                  mascotState.currentMessage!,
+                  style: TextStyle(
+                    color: Theme.of(context).brightness == Brightness.dark
+                        ? PandoraColors.neutral100
+                        : PandoraColors.neutral900,
+                    fontSize: 12,
+                    fontWeight: FontWeight.w500,
+                  ),
+                ),
+              ),
+            ],
+            AnimatedContainer(
+              duration: animationDuration,
+              width: _getSizeValue(),
+              height: _getSizeValue(),
+              child: _buildMascotAvatar(mascotState),
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Widget _buildMascotAnimation(MascotAnimation animation) {
-    // TODO: Thay thế bằng đường dẫn đến file Lottie thực tế
-    final animationPath = _getAnimationPath(animation);
-    
-    return Container(
-      width: widget.size,
-      height: widget.size,
+  Widget _buildMascotAvatar(MascotState state) {
+    return AnimatedContainer(
+      duration: animationDuration,
       decoration: BoxDecoration(
+        color: _getMoodColor(state.mood),
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: PandoraColors.primary200.withOpacity(0.3),
-            blurRadius: 20,
-            spreadRadius: 5,
+            color: _getMoodColor(state.mood).withOpacity(0.3),
+            blurRadius: 8,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
-      child: Lottie.asset(
-        animationPath,
-        width: widget.size,
-        height: widget.size,
-        fit: BoxFit.contain,
-        repeat: true,
-        animate: true,
-        errorBuilder: (context, error, stackTrace) {
-          // Fallback nếu không có file Lottie
-          return _buildFallbackMascot(animation);
-        },
+      child: Center(
+        child: _buildMascotIcon(state),
       ),
     );
   }
 
-  Widget _buildFallbackMascot(MascotAnimation animation) {
-    return Container(
-      width: widget.size,
-      height: widget.size,
-      decoration: BoxDecoration(
-        shape: BoxShape.circle,
-        color: PandoraColors.primary100,
-        border: Border.all(
-          color: PandoraColors.primary300,
-          width: 2,
-        ),
-      ),
+  Widget _buildMascotIcon(MascotState state) {
+    IconData iconData;
+    
+    switch (state.mood) {
+      case MascotMood.happy:
+        iconData = Icons.sentiment_very_satisfied;
+        break;
+      case MascotMood.excited:
+        iconData = Icons.celebration;
+        break;
+      case MascotMood.thinking:
+        iconData = Icons.psychology;
+        break;
+      case MascotMood.tired:
+        iconData = Icons.bedtime;
+        break;
+      case MascotMood.confused:
+        iconData = Icons.help_outline;
+        break;
+      case MascotMood.proud:
+        iconData = Icons.emoji_events;
+        break;
+      case MascotMood.sad:
+        iconData = Icons.sentiment_dissatisfied;
+        break;
+      case MascotMood.neutral:
+      default:
+        iconData = Icons.sentiment_neutral;
+        break;
+    }
+
+    return AnimatedSwitcher(
+      duration: animationDuration,
       child: Icon(
-        _getFallbackIcon(animation),
-        size: widget.size * 0.6,
-        color: PandoraColors.primary500,
+        iconData,
+        key: ValueKey(state.mood),
+        color: PandoraColors.white,
+        size: _getSizeValue() * 0.6,
       ),
     );
-  }
-
-  Widget _buildMessageBubble(String message, MascotMood mood) {
-    return Container(
-      constraints: const BoxConstraints(maxWidth: 200),
-      padding: const EdgeInsets.symmetric(
-        horizontal: PTokens.spacingMd,
-        vertical: PTokens.spacingSm,
-      ),
-      decoration: BoxDecoration(
-        color: _getMoodColor(mood).withOpacity(0.1),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(
-          color: _getMoodColor(mood).withOpacity(0.3),
-          width: 1,
-        ),
-      ),
-      child: Text(
-        message,
-        style: PTokens.typography.bodySmall.copyWith(
-          color: _getMoodColor(mood),
-          fontWeight: FontWeight.w500,
-        ),
-        textAlign: TextAlign.center,
-      ),
-    );
-  }
-
-  String _getAnimationPath(MascotAnimation animation) {
-    // TODO: Thay thế bằng đường dẫn thực tế đến các file Lottie
-    switch (animation) {
-      case MascotAnimation.idle:
-        return 'assets/lottie/cat_idle.json';
-      case MascotAnimation.happy:
-        return 'assets/lottie/cat_happy.json';
-      case MascotAnimation.thinking:
-        return 'assets/lottie/cat_thinking.json';
-      case MascotAnimation.celebrating:
-        return 'assets/lottie/cat_celebrating.json';
-      case MascotAnimation.sleeping:
-        return 'assets/lottie/cat_sleeping.json';
-      case MascotAnimation.waving:
-        return 'assets/lottie/cat_waving.json';
-      case MascotAnimation.excited:
-        return 'assets/lottie/cat_excited.json';
-      case MascotAnimation.confused:
-        return 'assets/lottie/cat_confused.json';
-      case MascotAnimation.working:
-        return 'assets/lottie/cat_working.json';
-      case MascotAnimation.eating:
-        return 'assets/lottie/cat_eating.json';
-    }
-  }
-
-  IconData _getFallbackIcon(MascotAnimation animation) {
-    switch (animation) {
-      case MascotAnimation.idle:
-        return Icons.pets;
-      case MascotAnimation.happy:
-        return Icons.sentiment_very_satisfied;
-      case MascotAnimation.thinking:
-        return Icons.psychology;
-      case MascotAnimation.celebrating:
-        return Icons.celebration;
-      case MascotAnimation.sleeping:
-        return Icons.bedtime;
-      case MascotAnimation.waving:
-        return Icons.waving_hand;
-      case MascotAnimation.excited:
-        return Icons.sentiment_very_satisfied;
-      case MascotAnimation.confused:
-        return Icons.help_outline;
-      case MascotAnimation.working:
-        return Icons.work;
-      case MascotAnimation.eating:
-        return Icons.restaurant;
-    }
   }
 
   Color _getMoodColor(MascotMood mood) {
     switch (mood) {
-      case MascotMood.neutral:
-        return PandoraColors.neutral600;
       case MascotMood.happy:
-        return PandoraColors.success600;
+        return PandoraColors.success500;
       case MascotMood.excited:
-        return PandoraColors.primary600;
+        return PandoraColors.warning500;
+      case MascotMood.thinking:
+        return PandoraColors.info500;
       case MascotMood.tired:
-        return PandoraColors.warning600;
+        return PandoraColors.neutral500;
       case MascotMood.confused:
-        return PandoraColors.error600;
+        return PandoraColors.error500;
       case MascotMood.proud:
-        return PandoraColors.secondary600;
+        return PandoraColors.primary500;
+      case MascotMood.sad:
+        return PandoraColors.error700;
+      case MascotMood.neutral:
+      default:
+        return PandoraColors.primary400;
     }
   }
 
-  void _handleTap() {
-    _bounceController.forward().then((_) {
-      _bounceController.reverse();
-    });
-    
-    ref.read(mascotServiceProvider.notifier).handleInteraction(
-      MascotInteraction.tap,
-    );
+  double _getSizeValue() {
+    switch (size) {
+      case MascotSize.small:
+        return 40;
+      case MascotSize.medium:
+        return 60;
+      case MascotSize.large:
+        return 80;
+      case MascotSize.extraLarge:
+        return 100;
+    }
   }
 
-  void _handleLongPress() {
-    _bounceController.forward().then((_) {
-      _bounceController.reverse();
-    });
-    
-    ref.read(mascotServiceProvider.notifier).handleInteraction(
-      MascotInteraction.longPress,
-    );
+  double _getTopPosition(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
+    switch (position) {
+      case MascotPosition.topLeft:
+      case MascotPosition.topRight:
+        return 50;
+      case MascotPosition.center:
+        return screenHeight / 2 - _getSizeValue() / 2;
+      case MascotPosition.bottomLeft:
+      case MascotPosition.bottomRight:
+        return screenHeight - _getSizeValue() - 100;
+      case MascotPosition.floating:
+      default:
+        return screenHeight - _getSizeValue() - 150;
+    }
   }
 
-  void _handleDoubleTap() {
-    _bounceController.forward().then((_) {
-      _bounceController.reverse();
-    });
-    
-    ref.read(mascotServiceProvider.notifier).handleInteraction(
-      MascotInteraction.doubleTap,
-    );
-  }
-
-  void _handlePanEnd(DragEndDetails details) {
-    if (details.velocity.pixelsPerSecond.dx.abs() > 100 ||
-        details.velocity.pixelsPerSecond.dy.abs() > 100) {
-      _bounceController.forward().then((_) {
-        _bounceController.reverse();
-      });
-      
-      ref.read(mascotServiceProvider.notifier).handleInteraction(
-        MascotInteraction.swipe,
-      );
+  double _getRightPosition(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    switch (position) {
+      case MascotPosition.topLeft:
+      case MascotPosition.bottomLeft:
+        return screenWidth - _getSizeValue() - 20;
+      case MascotPosition.topRight:
+      case MascotPosition.bottomRight:
+      case MascotPosition.floating:
+        return 20;
+      case MascotPosition.center:
+        return screenWidth / 2 - _getSizeValue() / 2;
+      default:
+        return 20;
     }
   }
 }
@@ -305,26 +230,25 @@ class _MascotWidgetState extends ConsumerState<MascotWidget>
 /// Mascot Floating Action Button
 class MascotFloatingActionButton extends ConsumerWidget {
   final VoidCallback? onPressed;
-  final String? tooltip;
+  final MascotSize size;
 
   const MascotFloatingActionButton({
     super.key,
     this.onPressed,
-    this.tooltip,
+    this.size = MascotSize.medium,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final mascotState = ref.watch(mascotServiceProvider);
-
     return FloatingActionButton(
-      onPressed: onPressed,
-      tooltip: tooltip ?? 'Mascot',
+      onPressed: () {
+        ref.read(mascotServiceProvider.notifier).handleInteraction(MascotInteraction.tap);
+        onPressed?.call();
+      },
       backgroundColor: PandoraColors.primary500,
-      child: MascotWidget(
-        size: 40,
-        showMessage: false,
-        enableInteraction: false,
+      child: const Icon(
+        Icons.sentiment_very_satisfied,
+        color: PandoraColors.white,
       ),
     );
   }
@@ -332,34 +256,29 @@ class MascotFloatingActionButton extends ConsumerWidget {
 
 /// Mascot Loading Widget
 class MascotLoadingWidget extends ConsumerWidget {
-  final String message;
-  final double size;
+  final String? message;
 
   const MascotLoadingWidget({
     super.key,
-    this.message = 'Đang xử lý...',
-    this.size = 100.0,
+    this.message,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        MascotWidget(
-          size: size,
-          showMessage: false,
-          enableInteraction: false,
-        ),
-        const SizedBox(height: PTokens.spacingMd),
-        Text(
-          message,
-          style: PTokens.typography.bodyMedium.copyWith(
-            color: PandoraColors.neutral600,
-          ),
-          textAlign: TextAlign.center,
-        ),
-      ],
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          const CircularProgressIndicator(),
+          if (message != null) ...[
+            const SizedBox(height: 16),
+            Text(
+              message!,
+              style: Theme.of(context).textTheme.bodyMedium,
+            ),
+          ],
+        ],
+      ),
     );
   }
 }
@@ -367,51 +286,47 @@ class MascotLoadingWidget extends ConsumerWidget {
 /// Mascot Empty State Widget
 class MascotEmptyStateWidget extends ConsumerWidget {
   final String title;
-  final String message;
-  final String? actionText;
+  final String subtitle;
   final VoidCallback? onAction;
 
   const MascotEmptyStateWidget({
     super.key,
     required this.title,
-    required this.message,
-    this.actionText,
+    required this.subtitle,
     this.onAction,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        MascotWidget(
-          size: 120,
-          showMessage: false,
-          enableInteraction: true,
-        ),
-        const SizedBox(height: PTokens.spacingLg),
-        Text(
-          title,
-          style: PTokens.typography.titleLarge,
-          textAlign: TextAlign.center,
-        ),
-        const SizedBox(height: PTokens.spacingSm),
-        Text(
-          message,
-          style: PTokens.typography.bodyMedium.copyWith(
-            color: PandoraColors.neutral600,
+    return Center(
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          MascotWidget(
+            size: MascotSize.large,
+            showMessage: false,
           ),
-          textAlign: TextAlign.center,
-        ),
-        if (actionText != null && onAction != null) ...[
-          const SizedBox(height: PTokens.spacingLg),
-          PandoraButton(
-            onPressed: onAction,
-            variant: PandoraButtonVariant.primary,
-            child: Text(actionText!),
+          const SizedBox(height: 24),
+          Text(
+            title,
+            style: Theme.of(context).textTheme.headlineSmall,
+            textAlign: TextAlign.center,
           ),
+          const SizedBox(height: 8),
+          Text(
+            subtitle,
+            style: Theme.of(context).textTheme.bodyMedium,
+            textAlign: TextAlign.center,
+          ),
+          if (onAction != null) ...[
+            const SizedBox(height: 24),
+            ElevatedButton(
+              onPressed: onAction,
+              child: const Text('Get Started'),
+            ),
+          ],
         ],
-      ],
+      ),
     );
   }
 }

@@ -175,7 +175,7 @@ class PandoraTheme {
   );
 
   // Dark Text Theme
-  static const TextTheme _darkTextTheme = TextTheme(
+  static final TextTheme _darkTextTheme = TextTheme(
     displayLarge: PandoraTypography.displayLarge.copyWith(color: PandoraColors.neutral100),
     displayMedium: PandoraTypography.displayMedium.copyWith(color: PandoraColors.neutral100),
     displaySmall: PandoraTypography.displaySmall.copyWith(color: PandoraColors.neutral100),
@@ -203,7 +203,7 @@ class PandoraTheme {
     shadowColor: PandoraColors.shadowColor,
   );
 
-  static const AppBarTheme _darkAppBarTheme = AppBarTheme(
+  static final AppBarTheme _darkAppBarTheme = AppBarTheme(
     elevation: 0,
     centerTitle: true,
     titleTextStyle: PandoraTypography.titleLarge.copyWith(color: PandoraColors.neutral100),
@@ -294,7 +294,7 @@ class PandoraTheme {
   );
 
   // Card Theme
-  static final CardTheme _lightCardTheme = CardTheme(
+  static final CardThemeData _lightCardTheme = CardThemeData(
     elevation: 0,
     shape: RoundedRectangleBorder(
       borderRadius: PandoraBorders.borderRadiusLg,
@@ -304,7 +304,7 @@ class PandoraTheme {
     shadowColor: PandoraColors.shadowColor,
   );
 
-  static final CardTheme _darkCardTheme = CardTheme(
+  static final CardThemeData _darkCardTheme = CardThemeData(
     elevation: 0,
     shape: RoundedRectangleBorder(
       borderRadius: PandoraBorders.borderRadiusLg,
@@ -394,8 +394,8 @@ class PandoraTheme {
   static const NavigationBarThemeData _darkNavigationBarTheme = NavigationBarThemeData();
   static const SnackBarThemeData _lightSnackBarTheme = SnackBarThemeData();
   static const SnackBarThemeData _darkSnackBarTheme = SnackBarThemeData();
-  static const DialogTheme _lightDialogTheme = DialogTheme();
-  static const DialogTheme _darkDialogTheme = DialogTheme();
+  static const DialogThemeData _lightDialogTheme = DialogThemeData();
+  static const DialogThemeData _darkDialogTheme = DialogThemeData();
   static const BottomSheetThemeData _lightBottomSheetTheme = BottomSheetThemeData();
   static const BottomSheetThemeData _darkBottomSheetTheme = BottomSheetThemeData();
   static const DrawerThemeData _lightDrawerTheme = DrawerThemeData();
@@ -412,8 +412,8 @@ class PandoraTheme {
   static const SliderThemeData _darkSliderTheme = SliderThemeData();
   static const ProgressIndicatorThemeData _lightProgressIndicatorTheme = ProgressIndicatorThemeData();
   static const ProgressIndicatorThemeData _darkProgressIndicatorTheme = ProgressIndicatorThemeData();
-  static const TabBarTheme _lightTabBarTheme = TabBarTheme();
-  static const TabBarTheme _darkTabBarTheme = TabBarTheme();
+  static const TabBarThemeData _lightTabBarTheme = TabBarThemeData();
+  static const TabBarThemeData _darkTabBarTheme = TabBarThemeData();
   static const TooltipThemeData _lightTooltipTheme = TooltipThemeData();
   static const TooltipThemeData _darkTooltipTheme = TooltipThemeData();
   static const PopupMenuThemeData _lightPopupMenuTheme = PopupMenuThemeData();

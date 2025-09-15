@@ -5,7 +5,7 @@
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
-	<string>Pandora</string>
+	<string>Pandora Notes</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIdentifier</key>
@@ -13,7 +13,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>Pandora</string>
+	<string>pandora_notes</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -41,9 +41,123 @@
 		<string>UIInterfaceOrientationLandscapeLeft</string>
 		<string>UIInterfaceOrientationLandscapeRight</string>
 	</array>
+	<key>UIViewControllerBasedStatusBarAppearance</key>
+	<false/>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
+	
+	<!-- App Store Configuration -->
+	<key>ITSAppUsesNonExemptEncryption</key>
+	<false/>
+	<key>NSAppTransportSecurity</key>
+	<dict>
+		<key>NSAllowsArbitraryLoads</key>
+		<false/>
+		<key>NSExceptionDomains</key>
+		<dict>
+			<key>api.pandora-notes.com</key>
+			<dict>
+				<key>NSExceptionAllowsInsecureHTTPLoads</key>
+				<false/>
+				<key>NSExceptionMinimumTLSVersion</key>
+				<string>TLSv1.2</string>
+				<key>NSExceptionRequiresForwardSecrecy</key>
+				<true/>
+			</dict>
+		</dict>
+	</dict>
+	
+	<!-- Privacy Permissions -->
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Pandora Notes needs access to your microphone to create voice notes and use speech recognition features.</string>
+	<key>NSSpeechRecognitionUsageDescription</key>
+	<string>Pandora Notes uses speech recognition to convert your voice into text for creating notes.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Pandora Notes can access your camera to capture photos for your notes.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Pandora Notes can access your photo library to add images to your notes.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Pandora Notes can access your location to add location context to your notes.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>Pandora Notes can access your contacts to help you share notes with specific people.</string>
+	<key>NSCalendarsUsageDescription</key>
+	<string>Pandora Notes can access your calendar to create notes related to your events.</string>
+	<key>NSRemindersUsageDescription</key>
+	<string>Pandora Notes can access your reminders to create notes related to your tasks.</string>
+	
+	<!-- Background Modes -->
+	<key>UIBackgroundModes</key>
+	<array>
+		<string>background-processing</string>
+		<string>background-fetch</string>
+		<string>remote-notification</string>
+	</array>
+	
+	<!-- App Store Categories -->
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.productivity</string>
+	
+	<!-- Supported Languages -->
+	<key>CFBundleLocalizations</key>
+	<array>
+		<string>en</string>
+		<string>vi</string>
+		<string>es</string>
+		<string>fr</string>
+		<string>de</string>
+		<string>ja</string>
+		<string>ko</string>
+		<string>zh</string>
+	</array>
+	
+	<!-- App Store Keywords -->
+	<key>ITSAppKeywords</key>
+	<array>
+		<string>notes</string>
+		<string>AI</string>
+		<string>voice</string>
+		<string>productivity</string>
+		<string>organization</string>
+		<string>speech recognition</string>
+		<string>cloud sync</string>
+		<string>notebook</string>
+	</array>
+	
+	<!-- Minimum iOS Version -->
+	<key>MinimumOSVersion</key>
+	<string>12.0</string>
+	
+	<!-- App Store Age Rating -->
+	<key>ITSAppAgeRating</key>
+	<string>4+</string>
+	
+	<!-- App Store Review Information -->
+	<key>ITSAppReviewInformation</key>
+	<dict>
+		<key>ITSAppReviewContactEmail</key>
+		<string>support@pandora-notes.com</string>
+		<key>ITSAppReviewContactPhone</key>
+		<string>+1-555-0123</string>
+		<key>ITSAppReviewNotes</key>
+		<string>Pandora Notes is a productivity app that helps users create, organize, and manage their notes with AI assistance. The app includes voice recognition, cloud sync, and smart categorization features. All user data is encrypted and stored securely.</string>
+	</dict>
+	
+	<!-- App Store Marketing URL -->
+	<key>ITSAppMarketingURL</key>
+	<string>https://pandora-notes.com</string>
+	
+	<!-- App Store Support URL -->
+	<key>ITSAppSupportURL</key>
+	<string>https://pandora-notes.com/support</string>
+	
+	<!-- App Store Privacy Policy URL -->
+	<key>ITSAppPrivacyPolicyURL</key>
+	<string>https://pandora-notes.com/privacy</string>
+	
+	<!-- App Store Terms of Service URL -->
+	<key>ITSAppTermsOfServiceURL</key>
+	<string>https://pandora-notes.com/terms</string>
 </dict>
 </plist>

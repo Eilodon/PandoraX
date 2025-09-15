@@ -125,18 +125,6 @@ class PandoraBorders {
     );
   }
 
-  static Border getBorderRadius({
-    double width = borderWidth1,
-    Color color = Colors.grey,
-    BorderStyle style = solid,
-    double radius = radiusMd,
-  }) {
-    return Border.all(
-      width: width,
-      color: color,
-      style: style,
-    );
-  }
 
   // Component-specific borders
   static Border getButtonBorder({

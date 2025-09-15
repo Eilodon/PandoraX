@@ -16,6 +16,7 @@ enum PandoraButtonVariant {
   tertiary,
   ghost,
   link,
+  outlined,
 }
 
 enum PandoraButtonSize {
@@ -446,6 +447,22 @@ class _PandoraButtonState extends State<PandoraButton>
           disabledColor: widget.disabledColor ?? 
               (isDark ? PandoraColors.neutral600 : PandoraColors.neutral300),
         );
+      case PandoraButtonVariant.outlined:
+        return ButtonColors(
+          backgroundColor: widget.backgroundColor ?? Colors.transparent,
+          foregroundColor: widget.foregroundColor ?? 
+              (isDark ? PandoraColors.primary400 : PandoraColors.primary500),
+          borderColor: widget.borderColor ?? 
+              (isDark ? PandoraColors.primary400 : PandoraColors.primary500),
+          hoverColor: widget.hoverColor ?? 
+              (isDark ? PandoraColors.primary300 : PandoraColors.primary600),
+          focusColor: widget.focusColor ?? 
+              (isDark ? PandoraColors.primary200 : PandoraColors.primary700),
+          splashColor: widget.splashColor ?? 
+              (isDark ? PandoraColors.primary100 : PandoraColors.primary800),
+          disabledColor: widget.disabledColor ?? 
+              (isDark ? PandoraColors.neutral600 : PandoraColors.neutral300),
+        );
     }
   }
 
@@ -542,6 +559,7 @@ class _PandoraButtonState extends State<PandoraButton>
         return 2.0;
       case PandoraButtonVariant.ghost:
       case PandoraButtonVariant.link:
+      case PandoraButtonVariant.outlined:
         return 0.0;
     }
   }

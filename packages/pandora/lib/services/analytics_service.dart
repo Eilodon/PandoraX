@@ -92,7 +92,7 @@ class AnalyticsService {
       final eventData = {
         'error': error,
         'stack_trace': stackTrace,
-        'app_name': _app_name,
+        'app_name': _appName,
         'timestamp': DateTime.now().toIso8601String(),
         ...?parameters,
       };

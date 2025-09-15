@@ -1,51 +1,105 @@
-// file: packages/pandora_ui/lib/src/widgets/result_card.dart
 import 'package:flutter/material.dart';
-import 'package:pandora_ui/src/tokens.dart';
-import 'package:pandora_ui/src/widgets/security_cue.dart';
+import '../tokens/color_tokens.dart';
+import 'security_cue.dart';
 
+/// Pandora 4 Result Card Component
+/// 
+/// A specialized card for displaying AI-generated results with security indicators.
 class ResultCard extends StatelessWidget {
   final String title;
   final String subtitle;
-  final bool isLoading;
+  final String? content;
   final SecurityCue? securityCue;
-  final VoidCallback? onCancel; // Cho phép hủy streaming
+  final Widget? leading;
+  final Widget? trailing;
   final VoidCallback? onTap;
+  final bool isLoading;
+  final EdgeInsetsGeometry? padding;
+  final double? borderRadius;
 
   const ResultCard({
     super.key,
     required this.title,
     required this.subtitle,
-    this.isLoading = false,
+    this.content,
     this.securityCue,
-    this.onCancel,
+    this.leading,
+    this.trailing,
     this.onTap,
+    this.isLoading = false,
+    this.padding,
+    this.borderRadius,
   });
 
   @override
   Widget build(BuildContext context) {
-    if (isLoading) {
-      return const ShimmerResultCard();
-    }
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
     return Card(
-      margin: const EdgeInsets.symmetric(vertical: PTokens.spacingSm),
-      shape: RoundedRectangleBorder(borderRadius: PTokens.radius.card),
-      elevation: PTokens.elevation.card,
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(borderRadius ?? 12),
+      ),
+      color: isDark ? PandoraColors.neutral800 : PandoraColors.surface,
       child: InkWell(
         onTap: onTap,
-        borderRadius: PTokens.radius.card,
+        borderRadius: BorderRadius.circular(borderRadius ?? 12),
         child: Padding(
-          padding: const EdgeInsets.all(PTokens.spacingLg),
+          padding: padding ?? const EdgeInsets.all(16),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: PTokens.typography.title, maxLines: 1, overflow: TextOverflow.ellipsis),
-              const SizedBox(height: PTokens.spacingXs),
-              Text(subtitle, style: PTokens.typography.body, maxLines: 2, overflow: TextOverflow.ellipsis),
-              if (securityCue != null) ...[
-                const SizedBox(height: PTokens.spacingMd),
-                securityCue!,
-              ]
+              Row(
+                children: [
+                  if (leading != null) ...[
+                    leading!,
+                    const SizedBox(width: 12),
+                  ],
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          title,
+                          style: theme.textTheme.titleMedium?.copyWith(
+                            color: isDark ? PandoraColors.neutral100 : PandoraColors.neutral900,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          subtitle,
+                          style: theme.textTheme.bodyMedium?.copyWith(
+                            color: isDark ? PandoraColors.neutral300 : PandoraColors.neutral600,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (securityCue != null) ...[
+                    const SizedBox(width: 8),
+                    securityCue!,
+                  ],
+                  if (trailing != null) ...[
+                    const SizedBox(width: 8),
+                    trailing!,
+                  ],
+                ],
+              ),
+              if (content != null) ...[
+                const SizedBox(height: 12),
+                Text(
+                  content!,
+                  style: theme.textTheme.bodyMedium?.copyWith(
+                    color: isDark ? PandoraColors.neutral200 : PandoraColors.neutral700,
+                  ),
+                ),
+              ],
+              if (isLoading) ...[
+                const SizedBox(height: 12),
+                const LinearProgressIndicator(),
+              ],
             ],
           ),
         ),
@@ -54,89 +108,91 @@ class ResultCard extends StatelessWidget {
   }
 }
 
-class ShimmerResultCard extends StatefulWidget {
-  const ShimmerResultCard({super.key});
+/// Shimmer version of ResultCard for loading states
+class ShimmerResultCard extends StatelessWidget {
+  final EdgeInsetsGeometry? padding;
+  final double? borderRadius;
 
-  @override
-  State<ShimmerResultCard> createState() => _ShimmerResultCardState();
-}
-
-class _ShimmerResultCardState extends State<ShimmerResultCard>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  late Animation<double> _animation;
-
-  @override
-  void initState() {
-    super.initState();
-    _animationController = AnimationController(
-      duration: const Duration(milliseconds: 1500),
-      vsync: this,
-    );
-    _animation = Tween<double>(
-      begin: -1.0,
-      end: 2.0,
-    ).animate(CurvedAnimation(
-      parent: _animationController,
-      curve: Curves.easeInOut,
-    ));
-    _animationController.repeat();
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
+  const ShimmerResultCard({
+    super.key,
+    this.padding,
+    this.borderRadius,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
     return Card(
-      margin: const EdgeInsets.symmetric(vertical: PTokens.spacingSm),
-      shape: RoundedRectangleBorder(borderRadius: PTokens.radius.card),
-      elevation: PTokens.elevation.card,
+      elevation: 2,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(borderRadius ?? 12),
+      ),
+      color: isDark ? PandoraColors.neutral800 : PandoraColors.surface,
       child: Padding(
-        padding: const EdgeInsets.all(PTokens.spacingLg),
+        padding: padding ?? const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildShimmerLine(width: 200, height: 20),
-            const SizedBox(height: PTokens.spacingSm),
-            _buildShimmerLine(width: double.infinity, height: 16),
-            const SizedBox(height: PTokens.spacingXs),
-            _buildShimmerLine(width: 150, height: 16),
+            Row(
+              children: [
+                Container(
+                  width: 40,
+                  height: 40,
+                  decoration: BoxDecoration(
+                    color: isDark ? PandoraColors.neutral700 : PandoraColors.neutral300,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Container(
+                        width: double.infinity,
+                        height: 16,
+                        decoration: BoxDecoration(
+                          color: isDark ? PandoraColors.neutral700 : PandoraColors.neutral300,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
+                      const SizedBox(height: 8),
+                      Container(
+                        width: 200,
+                        height: 12,
+                        decoration: BoxDecoration(
+                          color: isDark ? PandoraColors.neutral700 : PandoraColors.neutral300,
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 12),
+            Container(
+              width: double.infinity,
+              height: 12,
+              decoration: BoxDecoration(
+                color: isDark ? PandoraColors.neutral700 : PandoraColors.neutral300,
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
+            const SizedBox(height: 8),
+            Container(
+              width: 150,
+              height: 12,
+              decoration: BoxDecoration(
+                color: isDark ? PandoraColors.neutral700 : PandoraColors.neutral300,
+                borderRadius: BorderRadius.circular(4),
+              ),
+            ),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildShimmerLine({required double width, required double height}) {
-    return AnimatedBuilder(
-      animation: _animation,
-      builder: (context, child) {
-        return Container(
-          width: width,
-          height: height,
-          decoration: BoxDecoration(
-            borderRadius: PTokens.radius.chip,
-            gradient: LinearGradient(
-              begin: Alignment.centerLeft,
-              end: Alignment.centerRight,
-              colors: [
-                AppColors.onSurfaceVariant.withOpacity(0.3),
-                AppColors.onSurfaceVariant.withOpacity(0.1),
-                AppColors.onSurfaceVariant.withOpacity(0.3),
-              ],
-              stops: [
-                _animation.value - 0.3,
-                _animation.value,
-                _animation.value + 0.3,
-              ].map((stop) => stop.clamp(0.0, 1.0)).toList(),
-            ),
-          ),
-        );
-      },
     );
   }
 }

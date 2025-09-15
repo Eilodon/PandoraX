@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:alarm_domain/alarm_domain.dart';
+import 'package:note_domain/note_domain.dart';
 
 class SyncStatusBadge extends StatelessWidget {
   final SyncStatus syncStatus;

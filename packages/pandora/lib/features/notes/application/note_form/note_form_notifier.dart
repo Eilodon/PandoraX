@@ -16,7 +16,7 @@ class NoteFormNotifier extends StateNotifier<NoteFormState> {
     state = NoteFormState(
       title: note.title,
       content: note.content,
-      pinned: note.pinned,
+      pinned: note.isPinned,
       note: note,
     );
   }
@@ -57,17 +57,16 @@ class NoteFormNotifier extends StateNotifier<NoteFormState> {
           ? state.note!.copyWith(
               title: state.title.trim(),
               content: state.content.trim(),
-              pinned: state.pinned,
+              isPinned: state.pinned,
               updatedAt: now,
             )
           : Note(
               id: DateTime.now().millisecondsSinceEpoch.toString(),
               title: state.title.trim(),
               content: state.content.trim(),
-              pinned: state.pinned,
+              isPinned: state.pinned,
               createdAt: now,
               updatedAt: now,
-              syncStatus: SyncStatus.pending,
             );
 
       await _repository.saveNote(noteToSave);

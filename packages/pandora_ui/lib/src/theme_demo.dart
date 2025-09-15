@@ -254,7 +254,6 @@ class _ThemeDemoState extends State<ThemeDemo> with SingleTickerProviderStateMix
               ),
               Chip(
                 label: const Text('Selected'),
-                selected: true,
                 onDeleted: () {},
                 deleteIcon: const Icon(Icons.close, size: 18),
               ),

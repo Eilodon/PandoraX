@@ -1,7 +1,8 @@
 // file: packages/pandora_ui/lib/src/widgets_demo.dart
 import 'package:flutter/material.dart';
 import 'package:pandora_ui/src/tokens.dart';
-import 'widgets.dart';
+import 'widgets/widgets.dart';
+import 'package:pandora_ui/pandora_ui.dart';
 
 /// Demo widget showcasing all Pandora 4 Widget Components
 /// 
@@ -397,17 +398,17 @@ class _WidgetsDemoState extends State<WidgetsDemo> with SingleTickerProviderStat
           const Text('Pandora Dividers', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
           const SizedBox(height: 12),
           const Text('Content above divider'),
-          const PandoraDivider(),
+          PandoraDivider(),
           const Text('Content below divider'),
           const SizedBox(height: 16),
           const Text('Divider with text'),
-          const PandoraDivider(text: 'OR'),
+          PandoraDivider(text: 'OR'),
           const SizedBox(height: 16),
           const Text('Vertical divider'),
           Row(
             children: [
               const Text('Left'),
-              const PandoraDivider(type: PandoraDividerType.vertical),
+              PandoraDivider(type: PandoraDividerType.vertical),
               const Text('Right'),
             ],
           ),
@@ -483,7 +484,7 @@ class _WidgetsDemoState extends State<WidgetsDemo> with SingleTickerProviderStat
           const SizedBox(height: 12),
           const Text('Shimmer loading animation while content is being fetched'),
           const SizedBox(height: 8),
-          const ShimmerResultCard(),
+          ShimmerResultCard(),
           const SizedBox(height: 24),
           
           // Basic Result Card

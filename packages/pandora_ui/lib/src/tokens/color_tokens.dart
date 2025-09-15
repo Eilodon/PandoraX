@@ -113,6 +113,7 @@ class PandoraColors {
   static const Color transparent = Color(0x00000000);
   static const Color black = Color(0xFF000000);
   static const Color white = Color(0xFFFFFFFF);
+  static const Color shadowColor = Color(0x1A000000);
 
   /// Get color by semantic name
   static Color getColor(String semanticName) {

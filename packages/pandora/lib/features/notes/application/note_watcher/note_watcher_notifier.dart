@@ -1,5 +1,5 @@
 import 'dart:async';
-import 'package:alarm_domain/alarm_domain.dart';
+import 'package:note_domain/note_domain.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'note_watcher_state.dart';
 

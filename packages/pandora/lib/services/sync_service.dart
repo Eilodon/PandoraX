@@ -1,6 +1,6 @@
 import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:workmanager/workmanager.dart';
-import 'package:alarm_domain/alarm_domain.dart';
+import 'package:note_domain/note_domain.dart';
 import '../injection.dart';
 
 class SyncService {
@@ -28,7 +28,9 @@ class SyncService {
     );
 
     // Lắng nghe thay đổi kết nối mạng
-    _connectivity.onConnectivityChanged.listen(_onConnectivityChanged);
+    _connectivity.onConnectivityChanged.listen((List<ConnectivityResult> results) {
+      _onConnectivityChanged(results);
+    });
   }
 
   /// Xử lý khi kết nối mạng thay đổi
@@ -75,8 +77,8 @@ class SyncService {
 
   /// Kiểm tra trạng thái kết nối
   Future<bool> isConnected() async {
-    final results = await _connectivity.checkConnectivity();
-    return results.any((result) => result != ConnectivityResult.none);
+    final result = await _connectivity.checkConnectivity();
+    return result != ConnectivityResult.none;
   }
 
   /// Hủy tất cả tasks

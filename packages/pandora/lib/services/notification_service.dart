@@ -1,124 +1,153 @@
-import 'dart:io';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:timezone/timezone.dart' as tz;
 import 'package:timezone/data/latest.dart' as tz;
 
+/// Notification Service
+/// 
+/// Handles local notifications for reminders and alerts
 class NotificationService {
-  static final FlutterLocalNotificationsPlugin _notificationsPlugin =
-      FlutterLocalNotificationsPlugin();
+  static final NotificationService _instance = NotificationService._internal();
+  factory NotificationService() => _instance;
+  NotificationService._internal();
 
-  static Future<void> initialize() async {
-    // Khởi tạo timezone
+  final FlutterLocalNotificationsPlugin _notifications = FlutterLocalNotificationsPlugin();
+
+  /// Initialize the notification service
+  Future<void> initialize() async {
+    // Initialize timezone
     tz.initializeTimeZones();
-    
-    // Cấu hình cho Android
-    const AndroidInitializationSettings initializationSettingsAndroid =
-        AndroidInitializationSettings('@mipmap/ic_launcher');
 
-    // Cấu hình cho iOS
-    const DarwinInitializationSettings initializationSettingsIOS =
-        DarwinInitializationSettings(
+    // Android initialization settings
+    const AndroidInitializationSettings androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
+
+    // iOS initialization settings
+    const DarwinInitializationSettings iosSettings = DarwinInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
       requestSoundPermission: true,
     );
 
-    const InitializationSettings initializationSettings =
-        InitializationSettings(
-      android: initializationSettingsAndroid,
-      iOS: initializationSettingsIOS,
+    const InitializationSettings initSettings = InitializationSettings(
+      android: androidSettings,
+      iOS: iosSettings,
     );
 
-    await _notificationsPlugin.initialize(
-      initializationSettings,
+    await _notifications.initialize(
+      initSettings,
       onDidReceiveNotificationResponse: _onNotificationTapped,
     );
-
-    // Yêu cầu quyền thông báo
-    await _requestPermissions();
   }
 
-  static Future<void> _requestPermissions() async {
-    if (Platform.isAndroid) {
-      final status = await Permission.notification.request();
-      if (status != PermissionStatus.granted) {
-        throw Exception('Cần quyền thông báo để gửi nhắc nhở');
-      }
-    }
+  /// Handle notification tap
+  void _onNotificationTapped(NotificationResponse response) {
+    print('Notification tapped: ${response.payload}');
+    // Handle notification tap logic here
   }
 
-  static void _onNotificationTapped(NotificationResponse response) {
-    // Xử lý khi người dùng nhấn vào thông báo
-    print('Thông báo được nhấn: ${response.payload}');
-  }
-
-  /// Lập lịch thông báo cho ghi chú
-  static Future<void> scheduleNoteReminder({
-    required int noteId,
+  /// Schedule a notification
+  Future<void> scheduleNotification({
+    required int id,
     required String title,
-    required String content,
-    required DateTime reminderTime,
+    required String body,
+    required DateTime scheduledDate,
+    String? payload,
   }) async {
-    try {
-      await _notificationsPlugin.zonedSchedule(
-        noteId,
-        'Nhắc nhở: $title',
-        content,
-        tz.TZDateTime.from(reminderTime, tz.local),
-        const NotificationDetails(
-          android: AndroidNotificationDetails(
-            'note_reminders',
-            'Nhắc nhở ghi chú',
-            channelDescription: 'Thông báo nhắc nhở cho các ghi chú',
-            importance: Importance.high,
-            priority: Priority.high,
-            icon: '@mipmap/ic_launcher',
-            sound: RawResourceAndroidNotificationSound('notification_sound'),
-          ),
-          iOS: DarwinNotificationDetails(
-            sound: 'notification_sound.wav',
-            presentAlert: true,
-            presentBadge: true,
-            presentSound: true,
-          ),
+    await _notifications.zonedSchedule(
+      id,
+      title,
+      body,
+      tz.TZDateTime.from(scheduledDate, tz.local),
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'pandora_reminders',
+          'Pandora Reminders',
+          channelDescription: 'Reminder notifications for Pandora app',
+          importance: Importance.high,
+          priority: Priority.high,
         ),
-        androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-        uiLocalNotificationDateInterpretation:
-            UILocalNotificationDateInterpretation.absoluteTime,
-        payload: 'note_$noteId',
-      );
-    } catch (e) {
-      throw Exception('Lỗi khi lập lịch thông báo: $e');
-    }
+        iOS: DarwinNotificationDetails(
+          presentAlert: true,
+          presentBadge: true,
+          presentSound: true,
+        ),
+      ),
+      payload: payload,
+      androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
+      matchDateTimeComponents: DateTimeComponents.time,
+    );
   }
 
-  /// Hủy thông báo cho ghi chú
-  static Future<void> cancelNoteReminder(int noteId) async {
-    await _notificationsPlugin.cancel(noteId);
+  /// Cancel a scheduled notification
+  Future<void> cancelNotification(int id) async {
+    await _notifications.cancel(id);
   }
 
-  /// Hủy tất cả thông báo
-  static Future<void> cancelAllNotifications() async {
-    await _notificationsPlugin.cancelAll();
+  /// Cancel all notifications
+  Future<void> cancelAllNotifications() async {
+    await _notifications.cancelAll();
   }
 
-  /// Lấy danh sách thông báo đang chờ
-  static Future<List<PendingNotificationRequest>> getPendingNotifications() async {
-    return await _notificationsPlugin.pendingNotificationRequests();
+  /// Show immediate notification
+  Future<void> showNotification({
+    required int id,
+    required String title,
+    required String body,
+    String? payload,
+  }) async {
+    await _notifications.show(
+      id,
+      title,
+      body,
+      const NotificationDetails(
+        android: AndroidNotificationDetails(
+          'pandora_immediate',
+          'Pandora Immediate',
+          channelDescription: 'Immediate notifications for Pandora app',
+          importance: Importance.high,
+          priority: Priority.high,
+        ),
+        iOS: DarwinNotificationDetails(
+          presentAlert: true,
+          presentBadge: true,
+          presentSound: true,
+        ),
+      ),
+      payload: payload,
+    );
   }
 
-  /// Kiểm tra xem thông báo có được bật không
-  static Future<bool> areNotificationsEnabled() async {
-    if (Platform.isAndroid) {
-      final status = await Permission.notification.status;
-      return status == PermissionStatus.granted;
-    }
-    return true; // iOS tự động xử lý quyền
+  /// Request notification permissions
+  Future<bool> requestPermissions() async {
+    final result = await _notifications
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        ?.requestNotificationsPermission();
+    
+    return result ?? false;
   }
 
-  /// Mở cài đặt thông báo
-  static Future<void> openNotificationSettings() async {
-    await openAppSettings();
+  /// Check if notifications are enabled
+  Future<bool> areNotificationsEnabled() async {
+    final result = await _notifications
+        .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        ?.areNotificationsEnabled();
+    
+    return result ?? false;
+  }
+
+  /// Schedule a note reminder
+  Future<void> scheduleNoteReminder({
+    required int id,
+    required String title,
+    required String body,
+    required DateTime scheduledDate,
+    String? payload,
+  }) async {
+    await scheduleNotification(
+      id: id,
+      title: title,
+      body: body,
+      scheduledDate: scheduledDate,
+      payload: payload,
+    );
   }
 }

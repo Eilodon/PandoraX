@@ -52,7 +52,7 @@ class PandoraSnackbar {
   }) {
     final colors = _getColors(context, variant);
     final dimensions = _getDimensions(size);
-    final borderRadius = borderRadius ?? _getBorderRadius(size);
+    final borderRadiusValue = borderRadius ?? _getBorderRadius(size);
 
     final snackBar = SnackBar(
       content: _buildContent(
@@ -76,10 +76,9 @@ class PandoraSnackbar {
       width: width,
       behavior: SnackBarBehavior.floating,
       shape: RoundedRectangleBorder(
-        borderRadius: borderRadius,
+        borderRadius: borderRadiusValue,
       ),
       elevation: elevation ?? _getElevation(),
-      shadowColor: shadowColor ?? colors.shadowColor,
       onVisible: onVisible,
       clipBehavior: Clip.none,
       dismissDirection: DismissDirection.horizontal,

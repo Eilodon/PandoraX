@@ -1,206 +1,119 @@
-// file: packages/pandora_ui/lib/src/widgets/pandora_chip.dart
 import 'package:flutter/material.dart';
-import 'package:pandora_ui/src/tokens.dart';
+import '../tokens/color_tokens.dart';
 
+/// Pandora 4 Chip Component
+/// 
+/// A versatile chip component for tags, categories, and status indicators.
 enum PandoraChipVariant {
   filled,
   outlined,
   elevated,
 }
 
-enum PandoraChipSize {
-  small,
-  medium,
-  large,
-}
-
 class PandoraChip extends StatelessWidget {
   final String label;
   final PandoraChipVariant variant;
-  final PandoraChipSize size;
-  final IconData? leadingIcon;
-  final IconData? trailingIcon;
+  final Color? backgroundColor;
+  final Color? textColor;
   final VoidCallback? onTap;
   final VoidCallback? onDeleted;
-  final bool selected;
-  final bool enabled;
-  final Color? backgroundColor;
-  final Color? foregroundColor;
-  final Color? borderColor;
-  final EdgeInsets? padding;
+  final Widget? leading;
+  final Widget? trailing;
+  final EdgeInsetsGeometry? padding;
+  final double? borderRadius;
 
   const PandoraChip({
     super.key,
     required this.label,
     this.variant = PandoraChipVariant.filled,
-    this.size = PandoraChipSize.medium,
-    this.leadingIcon,
-    this.trailingIcon,
+    this.backgroundColor,
+    this.textColor,
     this.onTap,
     this.onDeleted,
-    this.selected = false,
-    this.enabled = true,
-    this.backgroundColor,
-    this.foregroundColor,
-    this.borderColor,
+    this.leading,
+    this.trailing,
     this.padding,
+    this.borderRadius,
   });
-
-  Color get _backgroundColor {
-    if (!enabled) {
-      return AppColors.onSurfaceVariant.withOpacity(PTokens.opacity.disabled);
-    }
-
-    if (selected) {
-      return backgroundColor ?? AppColors.primary;
-    }
-
-    switch (variant) {
-      case PandoraChipVariant.filled:
-        return backgroundColor ?? AppColors.surface;
-      case PandoraChipVariant.outlined:
-        return Colors.transparent;
-      case PandoraChipVariant.elevated:
-        return backgroundColor ?? AppColors.surface;
-    }
-  }
-
-  Color get _foregroundColor {
-    if (!enabled) {
-      return AppColors.onSurfaceVariant.withOpacity(PTokens.opacity.disabled);
-    }
-
-    if (selected) {
-      return foregroundColor ?? AppColors.onPrimary;
-    }
-
-    return foregroundColor ?? AppColors.onSurface;
-  }
-
-  Color get _borderColor {
-    if (!enabled) {
-      return AppColors.onSurfaceVariant.withOpacity(PTokens.opacity.disabled);
-    }
-
-    return borderColor ?? AppColors.onSurfaceVariant;
-  }
-
-  double get _fontSize {
-    switch (size) {
-      case PandoraChipSize.small:
-        return 11;
-      case PandoraChipSize.medium:
-        return 12;
-      case PandoraChipSize.large:
-        return 14;
-    }
-  }
-
-  double get _iconSize {
-    switch (size) {
-      case PandoraChipSize.small:
-        return 14;
-      case PandoraChipSize.medium:
-        return 16;
-      case PandoraChipSize.large:
-        return 18;
-    }
-  }
-
-  EdgeInsets get _padding {
-    if (padding != null) return padding!;
-
-    switch (size) {
-      case PandoraChipSize.small:
-        return const EdgeInsets.symmetric(
-          horizontal: PTokens.spacingSm,
-          vertical: PTokens.spacingXs,
-        );
-      case PandoraChipSize.medium:
-        return const EdgeInsets.symmetric(
-          horizontal: PTokens.spacingMd,
-          vertical: PTokens.spacingSm,
-        );
-      case PandoraChipSize.large:
-        return const EdgeInsets.symmetric(
-          horizontal: PTokens.spacingLg,
-          vertical: PTokens.spacingMd,
-        );
-    }
-  }
-
-  List<BoxShadow> get _shadows {
-    if (variant == PandoraChipVariant.elevated && enabled) {
-      return [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.1),
-          blurRadius: 4,
-          offset: const Offset(0, 2),
-        ),
-      ];
-    }
-    return [];
-  }
 
   @override
   Widget build(BuildContext context) {
-    final chip = Container(
-      padding: _padding,
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    Color bgColor = backgroundColor ?? _getBackgroundColor(isDark);
+    Color txtColor = textColor ?? _getTextColor(isDark);
+
+    Widget chip = Container(
+      padding: padding ?? const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: _backgroundColor,
-        borderRadius: PTokens.radius.chip,
+        color: bgColor,
+        borderRadius: BorderRadius.circular(borderRadius ?? 16),
         border: variant == PandoraChipVariant.outlined
-            ? Border.all(color: _borderColor, width: 1)
+            ? Border.all(color: PandoraColors.outline)
             : null,
-        boxShadow: _shadows,
+        boxShadow: variant == PandoraChipVariant.elevated
+            ? [
+                BoxShadow(
+                  color: PandoraColors.shadowColor,
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ]
+            : null,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          if (leadingIcon != null) ...[
-            Icon(
-              leadingIcon,
-              color: _foregroundColor,
-              size: _iconSize,
-            ),
-            const SizedBox(width: PTokens.spacingXs),
+          if (leading != null) ...[
+            leading!,
+            const SizedBox(width: 4),
           ],
           Text(
             label,
-            style: PTokens.typography.label.copyWith(
-              color: _foregroundColor,
-              fontSize: _fontSize,
-              fontWeight: selected ? FontWeight.w600 : FontWeight.w500,
+            style: TextStyle(
+              color: txtColor,
+              fontSize: 12,
+              fontWeight: FontWeight.w500,
             ),
           ),
-          if (trailingIcon != null) ...[
-            const SizedBox(width: PTokens.spacingXs),
-            Icon(
-              trailingIcon,
-              color: _foregroundColor,
-              size: _iconSize,
-            ),
+          if (trailing != null) ...[
+            const SizedBox(width: 4),
+            trailing!,
           ],
         ],
       ),
     );
 
-    if (onTap != null && enabled) {
+    if (onTap != null) {
       return GestureDetector(
         onTap: onTap,
         child: chip,
       );
     }
 
-    if (onDeleted != null && enabled) {
-      return Dismissible(
-        key: Key(label),
-        direction: DismissDirection.horizontal,
-        onDismissed: (_) => onDeleted!(),
-        child: chip,
-      );
-    }
-
     return chip;
+  }
+
+  Color _getBackgroundColor(bool isDark) {
+    switch (variant) {
+      case PandoraChipVariant.filled:
+        return isDark ? PandoraColors.primary400 : PandoraColors.primary500;
+      case PandoraChipVariant.outlined:
+        return Colors.transparent;
+      case PandoraChipVariant.elevated:
+        return isDark ? PandoraColors.neutral800 : PandoraColors.surface;
+    }
+  }
+
+  Color _getTextColor(bool isDark) {
+    switch (variant) {
+      case PandoraChipVariant.filled:
+        return PandoraColors.white;
+      case PandoraChipVariant.outlined:
+        return isDark ? PandoraColors.primary400 : PandoraColors.primary500;
+      case PandoraChipVariant.elevated:
+        return isDark ? PandoraColors.neutral100 : PandoraColors.neutral900;
+    }
   }
 }

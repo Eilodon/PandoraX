@@ -288,22 +288,22 @@ extension PandoraWidgetExtensions on Widget {
 
 extension PandoraBuildContextExtensions on BuildContext {
   /// Get Pandora theme extension
-  PandoraThemeExtension get pandoraTheme => Theme.of(this).extension<PandoraThemeExtension>()!;
+  // PandoraThemeExtension get pandoraTheme => Theme.of(this).extension<PandoraThemeExtension>()!;
 
-  /// Get Pandora colors
-  PandoraColors get pandoraColors => PandoraColors._();
+  /// Get Pandora colors (static access)
+  // PandoraColors get pandoraColors => PandoraColors;
 
-  /// Get Pandora typography
-  PandoraTypography get pandoraTypography => PandoraTypography._();
+  /// Get Pandora typography (static access)
+  // PandoraTypography get pandoraTypography => PandoraTypography;
 
-  /// Get Pandora spacing
-  PandoraSpacing get pandoraSpacing => PandoraSpacing._();
+  /// Get Pandora spacing (static access)
+  // PandoraSpacing get pandoraSpacing => PandoraSpacing;
 
-  /// Get Pandora borders
-  PandoraBorders get pandoraBorders => PandoraBorders._();
+  /// Get Pandora borders (static access)
+  // PandoraBorders get pandoraBorders => PandoraBorders;
 
-  /// Get Pandora shadows
-  PandoraShadows get pandoraShadows => PandoraShadows._();
+  /// Get Pandora shadows (static access)
+  // PandoraShadows get pandoraShadows => PandoraShadows;
 
   /// Get screen size
   Size get screenSize => MediaQuery.of(this).size;

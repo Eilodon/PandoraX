@@ -1,133 +1,164 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:workmanager/workmanager.dart';
 import 'package:pandora_ui/pandora_ui.dart';
+import 'package:firebase_core/firebase_core.dart';
+
+// Dependency Injection
 import 'injection.dart';
+
+// Features
 import 'features/notes/presentation/notes_list_screen.dart';
-import 'background_tasks/sync_task.dart';
-import 'services/sync_service.dart';
-import 'services/notification_service.dart';
+import 'features/ai/presentation/ai_chat_screen.dart';
+import 'features/speech_recognition/presentation/voice_recording_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  // Khởi tạo dependency injection
-  await configureDependencies();
-  
-  // Khởi tạo thông báo cục bộ
-  await NotificationService.initialize();
-  
-  // Khởi tạo WorkManager
-  await Workmanager().initialize(
-    callbackDispatcher,
-    isInDebugMode: true,
+  // Initialize Firebase
+  await Firebase.initializeApp(
+    options: const FirebaseOptions(
+      apiKey: 'AIzaSyDemo_Firebase_API_Key_For_Development_Only',
+      appId: '1:123456789012:android:abcdef123456789012345678',
+      messagingSenderId: '123456789012',
+      projectId: 'pandora-notes-demo',
+      storageBucket: 'pandora-notes-demo.appspot.com',
+    ),
   );
   
-  // Khởi tạo sync service
-  final syncService = SyncService();
-  await syncService.initialize();
-  
+  await configureDependencies();
   runApp(const ProviderScope(child: MyApp()));
 }
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
 
-  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Pandora',
+      title: 'Pandora Notes - Full Production',
+      debugShowCheckedModeBanner: false,
+      
+      // Theme configuration
       theme: createPandoraLightTheme(),
       darkTheme: createPandoraTheme(),
       themeMode: ThemeMode.system,
-      home: const NotesListScreen(),
+      
+      // Navigation
+      home: const PandoraHomeScreen(),
+      
+      // Routes
+      routes: {
+        '/notes': (context) => const NotesListScreen(),
+        '/ai-chat': (context) => const AiChatScreen(),
+        '/voice': (context) => const VoiceRecordingScreen(),
+      },
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
-
-  final String title;
+class PandoraHomeScreen extends StatefulWidget {
+  const PandoraHomeScreen({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<PandoraHomeScreen> createState() => _PandoraHomeScreenState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _PandoraHomeScreenState extends State<PandoraHomeScreen> {
+  int _selectedIndex = 0;
 
-  void _incrementCounter() {
-    setState(() {
-      // This call to setState tells the Flutter framework that something has
-      // changed in this State, which causes it to rerun the build method below
-      // so that the display can reflect the updated values. If we changed
-      // _counter without calling setState(), then the build method would not be
-      // called again, and so nothing would appear to happen.
-      _counter++;
-    });
-  }
+  final List<Widget> _screens = [
+    const NotesListScreen(),
+    const AiChatScreen(),
+    const VoiceRecordingScreen(),
+  ];
+
+  final List<String> _titles = [
+    'Notes',
+    'AI Chat',
+    'Voice Commands',
+  ];
 
   @override
   Widget build(BuildContext context) {
-    // This method is rerun every time setState is called, for instance as done
-    // by the _incrementCounter method above.
-    //
-    // The Flutter framework has been optimized to make rerunning build methods
-    // fast, so that you can just rebuild anything that needs updating rather
-    // than having to individually change instances of widgets.
     return Scaffold(
       appBar: AppBar(
-        // TRY THIS: Try changing the color here to a specific color (to
-        // Colors.amber, perhaps?) and trigger a hot reload to see the AppBar
-        // change color while the other colors stay the same.
+        title: Text(_titles[_selectedIndex]),
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        // Here we take the value from the MyHomePage object that was created by
-        // the App.build method, and use it to set our appbar title.
-        title: Text(widget.title),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              _showSettingsDialog();
+            },
+          ),
+        ],
       ),
-      body: Center(
-        // Center is a layout widget. It takes a single child and positions it
-        // in the middle of the parent.
-        child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
-          //
-          // TRY THIS: Invoke "debug painting" (choose the "Toggle Debug Paint"
-          // action in the IDE, or press "p" in the console), to see the
-          // wireframe for each widget.
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text('You have pushed the button this many times:'),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+      body: _screens[_selectedIndex],
+      bottomNavigationBar: NavigationBar(
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: (index) {
+          setState(() {
+            _selectedIndex = index;
+          });
+        },
+        destinations: const [
+          NavigationDestination(
+            icon: Icon(Icons.notes),
+            selectedIcon: Icon(Icons.notes),
+            label: 'Notes',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.chat),
+            selectedIcon: Icon(Icons.chat),
+            label: 'AI Chat',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.mic),
+            selectedIcon: Icon(Icons.mic),
+            label: 'Voice',
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _showSettingsDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Settings'),
+        content: const Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            ListTile(
+              leading: Icon(Icons.palette),
+              title: Text('Theme'),
+              subtitle: Text('Light/Dark mode'),
+            ),
+            ListTile(
+              leading: Icon(Icons.notifications),
+              title: Text('Notifications'),
+              subtitle: Text('Manage notifications'),
+            ),
+            ListTile(
+              leading: Icon(Icons.cloud_sync),
+              title: Text('Sync'),
+              subtitle: Text('Cloud synchronization'),
+            ),
+            ListTile(
+              leading: Icon(Icons.security),
+              title: Text('Security'),
+              subtitle: Text('Privacy & security'),
             ),
           ],
         ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(context).pop(),
+            child: const Text('Close'),
+          ),
+        ],
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

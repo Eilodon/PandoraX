@@ -16,21 +16,21 @@ class PandoraDarkTheme {
   static const ColorScheme colorScheme = PandoraTheme._darkColorScheme;
 
   /// Get dark text theme
-  static const TextTheme textTheme = PandoraTheme._darkTextTheme;
+  static final TextTheme textTheme = PandoraTheme._darkTextTheme;
 
   /// Get dark app bar theme
-  static const AppBarTheme appBarTheme = PandoraTheme._darkAppBarTheme;
+  static final AppBarTheme appBarTheme = PandoraTheme._darkAppBarTheme;
 
   /// Get dark button themes
-  static const ElevatedButtonThemeData elevatedButtonTheme = PandoraTheme._darkElevatedButtonTheme;
-  static const OutlinedButtonThemeData outlinedButtonTheme = PandoraTheme._darkOutlinedButtonTheme;
-  static const TextButtonThemeData textButtonTheme = PandoraTheme._darkTextButtonTheme;
+  static final ElevatedButtonThemeData elevatedButtonTheme = PandoraTheme._darkElevatedButtonTheme;
+  static final OutlinedButtonThemeData outlinedButtonTheme = PandoraTheme._darkOutlinedButtonTheme;
+  static final TextButtonThemeData textButtonTheme = PandoraTheme._darkTextButtonTheme;
 
   /// Get dark card theme
-  static const CardTheme cardTheme = PandoraTheme._darkCardTheme;
+  static final CardThemeData cardTheme = PandoraTheme._darkCardTheme;
 
   /// Get dark input decoration theme
-  static const InputDecorationTheme inputDecorationTheme = PandoraTheme._darkInputDecorationTheme;
+  static final InputDecorationTheme inputDecorationTheme = PandoraTheme._darkInputDecorationTheme;
 
   /// Get dark chip theme
   static const ChipThemeData chipTheme = PandoraTheme._darkChipTheme;

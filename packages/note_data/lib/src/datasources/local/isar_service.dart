@@ -1,7 +1,9 @@
-import 'package:alarm_data/src/models/note_isar_model.dart';
+import 'package:note_data/src/models/note_isar_model.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:injectable/injectable.dart';
 
+@injectable
 class IsarService {
   late Future<Isar> db;
 

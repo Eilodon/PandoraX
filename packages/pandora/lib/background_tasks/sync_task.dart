@@ -1,7 +1,8 @@
 import 'package:workmanager/workmanager.dart';
-import 'package:alarm_domain/alarm_domain.dart';
+import 'package:note_domain/note_domain.dart';
 import '../injection.dart';
 
+@pragma('vm:entry-point')
 void callbackDispatcher() {
   Workmanager().executeTask((task, inputData) async {
     try {

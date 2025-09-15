@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pandora_ui/pandora_ui.dart';
-import 'package:alarm_domain/alarm_domain.dart';
-import '../../services/notification_service.dart';
+import 'package:note_domain/note_domain.dart';
+import '../../../services/notification_service.dart';
 import '../../ai/application/ai_enhanced_service.dart';
 
 class SmartReminderScreen extends ConsumerStatefulWidget {
@@ -345,11 +345,11 @@ class _SmartReminderScreenState extends ConsumerState<SmartReminderScreen> {
         _selectedTime.minute,
       );
 
-      await NotificationService.scheduleNoteReminder(
-        noteId: int.parse(widget.note.id),
+      await NotificationService().scheduleNoteReminder(
+        id: int.parse(widget.note.id),
         title: widget.note.title,
-        content: widget.note.content,
-        reminderTime: reminderDateTime,
+        body: widget.note.content,
+        scheduledDate: reminderDateTime,
       );
 
       if (mounted) {

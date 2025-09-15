@@ -1,4 +1,4 @@
-import 'package:alarm_domain/alarm_domain.dart';
+import 'package:note_domain/note_domain.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pandora/injection.dart';
 import 'note_watcher/note_watcher_notifier.dart';

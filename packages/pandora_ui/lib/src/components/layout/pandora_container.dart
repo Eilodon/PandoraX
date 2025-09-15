@@ -3,6 +3,7 @@ import '../../tokens/color_tokens.dart';
 import '../../tokens/spacing_tokens.dart';
 import '../../tokens/border_tokens.dart';
 import '../../tokens/shadow_tokens.dart';
+import '../../tokens/typography_tokens.dart';
 import '../../utils/pandora_extensions.dart';
 
 /// Pandora 4 Container
@@ -73,7 +74,7 @@ class PandoraContainer extends StatefulWidget {
     this.imageErrorBuilder,
     this.imageFrameBuilder,
     this.imageLoadingBuilder,
-    this.imageSemanticLabelBuilder,
+    // this.imageSemanticLabelBuilder, // Removed - not available in current Flutter version
     this.imageFilterQualityOverrideForPlatform,
   });
 
@@ -123,7 +124,7 @@ class PandoraContainer extends StatefulWidget {
   final ImageErrorWidgetBuilder? imageErrorBuilder;
   final ImageFrameBuilder? imageFrameBuilder;
   final ImageLoadingBuilder? imageLoadingBuilder;
-  final ImageSemanticLabelBuilder? imageSemanticLabelBuilder;
+  // final ImageSemanticLabelBuilder? imageSemanticLabelBuilder; // Removed - not available in current Flutter version
   final FilterQuality? imageFilterQualityOverrideForPlatform;
 
   @override
@@ -263,7 +264,6 @@ class _PandoraContainerState extends State<PandoraContainer>
                 borderRadius: borderRadius,
                 splashColor: colors.splashColor,
                 highlightColor: colors.hoverColor,
-                behavior: widget.behavior,
                 child: Container(
                   padding: widget.padding ?? dimensions.padding,
                   alignment: widget.alignment ?? Alignment.center,

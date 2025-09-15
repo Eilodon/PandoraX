@@ -1,5 +1,7 @@
 import 'package:google_generative_ai/google_generative_ai.dart';
+import 'package:injectable/injectable.dart';
 
+@injectable
 class AiService {
   final GenerativeModel _model;
 

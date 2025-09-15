@@ -1,5 +1,5 @@
 import 'package:isar/isar.dart';
-import 'package:alarm_domain/alarm_domain.dart';
+import 'package:note_domain/note_domain.dart';
 
 part 'note_isar_model.g.dart';
 
@@ -29,7 +29,6 @@ extension NoteIsarModelMapper on NoteIsarModel {
     createdAt: createdAt,
     updatedAt: updatedAt,
     pinned: pinned,
-    syncStatus: syncStatus,
   );
 }
 
@@ -41,5 +40,5 @@ extension NoteEntityMapper on Note {
     ..createdAt = createdAt
     ..updatedAt = updatedAt
     ..pinned = pinned
-    ..syncStatus = syncStatus;
+    ..syncStatus = SyncStatus.pending;
 }

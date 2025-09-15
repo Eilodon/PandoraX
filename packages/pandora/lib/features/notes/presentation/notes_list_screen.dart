@@ -12,8 +12,9 @@ import '../../demo/pandora_demo_screen.dart';
 import '../../ai/presentation/ai_note_generator_screen.dart';
 import '../../ai/presentation/voice_commands_screen.dart';
 import '../../ai/presentation/ai_features_overview_screen.dart';
-import '../../widgets/mascot_widget.dart';
-import '../../services/mascot_service.dart';
+import '../../../widgets/mascot_widget.dart';
+import '../../../services/mascot_service.dart';
+import '../../../services/mascot_enums.dart';
 
 class NotesListScreen extends ConsumerWidget {
   const NotesListScreen({super.key});
@@ -133,7 +134,6 @@ class NotesListScreen extends ConsumerWidget {
                 MascotInteraction.tap,
               );
             },
-            tooltip: 'Mascot',
           ),
           const SizedBox(height: PTokens.spacingSm),
           // Add Note Button
@@ -142,7 +142,7 @@ class NotesListScreen extends ConsumerWidget {
               ref.read(mascotServiceProvider.notifier).handleUserAction(
                 UserAction.createNote,
               );
-              _navigateToForm(context, ref);
+              _navigateToForm(context);
             },
             tooltip: 'Add Note',
             child: const Icon(Icons.add),
@@ -155,13 +155,14 @@ class NotesListScreen extends ConsumerWidget {
   Widget _buildLoadingState() {
     return const MascotLoadingWidget(
       message: 'Đang tải ghi chú...',
-      size: 80,
     );
   }
 
   Widget _buildSuccessState(List<Note> notes, WidgetRef ref) {
-    // Cập nhật trạng thái mascot dựa trên số lượng ghi chú
-    ref.read(mascotServiceProvider.notifier).updateNoteCount(notes.length);
+    // Cập nhật trạng thái mascot dựa trên số lượng ghi chú (delayed to avoid build cycle violation)
+    Future.microtask(() {
+      ref.read(mascotServiceProvider.notifier).updateNoteCount(notes.length);
+    });
     
     if (notes.isEmpty) {
       return _buildEmptyState();
@@ -186,8 +187,7 @@ class NotesListScreen extends ConsumerWidget {
   Widget _buildEmptyState() {
     return MascotEmptyStateWidget(
       title: 'Chưa có ghi chú nào',
-      message: 'Hãy tạo ghi chú đầu tiên của bạn để bắt đầu!',
-      actionText: 'Tạo ghi chú mới',
+      subtitle: 'Hãy tạo ghi chú đầu tiên của bạn để bắt đầu!',
       onAction: () {
         // TODO: Navigate to create note
       },
@@ -240,7 +240,7 @@ class NotesListScreen extends ConsumerWidget {
     return ResultCard(
       title: note.title,
       subtitle: note.content,
-      onTap: () => _navigateToForm(context, ref, note: note),
+      onTap: () => _navigateToForm(context, note: note),
       securityCue: SecurityCue(
         level: note.syncStatus == SyncStatus.synced
             ? SecurityLevel.cloud
@@ -267,7 +267,7 @@ class NotesListScreen extends ConsumerWidget {
     }
   }
 
-  Future<void> _navigateToForm(BuildContext context, WidgetRef ref, {Note? note}) async {
+  Future<void> _navigateToForm(BuildContext context, {Note? note}) async {
     final result = await Navigator.of(context).push<bool>(
       MaterialPageRoute(
         builder: (context) => NoteFormScreen(note: note),
@@ -276,7 +276,7 @@ class NotesListScreen extends ConsumerWidget {
     
     if (result == true && context.mounted) {
       // Refresh the notes list if a note was saved or deleted
-      ref.read(noteWatcherProvider.notifier).watchAllNotes();
+      // ref.read(noteWatcherProvider.notifier).watchAllNotes();
     }
   }
 

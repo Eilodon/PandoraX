@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'sync_status.dart';
 
 part 'note.g.dart';
 
@@ -11,8 +12,11 @@ class Note extends Equatable {
   final DateTime createdAt;
   final DateTime updatedAt;
   final bool isPinned;
+  final bool pinned;
   final String? category;
   final Map<String, dynamic>? metadata;
+  final SyncStatus syncStatus;
+  final DateTime? reminderTime;
 
   const Note({
     required this.id,
@@ -21,8 +25,11 @@ class Note extends Equatable {
     required this.createdAt,
     required this.updatedAt,
     this.isPinned = false,
+    this.pinned = false,
     this.category,
     this.metadata,
+    this.syncStatus = SyncStatus.pending,
+    this.reminderTime,
   });
 
   factory Note.fromJson(Map<String, dynamic> json) => _$NoteFromJson(json);
@@ -35,8 +42,11 @@ class Note extends Equatable {
     DateTime? createdAt,
     DateTime? updatedAt,
     bool? isPinned,
+    bool? pinned,
     String? category,
     Map<String, dynamic>? metadata,
+    SyncStatus? syncStatus,
+    DateTime? reminderTime,
   }) {
     return Note(
       id: id ?? this.id,
@@ -45,8 +55,11 @@ class Note extends Equatable {
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt,
       isPinned: isPinned ?? this.isPinned,
+      pinned: pinned ?? this.pinned,
       category: category ?? this.category,
       metadata: metadata ?? this.metadata,
+      syncStatus: syncStatus ?? this.syncStatus,
+      reminderTime: reminderTime ?? this.reminderTime,
     );
   }
 
@@ -58,7 +71,10 @@ class Note extends Equatable {
         createdAt,
         updatedAt,
         isPinned,
+        pinned,
         category,
         metadata,
+        syncStatus,
+        reminderTime,
       ];
 }

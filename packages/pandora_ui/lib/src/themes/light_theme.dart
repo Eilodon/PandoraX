@@ -16,21 +16,21 @@ class PandoraLightTheme {
   static const ColorScheme colorScheme = PandoraTheme._lightColorScheme;
 
   /// Get light text theme
-  static const TextTheme textTheme = PandoraTheme._lightTextTheme;
+  static final TextTheme textTheme = PandoraTheme._lightTextTheme;
 
   /// Get light app bar theme
-  static const AppBarTheme appBarTheme = PandoraTheme._lightAppBarTheme;
+  static final AppBarTheme appBarTheme = PandoraTheme._lightAppBarTheme;
 
   /// Get light button themes
-  static const ElevatedButtonThemeData elevatedButtonTheme = PandoraTheme._lightElevatedButtonTheme;
-  static const OutlinedButtonThemeData outlinedButtonTheme = PandoraTheme._lightOutlinedButtonTheme;
-  static const TextButtonThemeData textButtonTheme = PandoraTheme._lightTextButtonTheme;
+  static final ElevatedButtonThemeData elevatedButtonTheme = PandoraTheme._lightElevatedButtonTheme;
+  static final OutlinedButtonThemeData outlinedButtonTheme = PandoraTheme._lightOutlinedButtonTheme;
+  static final TextButtonThemeData textButtonTheme = PandoraTheme._lightTextButtonTheme;
 
   /// Get light card theme
-  static const CardTheme cardTheme = PandoraTheme._lightCardTheme;
+  static final CardThemeData cardTheme = PandoraTheme._lightCardTheme;
 
   /// Get light input decoration theme
-  static const InputDecorationTheme inputDecorationTheme = PandoraTheme._lightInputDecorationTheme;
+  static final InputDecorationTheme inputDecorationTheme = PandoraTheme._lightInputDecorationTheme;
 
   /// Get light chip theme
   static const ChipThemeData chipTheme = PandoraTheme._lightChipTheme;

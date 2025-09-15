@@ -552,11 +552,11 @@ class _PandoraDemoScreenState extends State<PandoraDemoScreen>
   }
 
   Widget _buildThemeTab() {
-    return const ThemeDemo();
+    return const Center(child: Text('Theme Demo - Disabled'));
   }
 
   Widget _buildWidgetsTab() {
-    return const WidgetsDemo();
+    return const Center(child: Text('Widgets Demo - Disabled'));
   }
 
   void _showSnackbar(String message) {

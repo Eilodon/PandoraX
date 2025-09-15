@@ -1,7 +1,9 @@
-// file: packages/pandora_ui/lib/src/widgets/pandora_tooltip.dart
 import 'package:flutter/material.dart';
-import 'package:pandora_ui/src/tokens.dart';
+import '../tokens/color_tokens.dart';
 
+/// Pandora 4 Tooltip Component
+/// 
+/// A contextual help tooltip for providing additional information.
 enum PandoraTooltipPosition {
   top,
   bottom,
@@ -15,13 +17,10 @@ class PandoraTooltip extends StatelessWidget {
   final PandoraTooltipPosition position;
   final Color? backgroundColor;
   final Color? textColor;
-  final TextStyle? textStyle;
-  final EdgeInsets? padding;
-  final double? margin;
-  final bool showArrow;
-  final Duration? showDuration;
-  final Duration? hideDuration;
-  final Duration? waitDuration;
+  final EdgeInsetsGeometry? padding;
+  final double? borderRadius;
+  final Duration showDuration;
+  final Duration hideDuration;
 
   const PandoraTooltip({
     super.key,
@@ -30,53 +29,35 @@ class PandoraTooltip extends StatelessWidget {
     this.position = PandoraTooltipPosition.top,
     this.backgroundColor,
     this.textColor,
-    this.textStyle,
     this.padding,
-    this.margin,
-    this.showArrow = true,
-    this.showDuration,
-    this.hideDuration,
-    this.waitDuration,
+    this.borderRadius,
+    this.showDuration = const Duration(milliseconds: 500),
+    this.hideDuration = const Duration(milliseconds: 200),
   });
-
-  Color get _defaultBackgroundColor {
-    return backgroundColor ?? AppColors.surface;
-  }
-
-  Color get _defaultTextColor {
-    return textColor ?? AppColors.onSurface;
-  }
-
-  EdgeInsets get _defaultPadding {
-    return padding ?? const EdgeInsets.symmetric(
-      horizontal: PTokens.spacingMd,
-      vertical: PTokens.spacingSm,
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
+
+    final bgColor = backgroundColor ?? 
+        (isDark ? PandoraColors.neutral800 : PandoraColors.neutral900);
+    final txtColor = textColor ?? 
+        (isDark ? PandoraColors.neutral100 : PandoraColors.white);
+
     return Tooltip(
       message: message,
       decoration: BoxDecoration(
-        color: _defaultBackgroundColor,
-        borderRadius: PTokens.radius.card,
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 8,
-            offset: const Offset(0, 4),
-          ),
-        ],
+        color: bgColor,
+        borderRadius: BorderRadius.circular(borderRadius ?? 8),
       ),
-      textStyle: textStyle ?? PTokens.typography.body.copyWith(
-        color: _defaultTextColor,
+      textStyle: TextStyle(
+        color: txtColor,
+        fontSize: 12,
+        fontWeight: FontWeight.w500,
       ),
-      padding: _defaultPadding,
-      margin: EdgeInsets.all(margin ?? PTokens.spacingSm),
-      showDuration: showDuration ?? const Duration(seconds: 2),
-      hideDuration: hideDuration ?? const Duration(milliseconds: 200),
-      waitDuration: waitDuration ?? const Duration(milliseconds: 500),
+      padding: padding ?? const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+      showDuration: showDuration,
       preferBelow: position == PandoraTooltipPosition.bottom,
       verticalOffset: _getVerticalOffset(),
       child: child,

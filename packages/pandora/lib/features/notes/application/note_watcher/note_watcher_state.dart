@@ -1,4 +1,4 @@
-import 'package:alarm_domain/alarm_domain.dart';
+import 'package:note_domain/note_domain.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 
 part 'note_watcher_state.freezed.dart';

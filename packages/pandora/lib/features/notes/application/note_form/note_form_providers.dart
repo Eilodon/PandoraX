@@ -1,4 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:note_domain/note_domain.dart';
 import 'note_form_notifier.dart';
 import 'note_form_state.dart';
 import '../note_providers.dart';

@@ -54,11 +54,11 @@ library pandora_ui;
 // ============================================================================
 // Core design tokens for consistent styling across all components
 
-/// Main design tokens file with unified token system
-export 'src/tokens.dart';
-
 /// Individual token files for granular access
 export 'src/tokens/color_tokens.dart';
+
+/// Main design tokens file with unified token system (legacy support)
+export 'src/tokens.dart';
 export 'src/tokens/typography_tokens.dart';
 export 'src/tokens/spacing_tokens.dart';
 export 'src/tokens/border_tokens.dart';
@@ -73,9 +73,9 @@ export 'src/tokens/shadow_tokens.dart';
 export 'src/theme.dart';
 
 /// Individual theme files for specific implementations
-export 'src/themes/pandora_theme.dart';
-export 'src/themes/light_theme.dart';
-export 'src/themes/dark_theme.dart';
+// export 'src/themes/pandora_theme.dart';
+// export 'src/themes/light_theme.dart';
+// export 'src/themes/dark_theme.dart';
 
 // ============================================================================
 // CORE COMPONENTS
@@ -135,7 +135,7 @@ export 'src/utils/pandora_helpers.dart';
 export 'src/tokens_demo.dart';
 
 /// Theme system demo with all Material components
-export 'src/theme_demo.dart';
+// export 'src/theme_demo.dart';
 
 /// Widget components demo with interactive examples
-export 'src/widgets_demo.dart';
+// export 'src/widgets_demo.dart';

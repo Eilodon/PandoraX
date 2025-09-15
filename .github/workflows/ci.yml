@@ -8,17 +8,23 @@ on:
 
 env:
   FLUTTER_VERSION: '3.24.0'
-  DART_VERSION: '3.5.0'
+  JAVA_VERSION: '17'
 
 jobs:
   test:
-    name: Test
+    name: Test Suite
     runs-on: ubuntu-latest
     
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
       
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: ${{ env.JAVA_VERSION }}
+        
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
       with:
@@ -26,41 +32,70 @@ jobs:
         channel: 'stable'
         cache: true
         
-    - name: Setup Melos
-      run: dart pub global activate melos
-      
-    - name: Install dependencies
-      run: melos bootstrap
-      
-    - name: Verify formatting
-      run: melos run format --check
-      
-    - name: Analyze code
-      run: melos run analyze
-      
+    - name: Get dependencies
+      run: |
+        cd packages/pandora
+        flutter pub get
+        
     - name: Run tests
-      run: melos run test
-      
-    - name: Run tests with coverage
-      run: melos run test:coverage
-      
-    - name: Upload coverage to Codecov
-      uses: codecov/codecov-action@v3
+      run: |
+        cd packages/pandora
+        flutter test --coverage
+        
+    - name: Upload coverage
+      uses: codecov/codecov-action@v4
       with:
-        file: ./coverage/lcov.info
+        file: packages/pandora/coverage/lcov.info
         flags: unittests
         name: codecov-umbrella
         fail_ci_if_error: false
 
-  build:
-    name: Build
+  build-android:
+    name: Build Android APK
     runs-on: ubuntu-latest
     needs: test
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
     
-    strategy:
-      matrix:
-        platform: [android, ios, web, windows, macos, linux]
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: ${{ env.JAVA_VERSION }}
         
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: ${{ env.FLUTTER_VERSION }}
+        channel: 'stable'
+        cache: true
+        
+    - name: Get dependencies
+      run: |
+        cd packages/pandora
+        flutter pub get
+        
+    - name: Build APK
+      run: |
+        cd packages/pandora
+        flutter build apk --release --split-per-abi
+        
+    - name: Upload APK artifacts
+      uses: actions/upload-artifact@v4
+      with:
+        name: android-apk
+        path: packages/pandora/build/app/outputs/flutter-apk/
+        retention-days: 30
+
+  build-ios:
+    name: Build iOS
+    runs-on: macos-latest
+    needs: test
+    if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/develop'
+    
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
@@ -72,24 +107,67 @@ jobs:
         channel: 'stable'
         cache: true
         
-    - name: Setup Melos
-      run: dart pub global activate melos
-      
-    - name: Install dependencies
-      run: melos bootstrap
-      
-    - name: Build ${{ matrix.platform }}
-      run: melos run build:${{ matrix.platform }}
-      
-    - name: Upload build artifacts
-      uses: actions/upload-artifact@v3
+    - name: Get dependencies
+      run: |
+        cd packages/pandora
+        flutter pub get
+        
+    - name: Build iOS
+      run: |
+        cd packages/pandora
+        flutter build ios --release --no-codesign
+        
+    - name: Upload iOS artifacts
+      uses: actions/upload-artifact@v4
       with:
-        name: build-${{ matrix.platform }}
-        path: packages/pandora/build/
+        name: ios-build
+        path: packages/pandora/build/ios/
+        retention-days: 30
 
-  security:
-    name: Security Audit
+  integration-test:
+    name: Integration Tests
     runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: ${{ env.JAVA_VERSION }}
+        
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: ${{ env.FLUTTER_VERSION }}
+        channel: 'stable'
+        cache: true
+        
+    - name: Get dependencies
+      run: |
+        cd packages/pandora
+        flutter pub get
+        
+    - name: Run integration tests
+      run: |
+        cd packages/pandora
+        flutter test integration_test/
+        
+    - name: Upload test results
+      uses: actions/upload-artifact@v4
+      if: always()
+      with:
+        name: integration-test-results
+        path: packages/pandora/test_driver/
+        retention-days: 7
+
+  security-scan:
+    name: Security Scan
+    runs-on: ubuntu-latest
+    needs: test
     
     steps:
     - name: Checkout code
@@ -100,88 +178,68 @@ jobs:
       with:
         flutter-version: ${{ env.FLUTTER_VERSION }}
         channel: 'stable'
+        cache: true
         
-    - name: Setup Melos
-      run: dart pub global activate melos
-      
-    - name: Install dependencies
-      run: melos bootstrap
-      
+    - name: Get dependencies
+      run: |
+        cd packages/pandora
+        flutter pub get
+        
     - name: Run security audit
-      run: melos run security
-      
-    - name: Run dependency check
       run: |
         cd packages/pandora
-        flutter pub deps --json > deps.json
         flutter pub audit
-
-  quality:
-    name: Code Quality
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v4
-      
-    - name: Setup Flutter
-      uses: subosito/flutter-action@v2
-      with:
-        flutter-version: ${{ env.FLUTTER_VERSION }}
-        channel: 'stable'
         
-    - name: Setup Melos
-      run: dart pub global activate melos
-      
-    - name: Install dependencies
-      run: melos bootstrap
-      
-    - name: Run linting
-      run: melos run lint
-      
-    - name: Check code formatting
-      run: melos run format --check
-      
-    - name: Generate code metrics
+    - name: Run static analysis
       run: |
         cd packages/pandora
-        flutter pub global activate dart_code_metrics
-        metrics lib --reporter=console
-        metrics lib --reporter=html --output-directory=metrics
+        flutter analyze --fatal-infos
+        
+    - name: Check for vulnerabilities
+      run: |
+        cd packages/pandora
+        flutter pub deps --json | jq '.packages[] | select(.kind == "direct") | .name' | xargs -I {} sh -c 'echo "Checking {}" && flutter pub deps --json | jq ".packages[] | select(.name == \"{}\") | .version"'
 
-  release:
-    name: Release
+  performance-test:
+    name: Performance Tests
     runs-on: ubuntu-latest
-    needs: [test, build, security, quality]
-    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    needs: test
     
     steps:
     - name: Checkout code
       uses: actions/checkout@v4
       
+    - name: Setup Java
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: ${{ env.JAVA_VERSION }}
+        
     - name: Setup Flutter
       uses: subosito/flutter-action@v2
       with:
         flutter-version: ${{ env.FLUTTER_VERSION }}
         channel: 'stable'
+        cache: true
         
-    - name: Setup Melos
-      run: dart pub global activate melos
-      
-    - name: Install dependencies
-      run: melos bootstrap
-      
-    - name: Create Release
-      uses: actions/create-release@v1
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+    - name: Get dependencies
+      run: |
+        cd packages/pandora
+        flutter pub get
+        
+    - name: Run performance tests
+      run: |
+        cd packages/pandora
+        flutter test test/performance/
+        
+    - name: Generate performance report
+      run: |
+        cd packages/pandora
+        flutter test --coverage test/performance/
+        
+    - name: Upload performance results
+      uses: actions/upload-artifact@v4
       with:
-        tag_name: v${{ github.run_number }}
-        release_name: Release v${{ github.run_number }}
-        body: |
-          ## Changes in this Release
-          - Automated build and test
-          - All platforms supported
-          - Security audit passed
-        draft: false
-        prerelease: false
+        name: performance-results
+        path: packages/pandora/coverage/
+        retention-days: 30

@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pandora_ui/pandora_ui.dart';
 import '../application/ai_enhanced_service.dart';
-import '../../widgets/mascot_widget.dart';
-import '../../services/mascot_service.dart';
+import '../../../widgets/mascot_widget.dart';
+import '../../../services/mascot_service.dart';
+import '../../../services/mascot_enums.dart';
 
 class AiNoteGeneratorScreen extends ConsumerStatefulWidget {
   const AiNoteGeneratorScreen({super.key});
@@ -103,7 +104,7 @@ class _AiNoteGeneratorScreenState extends ConsumerState<AiNoteGeneratorScreen> {
                           PandoraChip(
                             label: _generatedNote!['category'] ?? 'khác',
                             variant: PandoraChipVariant.filled,
-                            color: PandoraColors.primary500,
+                            backgroundColor: PandoraColors.primary500,
                           ),
                           const SizedBox(width: PTokens.spacingSm),
                           if (_generatedNote!['tags'] != null && _generatedNote!['tags']!.isNotEmpty)

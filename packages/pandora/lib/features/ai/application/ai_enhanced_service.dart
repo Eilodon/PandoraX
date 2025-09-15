@@ -26,8 +26,8 @@ Trả về kết quả theo format JSON:
 }
 ''';
 
-      final content = [Content.text(aiPrompt)];
-      final response = await _model.generateContent(content);
+      final contentList = [Content.text(aiPrompt)];
+      final response = await _model.generateContent(contentList);
       
       // Parse JSON response (simplified)
       final responseText = response.text ?? '{}';
@@ -49,8 +49,8 @@ Nội dung: "$content"
 Chỉ trả về tên danh mục, không có gì khác.
 ''';
 
-      final content = [Content.text(prompt)];
-      final response = await _model.generateContent(content);
+      final contentList = [Content.text(prompt)];
+      final response = await _model.generateContent(contentList);
       return response.text?.trim() ?? 'khác';
     } catch (e) {
       return 'khác';
@@ -69,8 +69,8 @@ Nội dung: "$content"
 Trả về danh sách tags, mỗi tag trên một dòng, không có số thứ tự.
 ''';
 
-      final content = [Content.text(prompt)];
-      final response = await _model.generateContent(content);
+      final contentList = [Content.text(prompt)];
+      final response = await _model.generateContent(contentList);
       
       final tags = response.text?.split('\n')
           .where((tag) => tag.trim().isNotEmpty)
@@ -97,8 +97,8 @@ Mỗi đề xuất phải ngắn gọn (1-2 câu) và cụ thể.
 Trả về mỗi đề xuất trên một dòng, không có số thứ tự.
 ''';
 
-      final content = [Content.text(prompt)];
-      final response = await _model.generateContent(content);
+      final contentList = [Content.text(prompt)];
+      final response = await _model.generateContent(contentList);
       
       final suggestions = response.text?.split('\n')
           .where((suggestion) => suggestion.trim().isNotEmpty)
@@ -132,8 +132,8 @@ Trả về kết quả theo format JSON:
 Nếu ghi chú có tính cấp thiết, đề xuất thời gian gần. Nếu là ghi chú dài hạn, đề xuất thời gian phù hợp.
 ''';
 
-      final content = [Content.text(prompt)];
-      final response = await _model.generateContent(content);
+      final contentList = [Content.text(prompt)];
+      final response = await _model.generateContent(contentList);
       
       return _parseReminderResponse(response.text ?? '{}');
     } catch (e) {
@@ -163,8 +163,8 @@ Tiêu đề: "$title"
 Nội dung: "$content"
 ''';
 
-      final content = [Content.text(prompt)];
-      final response = await _model.generateContent(content);
+      final contentList = [Content.text(prompt)];
+      final response = await _model.generateContent(contentList);
       return response.text ?? 'Không thể tạo tóm tắt.';
     } catch (e) {
       throw Exception('Failed to create advanced summary: $e');
@@ -179,8 +179,8 @@ Nội dung: "$content"
           : 'Bạn là một trợ lý AI thông minh giúp quản lý ghi chú. Hãy trả lời một cách hữu ích và thân thiện.';
       
       final prompt = '$systemPrompt\n\nTin nhắn: "$message"';
-      final content = [Content.text(prompt)];
-      final response = await _model.generateContent(content);
+      final contentList = [Content.text(prompt)];
+      final response = await _model.generateContent(contentList);
       return response.text ?? 'Xin lỗi, tôi không thể trả lời tin nhắn này.';
     } catch (e) {
       throw Exception('Failed to chat with AI: $e');

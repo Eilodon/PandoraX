@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:alarm_domain/alarm_domain.dart';
+import 'package:note_domain/note_domain.dart';
 import 'package:pandora_ui/pandora_ui.dart';
 import '../../ai/application/ai_summarizer/ai_summarizer_providers.dart';
 import 'reminder_form_screen.dart';
@@ -162,11 +162,11 @@ class NoteDetailScreen extends ConsumerWidget {
                           style: PTokens.typography.titleMedium,
                         ),
                         const Spacer(),
-                        PandoraButton.icon(
+                        PandoraButton(
                           onPressed: aiState.maybeWhen(
                             loading: () => null,
                             orElse: () => () => aiNotifier.summarizeText(note.content),
-                          ),
+                          )(),
                           icon: aiState.maybeWhen(
                             loading: () => const SizedBox(
                               width: 16,

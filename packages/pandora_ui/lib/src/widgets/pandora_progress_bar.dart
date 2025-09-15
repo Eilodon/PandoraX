@@ -1,134 +1,77 @@
-// file: packages/pandora_ui/lib/src/widgets/pandora_progress_bar.dart
 import 'package:flutter/material.dart';
-import 'package:pandora_ui/src/tokens.dart';
+import '../tokens/color_tokens.dart';
 
+/// Pandora 4 Progress Bar Component
+/// 
+/// A versatile progress indicator for loading states and task completion.
 enum PandoraProgressBarVariant {
   linear,
   circular,
 }
 
-enum PandoraProgressBarSize {
-  small,
-  medium,
-  large,
-}
-
 class PandoraProgressBar extends StatelessWidget {
   final double value;
   final PandoraProgressBarVariant variant;
-  final PandoraProgressBarSize size;
   final Color? backgroundColor;
   final Color? valueColor;
-  final String? label;
-  final TextStyle? labelStyle;
-  final bool showPercentage;
   final double? strokeWidth;
   final double? height;
+  final String? label;
+  final TextStyle? labelStyle;
 
   const PandoraProgressBar({
     super.key,
     required this.value,
     this.variant = PandoraProgressBarVariant.linear,
-    this.size = PandoraProgressBarSize.medium,
     this.backgroundColor,
     this.valueColor,
-    this.label,
-    this.labelStyle,
-    this.showPercentage = false,
     this.strokeWidth,
     this.height,
-  }) : assert(value >= 0.0 && value <= 1.0, 'Value must be between 0.0 and 1.0');
-
-  Color get _defaultBackgroundColor {
-    return backgroundColor ?? AppColors.onSurfaceVariant.withOpacity(0.3);
-  }
-
-  Color get _defaultValueColor {
-    return valueColor ?? AppColors.primary;
-  }
-
-  double get _defaultHeight {
-    if (height != null) return height!;
-    
-    switch (size) {
-      case PandoraProgressBarSize.small:
-        return 4;
-      case PandoraProgressBarSize.medium:
-        return 6;
-      case PandoraProgressBarSize.large:
-        return 8;
-    }
-  }
-
-  double get _defaultStrokeWidth {
-    if (strokeWidth != null) return strokeWidth!;
-    
-    switch (size) {
-      case PandoraProgressBarSize.small:
-        return 3;
-      case PandoraProgressBarSize.medium:
-        return 4;
-      case PandoraProgressBarSize.large:
-        return 6;
-    }
-  }
-
-  double get _circularSize {
-    switch (size) {
-      case PandoraProgressBarSize.small:
-        return 32;
-      case PandoraProgressBarSize.medium:
-        return 48;
-      case PandoraProgressBarSize.large:
-        return 64;
-    }
-  }
+    this.label,
+    this.labelStyle,
+  });
 
   @override
   Widget build(BuildContext context) {
-    if (variant == PandoraProgressBarVariant.circular) {
-      return _buildCircularProgress();
-    }
+    final theme = Theme.of(context);
+    final isDark = theme.brightness == Brightness.dark;
 
-    return _buildLinearProgress();
+    final bgColor = backgroundColor ?? 
+        (isDark ? PandoraColors.neutral700 : PandoraColors.neutral200);
+    final valColor = valueColor ?? 
+        (isDark ? PandoraColors.primary400 : PandoraColors.primary500);
+
+    switch (variant) {
+      case PandoraProgressBarVariant.linear:
+        return _buildLinearProgress(bgColor, valColor);
+      case PandoraProgressBarVariant.circular:
+        return _buildCircularProgress(bgColor, valColor);
+    }
   }
 
-  Widget _buildLinearProgress() {
+  Widget _buildLinearProgress(Color bgColor, Color valColor) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      mainAxisSize: MainAxisSize.min,
       children: [
-        if (label != null || showPercentage) ...[
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              if (label != null)
-                Text(
-                  label!,
-                  style: labelStyle ?? PTokens.typography.label,
-                ),
-              if (showPercentage)
-                Text(
-                  '${(value * 100).round()}%',
-                  style: labelStyle ?? PTokens.typography.label,
-                ),
-            ],
+        if (label != null) ...[
+          Text(
+            label!,
+            style: labelStyle ?? const TextStyle(fontSize: 12),
           ),
-          const SizedBox(height: PTokens.spacingSm),
+          const SizedBox(height: 4),
         ],
         Container(
-          height: _defaultHeight,
+          height: height ?? 8,
           decoration: BoxDecoration(
-            color: _defaultBackgroundColor,
-            borderRadius: PTokens.radius.chip,
+            color: bgColor,
+            borderRadius: BorderRadius.circular(4),
           ),
-          child: FractionallySizedBox(
-            alignment: Alignment.centerLeft,
-            widthFactor: value,
-            child: Container(
-              decoration: BoxDecoration(
-                color: _defaultValueColor,
-                borderRadius: PTokens.radius.chip,
-              ),
+          child: ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: LinearProgressIndicator(
+              value: value.clamp(0.0, 1.0),
+              backgroundColor: Colors.transparent,
+              valueColor: AlwaysStoppedAnimation<Color>(valColor),
             ),
           ),
         ),
@@ -136,42 +79,27 @@ class PandoraProgressBar extends StatelessWidget {
     );
   }
 
-  Widget _buildCircularProgress() {
+  Widget _buildCircularProgress(Color bgColor, Color valColor) {
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
-        SizedBox(
-          width: _circularSize,
-          height: _circularSize,
-          child: Stack(
-            children: [
-              CircularProgressIndicator(
-                value: value,
-                strokeWidth: _defaultStrokeWidth,
-                backgroundColor: _defaultBackgroundColor,
-                valueColor: AlwaysStoppedAnimation<Color>(_defaultValueColor),
-              ),
-              if (showPercentage)
-                Center(
-                  child: Text(
-                    '${(value * 100).round()}%',
-                    style: PTokens.typography.label.copyWith(
-                      fontSize: _circularSize * 0.2,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-            ],
-          ),
-        ),
         if (label != null) ...[
-          const SizedBox(height: PTokens.spacingSm),
           Text(
             label!,
-            style: labelStyle ?? PTokens.typography.label,
-            textAlign: TextAlign.center,
+            style: labelStyle ?? const TextStyle(fontSize: 12),
           ),
+          const SizedBox(height: 8),
         ],
+        SizedBox(
+          width: 40,
+          height: 40,
+          child: CircularProgressIndicator(
+            value: value.clamp(0.0, 1.0),
+            backgroundColor: bgColor,
+            valueColor: AlwaysStoppedAnimation<Color>(valColor),
+            strokeWidth: strokeWidth ?? 3,
+          ),
+        ),
       ],
     );
   }

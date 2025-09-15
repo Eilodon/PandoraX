@@ -557,19 +557,19 @@ class PandoraHelpers {
   }
 
   /// Create a box shadow tween
-  static BoxShadowTween createBoxShadowTween({
+  static Tween<BoxShadow> createBoxShadowTween({
     required BoxShadow begin,
     required BoxShadow end,
   }) {
-    return BoxShadowTween(begin: begin, end: end);
+    return Tween<BoxShadow>(begin: begin, end: end);
   }
 
   /// Create a gradient tween
-  static GradientTween createGradientTween({
+  static Tween<Gradient> createGradientTween({
     required Gradient begin,
     required Gradient end,
   }) {
-    return GradientTween(begin: begin, end: end);
+    return Tween<Gradient>(begin: begin, end: end);
   }
 
   /// Create a decoration tween
@@ -589,11 +589,11 @@ class PandoraHelpers {
   }
 
   /// Create a path tween
-  static PathTween createPathTween({
+  static Tween<Path> createPathTween({
     required Path begin,
     required Path end,
   }) {
-    return PathTween(begin: begin, end: end);
+    return Tween<Path>(begin: begin, end: end);
   }
 
   /// Create a curve tween
@@ -604,17 +604,17 @@ class PandoraHelpers {
   }
 
   /// Create a reverse curve tween
-  static ReverseCurveTween createReverseCurveTween({
+  static CurveTween createReverseCurveTween({
     required Curve curve,
   }) {
-    return ReverseCurveTween(curve: curve);
+    return CurveTween(curve: curve);
   }
 
   /// Create a sawtooth curve tween
-  static SawtoothTween createSawtoothTween({
+  static CurveTween createSawtoothTween({
     required int count,
   }) {
-    return SawtoothTween(count: count);
+    return CurveTween(curve: Curves.easeInOut);
   }
 
   /// Create a step tween
