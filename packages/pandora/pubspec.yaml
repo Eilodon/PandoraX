@@ -37,6 +37,10 @@ dependencies:
     path: ../note_data
   pandora_ui:
     path: ../pandora_ui
+  ai_core:
+    path: ../ai_core
+  ai_llm:
+    path: ../ai_llm
   flutter_riverpod: ^2.5.1
   get_it: ^7.6.7
   injectable: ^2.4.0

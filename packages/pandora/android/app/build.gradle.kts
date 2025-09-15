@@ -30,9 +30,9 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = true
-            proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
-            isShrinkResources = true
+            isMinifyEnabled = false  // Temporarily disabled due to R8 issues
+            // proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
+            isShrinkResources = false  // Disabled with minify
             isDebuggable = false
         }
         debug {

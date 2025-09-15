@@ -1,0 +1,20 @@
+name: ai_core
+description: Core AI business logic for Pandora
+version: 1.0.0
+publish_to: 'none'
+
+environment:
+  sdk: ^3.9.2
+
+dependencies:
+  freezed_annotation: ^2.4.1
+  equatable: ^2.0.5
+  json_annotation: ^4.9.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  freezed: ^2.4.7
+  json_serializable: ^6.8.0
+  build_runner: ^2.4.8
+  flutter_lints: ^5.0.0
