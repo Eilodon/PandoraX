@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:collection';
-import 'dart:isolate';
 import 'package:flutter/foundation.dart';
 
 /// Performance optimizer for AI system

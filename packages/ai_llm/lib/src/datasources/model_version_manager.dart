@@ -1,15 +1,12 @@
-import 'dart:io';
-import 'package:ai_core/ai_core.dart';
-import '../models/model_cache_entry.dart';
 
 /// Manages model versions and migrations
 class ModelVersionManager {
-  final String _cacheDir;
+  // final String _cacheDir;
   final Map<String, ModelVersionInfo> _versionCache = {};
 
   ModelVersionManager({
     required String cacheDir,
-  }) : _cacheDir = cacheDir;
+  });
 
   /// Get available versions for a model
   Future<List<ModelVersionInfo>> getAvailableVersions(String modelId) async {

@@ -1,5 +1,4 @@
 import 'dart:collection';
-import 'dart:math';
 import '../models/health_sample.dart';
 
 /// Health monitor interface

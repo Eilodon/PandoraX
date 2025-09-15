@@ -1,9 +1,9 @@
 library ai_llm;
 
 // Export datasources
-export 'src/datasources/download_client.dart' hide CompressionType;
+export 'src/datasources/download_client.dart';
 export 'src/datasources/compression_codec.dart';
-export 'src/datasources/on_device_model_service.dart' hide HealthMonitor, HealthSnapshot;
+export 'src/datasources/on_device_model_service.dart';
 export 'src/datasources/delta_applier.dart';
 export 'src/datasources/model_download_manager.dart';
 export 'src/datasources/storage_quota_manager.dart';

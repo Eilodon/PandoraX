@@ -1,7 +1,5 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:ai_core/ai_core.dart';
-import '../models/health_sample.dart';
 import 'adaptive_health_monitor.dart';
 // import 'llama_cpp_service.dart';  // Temporarily disabled
 // import 'tflite_ai_service.dart';  // TensorFlow Lite AI service - Has namespace issues
@@ -250,28 +248,28 @@ class OnDeviceModelService {
   }
 
 
-  String _buildContextPrompt(String prompt, List<ChatMessage> history) {
-    final buffer = StringBuffer();
-    
-    // Add system context
-    buffer.writeln('You are a helpful AI assistant. Please respond to the user\'s message.');
-    buffer.writeln();
-    
-    // Add conversation history
-    for (final message in history.take(10)) { // Limit to last 10 messages
-      if (message.isUser) {
-        buffer.writeln('User: ${message.content}');
-      } else if (message.isAssistant) {
-        buffer.writeln('Assistant: ${message.content}');
-      }
-    }
-    
-    // Add current prompt
-    buffer.writeln('User: $prompt');
-    buffer.writeln('Assistant:');
-    
-    return buffer.toString();
-  }
+  // String _buildContextPrompt(String prompt, List<ChatMessage> history) {
+  //   final buffer = StringBuffer();
+  //   
+  //   // Add system context
+  //   buffer.writeln('You are a helpful AI assistant. Please respond to the user\'s message.');
+  //   buffer.writeln();
+  //   
+  //   // Add conversation history
+  //   for (final message in history.take(10)) { // Limit to last 10 messages
+  //     if (message.isUser) {
+  //       buffer.writeln('User: ${message.content}');
+  //     } else if (message.isAssistant) {
+  //       buffer.writeln('Assistant: ${message.content}');
+  //     }
+  //   }
+  //   
+  //   // Add current prompt
+  //   buffer.writeln('User: $prompt');
+  //   buffer.writeln('Assistant:');
+  //   
+  //   return buffer.toString();
+  // }
 
   /// Get max tokens based on model level
   int _getMaxTokens() {
@@ -355,7 +353,3 @@ class OnDeviceModelException implements Exception {
   String toString() => 'OnDeviceModelException: $message';
 }
 
-abstract class HealthMonitor {
-  void record(bool success, int latencyMs);
-  HealthSnapshot snapshot();
-}

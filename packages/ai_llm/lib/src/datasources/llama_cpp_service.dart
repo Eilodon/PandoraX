@@ -18,7 +18,7 @@ class LlamaCppService {
       _status = 'Initializing...';
       
       // Check if model file exists
-      if (session.file == null || !await session.file!.exists()) {
+      if (session.file == null || !await session.file.exists()) {
         _status = 'Model file not found';
         return false;
       }
@@ -96,7 +96,7 @@ class LlamaCppService {
     }
 
     return {
-      'modelPath': _currentSession?.file?.path,
+      'modelPath': _currentSession?.file.path,
       'modelLevel': _currentSession?.level.name,
       'contextSize': _getContextSize(_currentSession?.level ?? ModelLevel.tiny),
       'threadCount': _getThreadCount(),
@@ -129,19 +129,19 @@ class LlamaCppService {
     }
   }
 
-  /// Get batch size based on model level
-  int _getBatchSize(ModelLevel level) {
-    switch (level.name) {
-      case 'full':
-        return 512; // Large batch for full model
-      case 'mini':
-        return 256; // Medium batch
-      case 'tiny':
-        return 128; // Small batch
-      default:
-        return 64;  // Minimal batch
-    }
-  }
+  // /// Get batch size based on model level
+  // int _getBatchSize(ModelLevel level) {
+  //   switch (level.name) {
+  //     case 'full':
+  //       return 512; // Large batch for full model
+  //     case 'mini':
+  //       return 256; // Medium batch
+  //     case 'tiny':
+  //       return 128; // Small batch
+  //     default:
+  //       return 64;  // Minimal batch
+  //   }
+  // }
 
   /// Get optimal thread count
   int _getThreadCount() {
@@ -150,30 +150,30 @@ class LlamaCppService {
     return (processorCount / 2).ceil().clamp(2, 8);
   }
 
-  /// Build context prompt for chat
-  String _buildContextPrompt(String prompt, List<ChatMessage> history) {
-    final buffer = StringBuffer();
-    
-    // Add system context
-    buffer.writeln('You are a helpful AI assistant. Please respond to the user\'s message.');
-    buffer.writeln();
-    
-    // Add conversation history (limit to prevent context overflow)
-    final recentHistory = history.take(10).toList();
-    for (final message in recentHistory) {
-      if (message.isUser) {
-        buffer.writeln('User: ${message.content}');
-      } else if (message.isAssistant) {
-        buffer.writeln('Assistant: ${message.content}');
-      }
-    }
-    
-    // Add current prompt
-    buffer.writeln('User: $prompt');
-    buffer.writeln('Assistant:');
-    
-    return buffer.toString();
-  }
+  // /// Build context prompt for chat
+  // String _buildContextPrompt(String prompt, List<ChatMessage> history) {
+  //   final buffer = StringBuffer();
+  //   
+  //   // Add system context
+  //   buffer.writeln('You are a helpful AI assistant. Please respond to the user\'s message.');
+  //   buffer.writeln();
+  //   
+  //   // Add conversation history (limit to prevent context overflow)
+  //   final recentHistory = history.take(10).toList();
+  //   for (final message in recentHistory) {
+  //     if (message.isUser) {
+  //       buffer.writeln('User: ${message.content}');
+  //     } else if (message.isAssistant) {
+  //       buffer.writeln('Assistant: ${message.content}');
+  //     }
+  //   }
+  //   
+  //   // Add current prompt
+  //   buffer.writeln('User: $prompt');
+  //   buffer.writeln('Assistant:');
+  //   
+  //   return buffer.toString();
+  // }
 }
 
 /// Custom exception for llama_cpp_dart errors

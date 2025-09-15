@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 import 'package:ai_core/ai_core.dart';
 import 'package:google_generative_ai/google_generative_ai.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
@@ -157,7 +156,7 @@ class HybridAiService {
     }
 
     return {
-      'modelPath': _currentSession?.file?.path,
+      'modelPath': _currentSession?.file.path,
       'modelLevel': _currentSession?.level.name,
       'status': _status,
       'framework': 'Hybrid AI (Google AI + Local Fallback)',
@@ -198,34 +197,34 @@ class HybridAiService {
 
   /// Generate local fallback chat response
   String _generateLocalChatResponse(String prompt, List<ChatMessage> history, int maxTokens, double temperature) {
-    final context = _buildContextPrompt(prompt, history);
+    // final context = _buildContextPrompt(prompt, history);
     return 'Based on our conversation (${history.length} messages), I understand you\'re asking about "$prompt". This is a local AI response. For more detailed answers, please check your internet connection. (Local AI)';
   }
 
-  /// Build context prompt for chat
-  String _buildContextPrompt(String prompt, List<ChatMessage> history) {
-    final buffer = StringBuffer();
-    
-    // Add system context
-    buffer.writeln('You are a helpful AI assistant. Please respond to the user\'s message.');
-    buffer.writeln();
-    
-    // Add conversation history (limit to prevent context overflow)
-    final recentHistory = history.take(10).toList();
-    for (final message in recentHistory) {
-      if (message.isUser) {
-        buffer.writeln('User: ${message.content}');
-      } else if (message.isAssistant) {
-        buffer.writeln('Assistant: ${message.content}');
-      }
-    }
-    
-    // Add current prompt
-    buffer.writeln('User: $prompt');
-    buffer.writeln('Assistant:');
-    
-    return buffer.toString();
-  }
+  // /// Build context prompt for chat
+  // String _buildContextPrompt(String prompt, List<ChatMessage> history) {
+  //   final buffer = StringBuffer();
+  //   
+  //   // Add system context
+  //   buffer.writeln('You are a helpful AI assistant. Please respond to the user\'s message.');
+  //   buffer.writeln();
+  //   
+  //   // Add conversation history (limit to prevent context overflow)
+  //   final recentHistory = history.take(10).toList();
+  //   for (final message in recentHistory) {
+  //     if (message.isUser) {
+  //       buffer.writeln('User: ${message.content}');
+  //     } else if (message.isAssistant) {
+  //       buffer.writeln('Assistant: ${message.content}');
+  //     }
+  //   }
+  //   
+  //   // Add current prompt
+  //   buffer.writeln('User: $prompt');
+  //   buffer.writeln('Assistant:');
+  //   
+  //   return buffer.toString();
+  // }
 }
 
 /// Custom exception for Hybrid AI errors

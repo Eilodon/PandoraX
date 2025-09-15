@@ -1,8 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
-import 'package:archive/archive.dart';
-import 'package:crypto/crypto.dart';
 
 enum CompressionType { none, gzip, zstd, brotli }
 

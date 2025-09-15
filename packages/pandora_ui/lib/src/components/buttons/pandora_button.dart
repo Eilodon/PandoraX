@@ -1,10 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import '../../tokens/color_tokens.dart';
 import '../../tokens/typography_tokens.dart';
 import '../../tokens/spacing_tokens.dart';
 import '../../tokens/border_tokens.dart';
 import '../../tokens/shadow_tokens.dart';
 import '../../utils/pandora_extensions.dart';
+import '../../services/accessibility_service.dart';
+import '../../services/accessibility_colors.dart';
+import '../../services/focus_management_service.dart';
 
 /// Pandora 4 Button
 /// 
@@ -104,6 +108,14 @@ class PandoraButton extends StatefulWidget {
   final bool autofocus;
   final Clip clipBehavior;
   final ButtonStyle? style;
+  
+  // Accessibility properties
+  final String? accessibilityLabel;
+  final String? accessibilityHint;
+  final String? accessibilityValue;
+  final bool excludeSemantics = false;
+  final int? focusOrder;
+  final String? focusGroup;
 
   @override
   State<PandoraButton> createState() => _PandoraButtonState();

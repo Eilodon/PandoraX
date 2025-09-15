@@ -13,7 +13,7 @@ class ModelDownloadManager {
   final DeltaUpdateManager _deltaManager;
   final HealthMonitor _healthMonitor;
   final String _cacheDir;
-  final int _maxRetries;
+  // final int _maxRetries;
   final Duration _retryDelay;
 
   ModelDownloadManager({
@@ -29,7 +29,6 @@ class ModelDownloadManager {
        _deltaManager = deltaManager,
        _healthMonitor = healthMonitor,
        _cacheDir = cacheDir,
-       _maxRetries = maxRetries,
        _retryDelay = retryDelay;
 
   /// Download model with progress callback

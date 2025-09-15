@@ -554,7 +554,7 @@ class _PandoraTextFieldState extends State<PandoraTextField>
           cursorColor: widget.cursorColor ?? 
               (isDark ? PandoraColors.primary400 : PandoraColors.primary500),
           selectionColor: widget.selectionColor ?? 
-              (isDark ? PandoraColors.primary400.withOpacity(0.3) : PandoraColors.primary500.withOpacity(0.3)),
+              (isDark ? PandoraColors.primary400.withValues(alpha:(0.3) : PandoraColors.primary500.withValues(alpha:(0.3)),
           errorColor: widget.errorText != null ? 
               (isDark ? PandoraColors.error400 : PandoraColors.error500) : null,
           counterColor: isDark ? PandoraColors.neutral400 : PandoraColors.neutral600,
@@ -598,7 +598,7 @@ class _PandoraTextFieldState extends State<PandoraTextField>
           cursorColor: widget.cursorColor ?? 
               (isDark ? PandoraColors.primary400 : PandoraColors.primary500),
           selectionColor: widget.selectionColor ?? 
-              (isDark ? PandoraColors.primary400.withOpacity(0.3) : PandoraColors.primary500.withOpacity(0.3)),
+              (isDark ? PandoraColors.primary400.withValues(alpha:(0.3) : PandoraColors.primary500.withValues(alpha:(0.3)),
           errorColor: widget.errorText != null ? 
               (isDark ? PandoraColors.error400 : PandoraColors.error500) : null,
           counterColor: isDark ? PandoraColors.neutral400 : PandoraColors.neutral600,
@@ -643,7 +643,7 @@ class _PandoraTextFieldState extends State<PandoraTextField>
           cursorColor: widget.cursorColor ?? 
               (isDark ? PandoraColors.primary400 : PandoraColors.primary500),
           selectionColor: widget.selectionColor ?? 
-              (isDark ? PandoraColors.primary400.withOpacity(0.3) : PandoraColors.primary500.withOpacity(0.3)),
+              (isDark ? PandoraColors.primary400.withValues(alpha:(0.3) : PandoraColors.primary500.withValues(alpha:(0.3)),
           errorColor: widget.errorText != null ? 
               (isDark ? PandoraColors.error400 : PandoraColors.error500) : null,
           counterColor: isDark ? PandoraColors.neutral400 : PandoraColors.neutral600,

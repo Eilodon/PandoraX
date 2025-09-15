@@ -36,7 +36,7 @@ class PandoraHelpers {
 
   /// Create a color with opacity
   static Color colorWithOpacity(Color color, double opacity) {
-    return color.withOpacity(opacity);
+    return color.withValues(alpha: opacity);
   }
 
   /// Create a color with alpha

@@ -3,8 +3,6 @@ import 'dart:io';
 import 'dart:ffi';
 import 'dart:typed_data';
 import 'package:ai_core/ai_core.dart';
-import 'package:ffi/ffi.dart';
-import 'package:path/path.dart' as path;
 
 /// ONNX Runtime FFI Service for real on-device AI inference
 class OnnxFfiService {
@@ -20,7 +18,7 @@ class OnnxFfiService {
   // Model configuration
   static const int _maxSequenceLength = 128;
   static const int _vocabSize = 10000;
-  static const int _embeddingDim = 256;
+  // static const int _embeddingDim = 256;
 
   bool get isInitialized => _isInitialized;
   String get status => _status;
@@ -32,7 +30,7 @@ class OnnxFfiService {
       _status = 'Initializing ONNX Runtime FFI...';
       
       // Check if model file exists
-      if (session.file == null || !await session.file!.exists()) {
+      if (session.file == null || !await session.file.exists()) {
         _status = 'Model file not found - using built-in model';
         return await _initializeBuiltInModel();
       }
@@ -43,7 +41,7 @@ class OnnxFfiService {
       // Try to load ONNX Runtime library
       try {
         await _loadOnnxLibrary();
-        await _loadOnnxModel(session.file!.path);
+        await _loadOnnxModel(session.file.path);
         
         _isInitialized = true;
         _status = 'Ready (ONNX Runtime FFI)';
@@ -169,7 +167,7 @@ class OnnxFfiService {
       final tokens = _tokenizeText(prompt);
       
       // Prepare input tensor
-      final inputData = _prepareInputTensor(tokens);
+      // final inputData = _prepareInputTensor(tokens);
       
       // Run ONNX inference
       // In a real implementation, you would:
@@ -206,7 +204,7 @@ class OnnxFfiService {
     final lowerPrompt = prompt.toLowerCase();
     
     // High temperature = more creative responses
-    final creativity = temperature > 0.8 ? 'creative' : 'practical';
+    // final creativity = temperature > 0.8 ? 'creative' : 'practical';
     
     if (lowerPrompt.contains('hello') || lowerPrompt.contains('hi')) {
       return 'Hello! I\'m your on-device AI assistant powered by ONNX Runtime. How can I help you today? (On-device inference)';
@@ -274,7 +272,7 @@ class OnnxFfiService {
     }
 
     return {
-      'modelPath': _currentSession?.file?.path ?? 'Built-in model',
+      'modelPath': _currentSession?.file.path ?? 'Built-in model',
       'modelLevel': _currentSession?.level.name ?? 'Built-in',
       'status': _status,
       'framework': 'ONNX Runtime FFI On-Device',

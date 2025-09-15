@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:crypto/crypto.dart';
 import 'package:flutter/foundation.dart';
@@ -88,14 +87,13 @@ abstract class DownloadClient {
 
 class FlutterDownloadClient implements DownloadClient {
   final http.Client _client;
-  final Duration _timeout;
+  // final Duration _timeout;
   final Map<String, List<Source>> _sourceCache = {};
 
   FlutterDownloadClient({
     http.Client? client,
     Duration? timeout,
-  }) : _client = client ?? http.Client(),
-       _timeout = timeout ?? const Duration(seconds: 15);
+  }) : _client = client ?? http.Client();
 
   @override
   Future<DownloadResult> get(Source source, {int? rangeStart, int timeoutMs = 15000}) async {

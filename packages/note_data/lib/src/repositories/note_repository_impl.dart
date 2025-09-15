@@ -4,7 +4,6 @@ import 'package:note_domain/note_domain.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:injectable/injectable.dart';
 import 'package:isar/isar.dart';
-import 'package:rxdart/rxdart.dart';
 
 @Injectable(as: NoteRepository)
 class NoteRepositoryImpl implements NoteRepository {

@@ -11,7 +11,7 @@ import '../tokens/shadow_tokens.dart';
 /// throughout the application following "Thân Tâm Hợp Nhất" philosophy.
 extension PandoraColorExtensions on Color {
   /// Get color with opacity
-  Color withPandoraOpacity(double opacity) => withOpacity(opacity);
+  Color withPandoraOpacity(double opacity) => withValues(alpha: opacity);
 
   /// Get color with alpha
   Color withPandoraAlpha(int alpha) => withAlpha(alpha);

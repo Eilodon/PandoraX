@@ -6,10 +6,14 @@ import 'package:firebase_core/firebase_core.dart';
 // Dependency Injection
 import 'injection.dart';
 
+// Monitoring Services
+import 'services/monitoring_service.dart';
+
 // Features
 import 'features/notes/presentation/notes_list_screen.dart';
 import 'features/ai/presentation/ai_chat_screen.dart';
 import 'features/speech_recognition/presentation/voice_recording_screen.dart';
+import 'features/monitoring/presentation/screens/monitoring_dashboard_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -24,6 +28,9 @@ void main() async {
       storageBucket: 'pandora-notes-demo.appspot.com',
     ),
   );
+  
+  // Initialize Monitoring Services
+  await MonitoringService().initialize();
   
   await configureDependencies();
   runApp(const ProviderScope(child: MyApp()));
@@ -51,6 +58,7 @@ class MyApp extends StatelessWidget {
         '/notes': (context) => const NotesListScreen(),
         '/ai-chat': (context) => const AiChatScreen(),
         '/voice': (context) => const VoiceRecordingScreen(),
+        '/monitoring': (context) => const MonitoringDashboardScreen(),
       },
     );
   }
@@ -70,12 +78,14 @@ class _PandoraHomeScreenState extends State<PandoraHomeScreen> {
     const NotesListScreen(),
     const AiChatScreen(),
     const VoiceRecordingScreen(),
+    const MonitoringDashboardScreen(),
   ];
 
   final List<String> _titles = [
     'Notes',
     'AI Chat',
     'Voice Commands',
+    'Monitoring',
   ];
 
   @override
@@ -116,6 +126,11 @@ class _PandoraHomeScreenState extends State<PandoraHomeScreen> {
             icon: Icon(Icons.mic),
             selectedIcon: Icon(Icons.mic),
             label: 'Voice',
+          ),
+          NavigationDestination(
+            icon: Icon(Icons.monitor),
+            selectedIcon: Icon(Icons.monitor),
+            label: 'Monitoring',
           ),
         ],
       ),

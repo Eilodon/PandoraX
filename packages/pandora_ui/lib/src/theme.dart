@@ -118,14 +118,14 @@ ThemeData createPandoraTheme() {
       ),
       labelStyle: PTokens.typography.label,
       hintStyle: PTokens.typography.body.copyWith(
-        color: AppColors.onSurfaceVariant.withOpacity(0.6),
+        color: AppColors.onSurfaceVariant.withValues(alpha: 0.6),
       ),
     ),
     // Chip Theme
     chipTheme: ChipThemeData(
       backgroundColor: AppColors.surface,
-      selectedColor: AppColors.primary.withOpacity(0.2),
-      disabledColor: AppColors.onSurfaceVariant.withOpacity(PTokens.opacity.disabled),
+      selectedColor: AppColors.primary.withValues(alpha: 0.2),
+      disabledColor: AppColors.onSurfaceVariant.withValues(alpha: PTokens.opacity.disabled),
       labelStyle: PTokens.typography.label,
       shape: RoundedRectangleBorder(
         borderRadius: PTokens.radius.chip,
@@ -192,28 +192,28 @@ ThemeData createPandoraTheme() {
     ),
     // Switch Theme
     switchTheme: SwitchThemeData(
-      thumbColor: MaterialStateProperty.resolveWith((states) {
-        if (states.contains(MaterialState.selected)) {
+      thumbColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
           return AppColors.primary;
         }
         return AppColors.onSurfaceVariant;
       }),
-      trackColor: MaterialStateProperty.resolveWith((states) {
-        if (states.contains(MaterialState.selected)) {
-          return AppColors.primary.withOpacity(0.5);
+      trackColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
+          return AppColors.primary.withValues(alpha: 0.5);
         }
-        return AppColors.onSurfaceVariant.withOpacity(0.3);
+        return AppColors.onSurfaceVariant.withValues(alpha: 0.3);
       }),
     ),
     // Checkbox Theme
     checkboxTheme: CheckboxThemeData(
-      fillColor: MaterialStateProperty.resolveWith((states) {
-        if (states.contains(MaterialState.selected)) {
+      fillColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
           return AppColors.primary;
         }
         return Colors.transparent;
       }),
-      checkColor: MaterialStateProperty.all(AppColors.onPrimary),
+      checkColor: WidgetStateProperty.all(AppColors.onPrimary),
       side: const BorderSide(color: AppColors.onSurfaceVariant),
       shape: RoundedRectangleBorder(
         borderRadius: PTokens.radius.chip,
@@ -221,8 +221,8 @@ ThemeData createPandoraTheme() {
     ),
     // Radio Theme
     radioTheme: RadioThemeData(
-      fillColor: MaterialStateProperty.resolveWith((states) {
-        if (states.contains(MaterialState.selected)) {
+      fillColor: WidgetStateProperty.resolveWith((states) {
+        if (states.contains(WidgetState.selected)) {
           return AppColors.primary;
         }
         return AppColors.onSurfaceVariant;
@@ -231,9 +231,9 @@ ThemeData createPandoraTheme() {
     // Slider Theme
     sliderTheme: SliderThemeData(
       activeTrackColor: AppColors.primary,
-      inactiveTrackColor: AppColors.onSurfaceVariant.withOpacity(0.3),
+      inactiveTrackColor: AppColors.onSurfaceVariant.withValues(alpha: 0.3),
       thumbColor: AppColors.primary,
-      overlayColor: AppColors.primary.withOpacity(0.2),
+      overlayColor: AppColors.primary.withValues(alpha: 0.2),
       valueIndicatorColor: AppColors.primary,
       valueIndicatorTextStyle: PTokens.typography.label,
     ),

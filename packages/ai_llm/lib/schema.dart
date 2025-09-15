@@ -1,5 +1,4 @@
 import 'package:isar/isar.dart';
-import 'src/models/model_cache_entry.dart';
 
 part 'schema.g.dart';
 
