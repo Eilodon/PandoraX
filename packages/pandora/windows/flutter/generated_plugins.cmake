@@ -3,10 +3,12 @@
 #
 
 list(APPEND FLUTTER_PLUGIN_LIST
+  audioplayers_windows
   cloud_firestore
   connectivity_plus
   firebase_core
   flutter_secure_storage_windows
+  flutter_tts
   isar_flutter_libs
   permission_handler_windows
   speech_to_text_windows

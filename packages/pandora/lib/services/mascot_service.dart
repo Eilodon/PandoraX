@@ -11,6 +11,9 @@ class MascotState {
   final String? currentMessage;
   final int interactionCount;
   final DateTime lastInteraction;
+  final bool isSleeping;
+  final Duration idleTime;
+  final int missedDeadlines;
 
   const MascotState({
     this.mood = MascotMood.neutral,
@@ -19,6 +22,9 @@ class MascotState {
     this.currentMessage,
     this.interactionCount = 0,
     required this.lastInteraction,
+    this.isSleeping = false,
+    this.idleTime = Duration.zero,
+    this.missedDeadlines = 0,
   });
 
   MascotState copyWith({
@@ -28,6 +34,9 @@ class MascotState {
     String? currentMessage,
     int? interactionCount,
     DateTime? lastInteraction,
+    bool? isSleeping,
+    Duration? idleTime,
+    int? missedDeadlines,
   }) {
     return MascotState(
       mood: mood ?? this.mood,
@@ -36,6 +45,9 @@ class MascotState {
       currentMessage: currentMessage ?? this.currentMessage,
       interactionCount: interactionCount ?? this.interactionCount,
       lastInteraction: lastInteraction ?? this.lastInteraction,
+      isSleeping: isSleeping ?? this.isSleeping,
+      idleTime: idleTime ?? this.idleTime,
+      missedDeadlines: missedDeadlines ?? this.missedDeadlines,
     );
   }
 }
@@ -46,15 +58,25 @@ class MascotState {
 class MascotService extends StateNotifier<MascotState> {
   MascotService() : super(MascotState(lastInteraction: DateTime.now())) {
     _startIdleAnimation();
+    _startIdleTimer();
   }
 
   Timer? _idleTimer;
+  Timer? _sleepTimer;
   final Random _random = Random();
 
   void _startIdleAnimation() {
     _idleTimer = Timer.periodic(const Duration(seconds: 10), (_) {
       if (mounted) {
         _performIdleAction();
+      }
+    });
+  }
+
+  void _startIdleTimer() {
+    _sleepTimer = Timer.periodic(const Duration(seconds: 1), (_) {
+      if (mounted) {
+        _updateIdleTime();
       }
     });
   }
@@ -73,11 +95,57 @@ class MascotService extends StateNotifier<MascotState> {
     );
   }
 
+  void _updateIdleTime() {
+    final now = DateTime.now();
+    final idleDuration = now.difference(state.lastInteraction);
+    
+    state = state.copyWith(idleTime: idleDuration);
+    
+    // If idle for more than 5 minutes, go to sleep
+    if (idleDuration.inMinutes > 5 && !state.isSleeping) {
+      _goToSleep();
+    }
+  }
+
+  void _goToSleep() {
+    state = state.copyWith(
+      mood: MascotMood.sleeping,
+      currentAnimation: MascotAnimation.sleep,
+      currentMessage: "Zzz... I'm taking a nap. Wake me up when you're ready!",
+      isSleeping: true,
+    );
+  }
+
+  void _wakeUp() {
+    state = state.copyWith(
+      mood: MascotMood.welcoming,
+      currentAnimation: MascotAnimation.wake,
+      currentMessage: "Good to see you again! Let's get back to work!",
+      isSleeping: false,
+      lastInteraction: DateTime.now(),
+    );
+  }
+
   /// Handle user actions
   void handleUserAction(UserAction action) {
     final now = DateTime.now();
     
+    // Wake up if sleeping
+    if (state.isSleeping) {
+      _wakeUp();
+    }
+    
     switch (action) {
+      case UserAction.openApp:
+        state = state.copyWith(
+          mood: MascotMood.welcoming,
+          currentAnimation: MascotAnimation.wave,
+          currentMessage: "Welcome back! I missed you! 👋",
+          interactionCount: state.interactionCount + 1,
+          lastInteraction: now,
+        );
+        break;
+        
       case UserAction.createNote:
         state = state.copyWith(
           mood: MascotMood.happy,
@@ -90,9 +158,9 @@ class MascotService extends StateNotifier<MascotState> {
         
       case UserAction.completeTask:
         state = state.copyWith(
-          mood: MascotMood.proud,
-          currentAnimation: MascotAnimation.bounce,
-          currentMessage: "Well done! You're doing great!",
+          mood: MascotMood.celebrating,
+          currentAnimation: MascotAnimation.celebration,
+          currentMessage: "🎉 Amazing! You did it! I'm so proud of you! 🎉",
           interactionCount: state.interactionCount + 1,
           lastInteraction: now,
         );
@@ -128,6 +196,30 @@ class MascotService extends StateNotifier<MascotState> {
         );
         break;
         
+      case UserAction.missDeadline:
+        state = state.copyWith(
+          mood: MascotMood.disappointed,
+          currentAnimation: MascotAnimation.sad,
+          currentMessage: "😔 Oh no... We missed the deadline. But don't worry, we can do better next time!",
+          interactionCount: state.interactionCount + 1,
+          lastInteraction: now,
+          missedDeadlines: state.missedDeadlines + 1,
+        );
+        break;
+        
+      case UserAction.longIdle:
+        state = state.copyWith(
+          mood: MascotMood.idle,
+          currentAnimation: MascotAnimation.idle,
+          currentMessage: "Hey there! I'm here if you need me. What should we work on?",
+          lastInteraction: now,
+        );
+        break;
+        
+      case UserAction.directTouch:
+        _handleDirectTouch();
+        break;
+        
       case UserAction.idle:
       default:
         state = state.copyWith(
@@ -140,19 +232,38 @@ class MascotService extends StateNotifier<MascotState> {
     }
   }
 
+  void _handleDirectTouch() {
+    final now = DateTime.now();
+    final randomActions = [
+      (MascotMood.playful, MascotAnimation.bounce, "That tickles! 😄"),
+      (MascotMood.happy, MascotAnimation.jump, "Hi there! Nice to see you! 👋"),
+      (MascotMood.excited, MascotAnimation.spin, "Wheee! You're so fun! 🎉"),
+      (MascotMood.playful, MascotAnimation.wave, "Hello! Want to play? 🎮"),
+      (MascotMood.happy, MascotAnimation.random, "You make me so happy! 😊"),
+    ];
+    
+    final randomAction = randomActions[_random.nextInt(randomActions.length)];
+    state = state.copyWith(
+      mood: randomAction.$1,
+      currentAnimation: randomAction.$2,
+      currentMessage: randomAction.$3,
+      interactionCount: state.interactionCount + 1,
+      lastInteraction: now,
+    );
+  }
+
   /// Handle direct interactions
   void handleInteraction(MascotInteraction interaction) {
     final now = DateTime.now();
     
+    // Wake up if sleeping
+    if (state.isSleeping) {
+      _wakeUp();
+    }
+    
     switch (interaction) {
       case MascotInteraction.tap:
-        state = state.copyWith(
-          mood: MascotMood.happy,
-          currentAnimation: MascotAnimation.bounce,
-          currentMessage: "Hello there!",
-          interactionCount: state.interactionCount + 1,
-          lastInteraction: now,
-        );
+        _handleDirectTouch();
         break;
         
       case MascotInteraction.longPress:
@@ -250,6 +361,7 @@ class MascotService extends StateNotifier<MascotState> {
   @override
   void dispose() {
     _idleTimer?.cancel();
+    _sleepTimer?.cancel();
     super.dispose();
   }
 }

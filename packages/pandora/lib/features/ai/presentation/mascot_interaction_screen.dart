@@ -250,6 +250,18 @@ class _MascotInteractionScreenState extends ConsumerState<MascotInteractionScree
         return PandoraColors.error700;
       case MascotMood.thinking:
         return PandoraColors.info600;
+      case MascotMood.welcoming:
+        return PandoraColors.primary500;
+      case MascotMood.celebrating:
+        return PandoraColors.success500;
+      case MascotMood.sleeping:
+        return PandoraColors.neutral500;
+      case MascotMood.idle:
+        return PandoraColors.neutral400;
+      case MascotMood.disappointed:
+        return PandoraColors.error500;
+      case MascotMood.playful:
+        return PandoraColors.secondary500;
     }
   }
 }

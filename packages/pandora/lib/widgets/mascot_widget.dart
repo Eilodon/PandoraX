@@ -140,6 +140,24 @@ class MascotWidget extends ConsumerWidget {
       case MascotMood.sad:
         iconData = Icons.sentiment_dissatisfied;
         break;
+      case MascotMood.welcoming:
+        iconData = Icons.waving_hand;
+        break;
+      case MascotMood.celebrating:
+        iconData = Icons.celebration;
+        break;
+      case MascotMood.sleeping:
+        iconData = Icons.bedtime;
+        break;
+      case MascotMood.idle:
+        iconData = Icons.sentiment_neutral;
+        break;
+      case MascotMood.disappointed:
+        iconData = Icons.sentiment_dissatisfied;
+        break;
+      case MascotMood.playful:
+        iconData = Icons.sports_esports;
+        break;
       case MascotMood.neutral:
       default:
         iconData = Icons.sentiment_neutral;
@@ -173,6 +191,18 @@ class MascotWidget extends ConsumerWidget {
         return PandoraColors.primary500;
       case MascotMood.sad:
         return PandoraColors.error700;
+      case MascotMood.welcoming:
+        return PandoraColors.success400;
+      case MascotMood.celebrating:
+        return PandoraColors.warning400;
+      case MascotMood.sleeping:
+        return PandoraColors.neutral600;
+      case MascotMood.idle:
+        return PandoraColors.neutral400;
+      case MascotMood.disappointed:
+        return PandoraColors.error600;
+      case MascotMood.playful:
+        return PandoraColors.primary400;
       case MascotMood.neutral:
       default:
         return PandoraColors.primary400;
