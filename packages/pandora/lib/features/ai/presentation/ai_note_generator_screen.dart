@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pandora_ui/pandora_ui.dart';
 import '../application/ai_enhanced_service.dart';
-import '../../../widgets/mascot_widget.dart';
 import '../../../services/mascot_service.dart';
 import '../../../services/mascot_enums.dart';
 

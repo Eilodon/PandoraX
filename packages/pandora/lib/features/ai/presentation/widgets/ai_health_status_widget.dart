@@ -1,226 +1,131 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../domain/health_status.dart';
 
-/// Health Status enum for AI system
-enum HealthStatus {
-  healthy,
-  warning,
-  critical,
-  offline,
-}
-
-/// Health Sample class for AI system
-class HealthSample {
-  final DateTime timestamp;
-  final double value;
-  final String metric;
-  
-  const HealthSample({
-    required this.timestamp,
-    required this.value,
-    required this.metric,
-  });
-}
-
-/// AI Health Status Widget for displaying AI system health
 class AIHealthStatusWidget extends ConsumerWidget {
-  final bool showDetails;
-  final VoidCallback? onTap;
+  final HealthStatus healthStatus;
+  final VoidCallback? onRefresh;
 
   const AIHealthStatusWidget({
     super.key,
-    this.showDetails = false,
-    this.onTap,
+    required this.healthStatus,
+    this.onRefresh,
   });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final healthStatus = ref.watch(aiHealthStatusProvider);
-    final healthReport = ref.watch(aiHealthReportProvider);
-
-    if (showDetails) {
-      return _buildDetailedHealthStatus(healthStatus, healthReport, context);
-    } else {
-      return _buildCompactHealthStatus(healthStatus, context);
-    }
-  }
-
-  Widget _buildCompactHealthStatus(HealthStatus healthStatus, BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-        decoration: BoxDecoration(
-          color: _getHealthColor(healthStatus.isHealthy).withValues(alpha: 0.1),
-          borderRadius: BorderRadius.circular(16),
-          border: Border.all(
-            color: _getHealthColor(healthStatus.isHealthy),
-            width: 1,
-          ),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Icon(
-              _getHealthIcon(healthStatus.isHealthy),
-              size: 16,
-              color: _getHealthColor(healthStatus.isHealthy),
-            ),
-            const SizedBox(width: 6),
-            Text(
-              _getHealthText(healthStatus.isHealthy),
-              style: TextStyle(
-                fontSize: 12,
-                fontWeight: FontWeight.w500,
-                color: _getHealthColor(healthStatus.isHealthy),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildDetailedHealthStatus(
-    HealthStatus healthStatus,
-    HealthReport healthReport,
-    BuildContext context,
-  ) {
     return Card(
+      margin: const EdgeInsets.all(16),
       child: Padding(
         padding: const EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _buildHealthHeader(healthStatus, context),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  'AI Health Status',
+                  style: Theme.of(context).textTheme.headlineSmall,
+                ),
+                if (onRefresh != null)
+                  IconButton(
+                    onPressed: onRefresh,
+                    icon: const Icon(Icons.refresh),
+                  ),
+              ],
+            ),
             const SizedBox(height: 16),
-            _buildHealthMetrics(healthStatus, context),
+            _buildStatusIndicator(context),
             const SizedBox(height: 16),
-            _buildPerformanceTrend(healthReport, context),
-            if (healthReport.recommendations.isNotEmpty) ...[
-              const SizedBox(height: 16),
-              _buildRecommendations(healthReport, context),
-            ],
-            if (healthReport.recentErrors.isNotEmpty) ...[
-              const SizedBox(height: 16),
-              _buildRecentErrors(healthReport, context),
-            ],
+            _buildMetrics(context),
+            const SizedBox(height: 16),
+            _buildRecommendations(context),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildHealthHeader(HealthStatus healthStatus, BuildContext context) {
+  Widget _buildStatusIndicator(BuildContext context) {
+    final isHealthy = healthStatus.isHealthy;
+    final color = isHealthy ? Colors.green : Colors.red;
+    final icon = isHealthy ? Icons.check_circle : Icons.error;
+    
     return Row(
       children: [
-        Icon(
-          _getHealthIcon(healthStatus.isHealthy),
-          color: _getHealthColor(healthStatus.isHealthy),
-          size: 24,
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                _getHealthText(healthStatus.isHealthy),
-                style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  color: _getHealthColor(healthStatus.isHealthy),
-                ),
-              ),
-              Text(
-                healthStatus.recommendation,
-                style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: Colors.grey[600],
-                ),
-              ),
-            ],
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildHealthMetrics(HealthStatus healthStatus, BuildContext context) {
-    return Row(
-      children: [
-        Expanded(
-          child: _buildMetricCard(
-            'Success Rate',
-            '${(healthStatus.successRate * 100).toStringAsFixed(1)}%',
-            _getSuccessRateColor(healthStatus.successRate),
-            context,
-          ),
-        ),
-        const SizedBox(width: 12),
-        Expanded(
-          child: _buildMetricCard(
-            'Avg Latency',
-            '${healthStatus.averageLatencyMs}ms',
-            _getLatencyColor(healthStatus.averageLatencyMs),
-            context,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildMetricCard(String label, String value, Color color, BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(12),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.1),
-        borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withValues(alpha: 0.3)),
-      ),
-      child: Column(
-        children: [
-          Text(
-            value,
-            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-              fontWeight: FontWeight.bold,
-              color: color,
-            ),
-          ),
-          const SizedBox(height: 4),
-          Text(
-            label,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Colors.grey[600],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildPerformanceTrend(HealthReport healthReport, BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
+        Icon(icon, color: color, size: 24),
+        const SizedBox(width: 8),
         Text(
-          'Performance Trend',
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
+          isHealthy ? 'Healthy' : 'Issues Detected',
+          style: TextStyle(
+            color: color,
             fontWeight: FontWeight.bold,
+            fontSize: 16,
           ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMetrics(BuildContext context) {
+    return Column(
+      children: [
+        _buildMetricRow(
+          context,
+          'Success Rate',
+          '${(healthStatus.successRate * 100).toStringAsFixed(1)}%',
+          healthStatus.successRate,
         ),
         const SizedBox(height: 8),
+        _buildMetricRow(
+          context,
+          'Average Latency',
+          '${healthStatus.averageLatencyMs}ms',
+          _getLatencyScore(healthStatus.averageLatencyMs),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMetricRow(
+    BuildContext context,
+    String label,
+    String value,
+    double score,
+  ) {
+    final color = _getScoreColor(score);
+    
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Text(label),
         Row(
           children: [
-            Icon(
-              _getTrendIcon(healthReport.trend),
-              color: _getTrendColor(healthReport.trend),
-              size: 20,
+            Container(
+              width: 100,
+              height: 8,
+              decoration: BoxDecoration(
+                color: Colors.grey[300],
+                borderRadius: BorderRadius.circular(4),
+              ),
+              child: FractionallySizedBox(
+                alignment: Alignment.centerLeft,
+                widthFactor: score,
+                child: Container(
+                  decoration: BoxDecoration(
+                    color: color,
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                ),
+              ),
             ),
             const SizedBox(width: 8),
             Text(
-              _getTrendText(healthReport.trend),
-              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: _getTrendColor(healthReport.trend),
-                fontWeight: FontWeight.w500,
+              value,
+              style: TextStyle(
+                color: color,
+                fontWeight: FontWeight.bold,
               ),
             ),
           ],
@@ -229,206 +134,115 @@ class AIHealthStatusWidget extends ConsumerWidget {
     );
   }
 
-  Widget _buildRecommendations(HealthReport healthReport, BuildContext context) {
+  Widget _buildRecommendations(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           'Recommendations',
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.bold,
-          ),
+          style: Theme.of(context).textTheme.titleMedium,
         ),
         const SizedBox(height: 8),
-        ...healthReport.recommendations.map((recommendation) => 
-          _buildRecommendationItem(recommendation, context)
-        ),
-      ],
-    );
-  }
-
-  Widget _buildRecommendationItem(String recommendation, BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
-      child: Row(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Icon(
-            Icons.lightbulb_outline,
-            size: 16,
-            color: Colors.amber[600],
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              recommendation,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.grey[700],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildRecentErrors(HealthReport healthReport, BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
         Text(
-          'Recent Errors',
-          style: Theme.of(context).textTheme.titleSmall?.copyWith(
-            fontWeight: FontWeight.bold,
-            color: Colors.red[600],
-          ),
-        ),
-        const SizedBox(height: 8),
-        ...healthReport.recentErrors.take(3).map((error) => 
-          _buildErrorItem(error, context)
+          healthStatus.recommendation,
+          style: Theme.of(context).textTheme.bodyMedium,
         ),
       ],
     );
   }
 
-  Widget _buildErrorItem(HealthSample error, BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 2),
-      child: Row(
-        children: [
-          Icon(
-            Icons.error_outline,
-            size: 16,
-            color: Colors.red[600],
-          ),
-          const SizedBox(width: 8),
-          Expanded(
-            child: Text(
-              error.error ?? 'Unknown error',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: Colors.red[600],
-              ),
-            ),
-          ),
-          Text(
-            _formatTimestamp(error.timestamp),
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-              color: Colors.grey[500],
-            ),
-          ),
-        ],
-      ),
-    );
+  double _getLatencyScore(int latencyMs) {
+    if (latencyMs < 100) return 1.0;
+    if (latencyMs < 500) return 0.8;
+    if (latencyMs < 1000) return 0.6;
+    if (latencyMs < 2000) return 0.4;
+    return 0.2;
   }
 
-  Color _getHealthColor(bool isHealthy) {
-    return isHealthy ? Colors.green : Colors.red;
-  }
-
-  IconData _getHealthIcon(bool isHealthy) {
-    return isHealthy ? Icons.check_circle : Icons.error;
-  }
-
-  String _getHealthText(bool isHealthy) {
-    return isHealthy ? 'Healthy' : 'Issues Detected';
-  }
-
-  Color _getSuccessRateColor(double successRate) {
-    if (successRate >= 0.9) return Colors.green;
-    if (successRate >= 0.7) return Colors.orange;
+  Color _getScoreColor(double score) {
+    if (score >= 0.8) return Colors.green;
+    if (score >= 0.6) return Colors.orange;
     return Colors.red;
-  }
-
-  Color _getLatencyColor(int latencyMs) {
-    if (latencyMs <= 1000) return Colors.green;
-    if (latencyMs <= 3000) return Colors.orange;
-    return Colors.red;
-  }
-
-  IconData _getTrendIcon(PerformanceTrend trend) {
-    switch (trend) {
-      case PerformanceTrend.improving:
-        return Icons.trending_up;
-      case PerformanceTrend.declining:
-        return Icons.trending_down;
-      case PerformanceTrend.speeding:
-        return Icons.speed;
-      case PerformanceTrend.slowing:
-        return Icons.slow_motion_video;
-      case PerformanceTrend.stable:
-        return Icons.trending_flat;
-    }
-  }
-
-  Color _getTrendColor(PerformanceTrend trend) {
-    switch (trend) {
-      case PerformanceTrend.improving:
-      case PerformanceTrend.speeding:
-        return Colors.green;
-      case PerformanceTrend.declining:
-      case PerformanceTrend.slowing:
-        return Colors.red;
-      case PerformanceTrend.stable:
-        return Colors.blue;
-    }
-  }
-
-  String _getTrendText(PerformanceTrend trend) {
-    switch (trend) {
-      case PerformanceTrend.improving:
-        return 'Performance is improving';
-      case PerformanceTrend.declining:
-        return 'Performance is declining';
-      case PerformanceTrend.speeding:
-        return 'Response times are improving';
-      case PerformanceTrend.slowing:
-        return 'Response times are increasing';
-      case PerformanceTrend.stable:
-        return 'Performance is stable';
-    }
-  }
-
-  String _formatTimestamp(DateTime timestamp) {
-    final now = DateTime.now();
-    final difference = now.difference(timestamp);
-
-    if (difference.inMinutes < 1) {
-      return 'Just now';
-    } else if (difference.inHours < 1) {
-      return '${difference.inMinutes}m ago';
-    } else if (difference.inDays < 1) {
-      return '${difference.inHours}h ago';
-    } else {
-      return '${difference.inDays}d ago';
-    }
   }
 }
 
-/// Health Status Provider
-final aiHealthStatusProvider = StateProvider<HealthStatus>((ref) {
-  return const HealthStatus(
-    isHealthy: true,
-    successRate: 0.95,
-    averageLatencyMs: 150,
-    recommendation: 'All systems optimal',
-  );
-});
+class HealthReportWidget extends StatelessWidget {
+  final HealthReport report;
 
-/// Health Report Provider
-final aiHealthReportProvider = Provider<HealthReport>((ref) {
-  return HealthReport(
-    snapshot: const HealthSnapshot(
-      successRate: 0.95,
-      p50LatencyMs: 150,
-      p95LatencyMs: 300,
-      totalSamples: 100,
-      isHealthy: true,
-    ),
-    trend: PerformanceTrend.stable,
-    recentErrors: [],
-    recommendations: [
-      'Performance is stable',
-      'No immediate action needed',
-    ],
-  );
-});
+  const HealthReportWidget({
+    super.key,
+    required this.report,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Card(
+      margin: const EdgeInsets.all(16),
+      child: Padding(
+        padding: const EdgeInsets.all(16),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Health Report',
+              style: Theme.of(context).textTheme.headlineSmall,
+            ),
+            const SizedBox(height: 16),
+            AIHealthStatusWidget(healthStatus: report.status),
+            const SizedBox(height: 16),
+            _buildTrendIndicator(context),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTrendIndicator(BuildContext context) {
+    return Row(
+      children: [
+        Icon(
+          _getTrendIcon(report.trend),
+          color: _getTrendColor(report.trend),
+        ),
+        const SizedBox(width: 8),
+        Text(
+          'Trend: ${_getTrendText(report.trend)}',
+          style: TextStyle(
+            color: _getTrendColor(report.trend),
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      ],
+    );
+  }
+
+  IconData _getTrendIcon(PerformanceTrend trend) {
+    return trend.when(
+      improving: () => Icons.trending_up,
+      stable: () => Icons.trending_flat,
+      declining: () => Icons.trending_down,
+      volatile: () => Icons.trending_up,
+      unknown: () => Icons.help_outline,
+    );
+  }
+
+  Color _getTrendColor(PerformanceTrend trend) {
+    return trend.when(
+      improving: () => Colors.green,
+      stable: () => Colors.blue,
+      declining: () => Colors.red,
+      volatile: () => Colors.orange,
+      unknown: () => Colors.grey,
+    );
+  }
+
+  String _getTrendText(PerformanceTrend trend) {
+    return trend.when(
+      improving: () => 'Improving',
+      stable: () => 'Stable',
+      declining: () => 'Declining',
+      volatile: () => 'Volatile',
+      unknown: () => 'Unknown',
+    );
+  }
+}

@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ai_core/ai_core.dart';
-import 'package:ai_llm/src/services/progressive_model_service.dart';
-import 'package:ai_llm/src/services/device_capability_detector.dart';
+import 'package:ai_llm/src/services/progressive_model_service.dart' as progressive;
+import 'package:ai_llm/src/services/device_capability_detector.dart' as detector;
 import '../widgets/model_download_card.dart';
 import '../widgets/download_progress_widget.dart';
 
@@ -19,8 +19,9 @@ class _ModelDownloadScreenState extends ConsumerState<ModelDownloadScreen> {
   void initState() {
     super.initState();
     // Initialize device capability detection
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(deviceCapabilityProvider.notifier).refreshCapability();
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      final capability = await detector.DeviceCapabilityDetector().detectCapability();
+      ref.read(deviceCapabilityProvider.notifier).state = capability;
     });
   }
 
@@ -37,8 +38,9 @@ class _ModelDownloadScreenState extends ConsumerState<ModelDownloadScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh),
-            onPressed: () {
-              ref.read(deviceCapabilityProvider.notifier).refreshCapability();
+            onPressed: () async {
+              final capability = await detector.DeviceCapabilityDetector().detectCapability();
+              ref.read(deviceCapabilityProvider.notifier).state = capability;
             },
           ),
         ],
@@ -76,7 +78,7 @@ class _ModelDownloadScreenState extends ConsumerState<ModelDownloadScreen> {
     );
   }
 
-  Widget _buildDeviceCapabilityCard(DeviceCapability capability, BuildContext context) {
+  Widget _buildDeviceCapabilityCard(detector.DeviceCapability capability, BuildContext context) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -307,8 +309,12 @@ class _ModelDownloadScreenState extends ConsumerState<ModelDownloadScreen> {
 }
 
 /// Device Capability Provider
-final deviceCapabilityProvider = StateProvider<DeviceCapability>((ref) {
-  return const DeviceCapability(
+final deviceCapabilityProvider = StateProvider<detector.DeviceCapability>((ref) {
+  return const detector.DeviceCapability(
+    maxMemoryGB: 4,
+    availableStorageGB: 8,
+    processingPower: detector.ProcessingPower.medium,
+    supportedModels: [detector.ModelLevel.light, detector.ModelLevel.medium],
     ramGB: 4,
     storageGB: 8,
     cpuCores: 4,
@@ -318,7 +324,7 @@ final deviceCapabilityProvider = StateProvider<DeviceCapability>((ref) {
 });
 
 /// Selected Model Level Provider
-final selectedModelLevelProvider = StateProvider<ModelLevel?>((ref) {
+final selectedModelLevelProvider = StateProvider<detector.ModelLevel?>((ref) {
   return null;
 });
 

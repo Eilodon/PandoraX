@@ -279,6 +279,8 @@ class MemoryCard extends StatelessWidget {
         return Icons.people;
       case MemoryType.ai_generated:
         return Icons.smart_toy;
+      case MemoryType.system:
+        return Icons.settings;
     }
   }
 
@@ -298,6 +300,8 @@ class MemoryCard extends StatelessWidget {
         return Colors.teal;
       case MemoryType.ai_generated:
         return Colors.indigo;
+      case MemoryType.system:
+        return Colors.grey;
     }
   }
 
@@ -317,6 +321,8 @@ class MemoryCard extends StatelessWidget {
         return 'Social Memory';
       case MemoryType.ai_generated:
         return 'AI Generated Memory';
+      case MemoryType.system:
+        return 'System Memory';
     }
   }
 

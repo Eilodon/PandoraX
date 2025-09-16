@@ -130,7 +130,7 @@ class LivingMascotWidget extends ConsumerWidget {
         return MascotAnimations.error;
       case MascotMood.idle:
         return MascotAnimations.welcome;
-      default:
+      case MascotMood.neutral:
         return MascotAnimations.welcome;
     }
   }
@@ -140,9 +140,8 @@ class LivingMascotWidget extends ConsumerWidget {
       case MascotMood.sleeping:
       case MascotMood.thinking:
       case MascotMood.idle:
+      case MascotMood.neutral:
         return true;
-      default:
-        return false;
     }
   }
 

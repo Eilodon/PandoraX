@@ -375,7 +375,6 @@ class ThoughtBubbleWidget extends ConsumerWidget {
       case ThoughtBubbleType.reminder:
         return const Color(0xFF4CAF50); // Green
       case ThoughtBubbleType.normal:
-      default:
         return const Color(0xFFFFFFFF); // White
     }
   }
@@ -392,7 +391,6 @@ class ThoughtBubbleWidget extends ConsumerWidget {
       case ThoughtBubbleType.reminder:
         return const Color(0xFFFFFFFF); // White
       case ThoughtBubbleType.normal:
-      default:
         return const Color(0xFF333333); // Dark gray
     }
   }

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ai_llm/src/services/ai_router_service.dart';
 
 /// AI Mode Indicator widget that shows current AI mode and status
 class AIModeIndicator extends ConsumerWidget {

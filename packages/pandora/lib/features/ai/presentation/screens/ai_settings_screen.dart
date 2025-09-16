@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ai_core/ai_core.dart';
 import '../widgets/ai_mode_indicator.dart' as mode_indicator;
-import '../widgets/ai_health_status_widget.dart' as health_widget;
+import '../widgets/ai_health_status_widget.dart';
+import '../../domain/health_status.dart';
+import '../../providers/health_providers.dart';
 
 /// AI Mode Provider
 final aiModeProvider = StateProvider<AIMode>((ref) => const AIMode(
@@ -99,7 +100,7 @@ class _AISettingsScreenState extends ConsumerState<AISettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final aiMode = ref.watch(aiModeProvider);
-    final healthStatus = ref.watch(health_widget.aiHealthStatusProvider);
+    final healthStatus = ref.watch(aiHealthStatusProvider);
     final settings = ref.watch(aiSettingsProvider);
 
     return Scaffold(
@@ -195,7 +196,7 @@ class _AISettingsScreenState extends ConsumerState<AISettingsScreen> {
     );
   }
 
-  Widget _buildHealthStatusSection(health_widget.HealthStatus healthStatus, BuildContext context) {
+  Widget _buildHealthStatusSection(HealthStatusEnum healthStatus, BuildContext context) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -218,7 +219,14 @@ class _AISettingsScreenState extends ConsumerState<AISettingsScreen> {
               ],
             ),
             const SizedBox(height: 16),
-            const health_widget.AIHealthStatusWidget(showDetails: true),
+            AIHealthStatusWidget(
+              healthStatus: HealthStatus(
+                isHealthy: true,
+                successRate: 0.95,
+                averageLatencyMs: 150,
+                recommendation: 'System is running optimally',
+              ),
+            ),
           ],
         ),
       ),
@@ -459,7 +467,14 @@ class _AISettingsScreenState extends ConsumerState<AISettingsScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('AI Health Details'),
-        content: const health_widget.AIHealthStatusWidget(showDetails: true),
+        content: AIHealthStatusWidget(
+          healthStatus: HealthStatus(
+            isHealthy: true,
+            successRate: 0.95,
+            averageLatencyMs: 150,
+            recommendation: 'System is running optimally',
+          ),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

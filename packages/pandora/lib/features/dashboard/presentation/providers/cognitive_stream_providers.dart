@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cac_core/cac_core.dart';
-import 'package:ai_llm/ai_llm.dart';
 
 /// Memory Stream Provider
 /// 

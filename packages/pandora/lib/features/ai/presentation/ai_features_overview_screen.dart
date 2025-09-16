@@ -5,7 +5,6 @@ import 'ai_note_generator_screen.dart';
 import 'voice_commands_screen.dart';
 import 'mascot_interaction_screen.dart';
 import 'mascot_guide_screen.dart';
-import '../../../widgets/mascot_widget.dart';
 
 class AiFeaturesOverviewScreen extends ConsumerWidget {
   const AiFeaturesOverviewScreen({super.key});

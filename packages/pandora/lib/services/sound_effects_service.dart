@@ -398,8 +398,8 @@ class SoundSettingsWidget extends ConsumerWidget {
       icon: Icon(icon, size: 16),
       label: Text(label),
       style: ElevatedButton.styleFrom(
-        backgroundColor: PandoraColors.primary500,
-        foregroundColor: PandoraColors.white,
+        backgroundColor: PandoraColors.primary,
+        foregroundColor: PandoraColors.textPrimaryDark,
       ),
     );
   }

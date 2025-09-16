@@ -135,6 +135,9 @@ class MascotBehaviorController {
       case TaskEvent.missedDeadline:
         _ref.read(mascotTaskIntegrationProvider).onTaskCompleted(); // This will trigger missDeadline
         break;
+      case TaskEvent.updated:
+        _ref.read(mascotTaskIntegrationProvider).onTaskUpdated();
+        break;
     }
   }
 
@@ -146,6 +149,9 @@ class MascotBehaviorController {
         break;
       case AIEvent.error:
         _ref.read(mascotTaskIntegrationProvider).onError();
+        break;
+      case AIEvent.completed:
+        _ref.read(mascotTaskIntegrationProvider).onAICompleted();
         break;
     }
   }

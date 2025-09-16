@@ -4,6 +4,27 @@ packages:
   - packages/cac_core
   - packages/cac_data
   - packages/common_entities
+  - packages/performance_monitoring
+  - packages/mobile_optimization
+  - packages/realtime_processing
+  - packages/phase1_demo
+  - packages/advanced_ai_models
+  - packages/federated_learning
+  - packages/edge_computing
+  - packages/phase2_demo
+  - packages/multi_cloud_support
+  - packages/advanced_cloud_services
+  - packages/cost_optimization
+  - packages/phase3_demo
+  - packages/realtime_collaboration
+  - packages/advanced_federated_learning
+  - packages/complete_edge_computing
+  - packages/phase4_demo
+  - packages/production_optimization
+  - packages/security_hardening
+  - packages/monitoring_alerting
+  - packages/documentation_deployment
+  - packages/phase5_demo
 
 scripts:
   get:
@@ -77,3 +98,75 @@ scripts:
   version:major:
     run: melos version major --no-git-tag-version
     description: Bump major version for all packages.
+  phase1:demo:
+    run: |
+      cd packages/phase1_demo
+      flutter run
+    description: Run Phase 1 demo app.
+  phase1:test:
+    run: |
+      cd packages/performance_monitoring
+      flutter test
+      cd ../mobile_optimization
+      flutter test
+      cd ../realtime_processing
+      flutter test
+    description: Run Phase 1 tests.
+  phase2:demo:
+    run: |
+      cd packages/phase2_demo
+      flutter run
+    description: Run Phase 2 demo app.
+  phase2:test:
+    run: |
+      cd packages/advanced_ai_models
+      flutter test
+      cd ../federated_learning
+      flutter test
+      cd ../edge_computing
+      flutter test
+    description: Run Phase 2 tests.
+  phase3:demo:
+    run: |
+      cd packages/phase3_demo
+      flutter run
+    description: Run Phase 3 demo app.
+  phase3:test:
+    run: |
+      cd packages/multi_cloud_support
+      flutter test
+      cd ../advanced_cloud_services
+      flutter test
+      cd ../cost_optimization
+      flutter test
+    description: Run Phase 3 tests.
+  phase4:demo:
+    run: |
+      cd packages/phase4_demo
+      flutter run
+    description: Run Phase 4 demo app.
+  phase4:test:
+    run: |
+      cd packages/realtime_collaboration
+      flutter test
+      cd ../advanced_federated_learning
+      flutter test
+      cd ../complete_edge_computing
+      flutter test
+    description: Run Phase 4 tests.
+  phase5:demo:
+    run: |
+      cd packages/phase5_demo
+      flutter run
+    description: Run Phase 5 demo app.
+  phase5:test:
+    run: |
+      cd packages/production_optimization
+      flutter test
+      cd ../security_hardening
+      flutter test
+      cd ../monitoring_alerting
+      flutter test
+      cd ../documentation_deployment
+      flutter test
+    description: Run Phase 5 tests.

@@ -1,4 +1,5 @@
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import '../services/logger_service.dart';
 
 /// Environment types
 enum EnvironmentType {
@@ -28,9 +29,9 @@ class Environment {
       await _loadEnvironmentFile();
       
       _initialized = true;
-      print('✅ Environment initialized: ${_current.name}');
+      LoggerService.info('Environment initialized: ${_current.name}', tag: 'Environment');
     } catch (e) {
-      print('❌ Environment initialization failed: $e');
+      LoggerService.error('Environment initialization failed: $e', tag: 'Environment');
       // Use development as fallback
       _current = EnvironmentType.development;
       _initialized = true;
@@ -64,7 +65,6 @@ class Environment {
         fileName = '.env.staging';
         break;
       case EnvironmentType.development:
-      default:
         fileName = '.env.development';
         break;
     }
@@ -72,7 +72,7 @@ class Environment {
     try {
       await dotenv.load(fileName: fileName);
     } catch (e) {
-      print('⚠️ Could not load $fileName, using default values');
+      LoggerService.warning('Could not load $fileName, using default values', tag: 'Environment');
       // Create empty dotenv for fallback
       dotenv.env.clear();
     }

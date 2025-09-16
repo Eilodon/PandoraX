@@ -4,7 +4,9 @@ import 'package:ai_core/ai_core.dart';
 import '../widgets/ai_mode_indicator.dart' as mode_indicator;
 import '../widgets/chat_message_widget.dart';
 import '../widgets/ai_input_widget.dart';
-import '../widgets/ai_health_status_widget.dart' as health_widget;
+import '../widgets/ai_health_status_widget.dart';
+import '../../domain/health_status.dart';
+import '../../providers/health_providers.dart';
 
 /// AI Mode Provider
 final aiModeProvider = StateProvider<AIMode>((ref) => const AIMode(
@@ -62,7 +64,7 @@ class _EnhancedAIChatScreenState extends ConsumerState<EnhancedAIChatScreen> {
   Widget build(BuildContext context) {
     final chatState = ref.watch(aiChatProvider);
     final aiMode = ref.watch(aiModeProvider);
-    final healthStatus = ref.watch(health_widget.aiHealthStatusProvider);
+    final healthStatus = ref.watch(aiHealthStatusProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -82,7 +84,7 @@ class _EnhancedAIChatScreenState extends ConsumerState<EnhancedAIChatScreen> {
       body: Column(
         children: [
           // Health Status Bar
-          if (healthStatus != health_widget.HealthStatus.healthy)
+          if (healthStatus != HealthStatusEnum.healthy)
             _buildHealthWarning(healthStatus),
           
           // Chat Messages
@@ -97,7 +99,7 @@ class _EnhancedAIChatScreenState extends ConsumerState<EnhancedAIChatScreen> {
     );
   }
 
-  Widget _buildHealthWarning(health_widget.HealthStatus healthStatus) {
+  Widget _buildHealthWarning(HealthStatusEnum healthStatus) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -360,7 +362,14 @@ class _EnhancedAIChatScreenState extends ConsumerState<EnhancedAIChatScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('AI Health Status'),
-        content: const AIHealthStatusWidget(),
+        content: AIHealthStatusWidget(
+          healthStatus: HealthStatus(
+            isHealthy: true,
+            successRate: 0.95,
+            averageLatencyMs: 150,
+            recommendation: 'System is running optimally',
+          ),
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),

@@ -363,7 +363,6 @@ class _LivingMascotDemoScreenState extends ConsumerState<LivingMascotDemoScreen>
       case MascotAnimation.slide:
         return 'Slide';
       case MascotAnimation.idle:
-      default:
         return 'Idle';
     }
   }

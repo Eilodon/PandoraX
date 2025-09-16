@@ -1,9 +1,8 @@
-import 'package:flutter/material.dart';
+import 'package:flutter/material.dart' hide TextButton;
+import 'package:flutter/material.dart' as material show TextButton;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pandora_ui/pandora_ui.dart';
 import '../../../injection.dart';
 import '../../../services/interfaces/ai_service.dart';
-import '../../../config/api_config.dart';
 
 /// AI Chat screen with real Gemini integration
 class AIChatScreen extends ConsumerStatefulWidget {
@@ -158,7 +157,7 @@ class _AIChatScreenState extends ConsumerState<AIChatScreen> {
           ],
         ),
         actions: [
-          TextButton(
+          material.TextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: const Text('Cancel'),
           ),
@@ -182,7 +181,7 @@ class _AIChatScreenState extends ConsumerState<AIChatScreen> {
         title: const Text('Error'),
         content: Text(error),
         actions: [
-          TextButton(
+          material.TextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: const Text('OK'),
           ),
@@ -360,7 +359,7 @@ class _AIChatScreenState extends ConsumerState<AIChatScreen> {
           ],
         ),
         actions: [
-          TextButton(
+          material.TextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: const Text('Close'),
           ),
