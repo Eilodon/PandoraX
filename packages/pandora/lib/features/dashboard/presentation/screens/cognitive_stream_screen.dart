@@ -218,7 +218,7 @@ class _CognitiveStreamScreenState extends ConsumerState<CognitiveStreamScreen>
       children: [
         Expanded(
           child: DropdownButtonFormField<MemoryType?>(
-            value: _selectedMemoryType,
+            initialValue: _selectedMemoryType,
             decoration: const InputDecoration(
               labelText: 'Memory Type',
               border: OutlineInputBorder(),
@@ -537,9 +537,9 @@ class _CognitiveStreamScreenState extends ConsumerState<CognitiveStreamScreen>
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8.0),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Column(
         children: [
@@ -558,7 +558,7 @@ class _CognitiveStreamScreenState extends ConsumerState<CognitiveStreamScreen>
             title,
             style: TextStyle(
               fontSize: 12,
-              color: color.withOpacity(0.8),
+              color: color.withValues(alpha: 0.8),
             ),
             textAlign: TextAlign.center,
           ),

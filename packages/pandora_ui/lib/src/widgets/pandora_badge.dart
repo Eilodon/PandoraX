@@ -37,7 +37,7 @@ class PandoraBadge extends StatelessWidget {
 
   Color get _backgroundColor {
     if (!enabled) {
-      return AppColors.onSurfaceVariant.withValues(alpha:(PTokens.opacity.disabled);
+      return AppColors.onSurfaceVariant.withValues(alpha: PTokens.opacity.disabled);
     }
     
     switch (variant) {
@@ -58,7 +58,7 @@ class PandoraBadge extends StatelessWidget {
 
   Color get _textColor {
     if (!enabled) {
-      return AppColors.onSurfaceVariant.withValues(alpha:(PTokens.opacity.disabled);
+      return AppColors.onSurfaceVariant.withValues(alpha: PTokens.opacity.disabled);
     }
     
     switch (variant) {

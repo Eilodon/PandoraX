@@ -2,14 +2,16 @@ import 'package:note_domain/note_domain.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:cac_core/cac_core.dart';
 import 'package:common_entities/common_entities.dart';
+import 'package:uuid/uuid.dart';
 import 'note_form_state.dart';
 import '../note_providers.dart';
+import '../../../services/interfaces/ai_service.dart' as ai;
 
 class NoteFormNotifier extends StateNotifier<NoteFormState> {
   final NoteRepository _repository;
   final MemoryRepository _memoryRepository;
   final EventBusService _eventBusService;
-  final AIServiceInterface _aiService;
+  final ai.AIService _aiService;
 
   NoteFormNotifier(
     this._repository,
@@ -130,8 +132,8 @@ class NoteFormNotifier extends StateNotifier<NoteFormState> {
         _eventBusService.publishEvent(
           CacEvent.noteUpdated(
             noteId: note.id,
-            oldContent: state.note?.content ?? '',
-            newContent: note.content,
+            title: note.title,
+            content: note.content,
             timestamp: DateTime.now(),
           ),
         );
@@ -139,12 +141,9 @@ class NoteFormNotifier extends StateNotifier<NoteFormState> {
         _eventBusService.publishEvent(
           CacEvent.noteCreated(
             noteId: note.id,
+            title: note.title,
             content: note.content,
             timestamp: note.createdAt,
-            metadata: {
-              'title': note.title,
-              'isPinned': note.isPinned,
-            },
           ),
         );
       }
@@ -168,8 +167,6 @@ class NoteFormNotifier extends StateNotifier<NoteFormState> {
       _eventBusService.publishEvent(
         CacEvent.noteDeleted(
           noteId: noteId,
-          content: state.note!.content,
-          timestamp: DateTime.now(),
         ),
       );
       

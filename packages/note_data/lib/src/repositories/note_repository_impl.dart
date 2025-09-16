@@ -148,4 +148,13 @@ class NoteRepositoryImpl implements NoteRepository {
       return [];
     }
   }
+
+  @override
+  Future<void> syncNotes() async {
+    // Sync pending notes to remote
+    await syncPendingNotes();
+    
+    // TODO: Implement sync from remote to local
+    // This would involve fetching notes from Firestore and updating local database
+  }
 }

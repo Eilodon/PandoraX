@@ -2,12 +2,15 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:isar/isar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:alarm_domain/alarm_domain.dart';
-import 'package:alarm_data/alarm_data.dart';
+import 'package:note_domain/note_domain.dart';
+import 'package:note_data/note_data.dart';
 
 // Mock classes
 class MockIsar extends Mock implements Isar {}
 class MockIsarCollection extends Mock implements IsarCollection<NoteIsarModel> {}
+class MockQueryBuilder extends Mock implements QueryBuilder<NoteIsarModel, NoteIsarModel, QWhere> {}
+class MockFilterBuilder extends Mock implements QueryBuilder<NoteIsarModel, NoteIsarModel, QFilterCondition> {}
+class MockIsarService extends Mock implements IsarService {}
 class MockFirebaseFirestore extends Mock implements FirebaseFirestore {}
 class MockCollectionReference extends Mock implements CollectionReference<Map<String, dynamic>> {}
 class MockDocumentReference extends Mock implements DocumentReference<Map<String, dynamic>> {}
@@ -18,37 +21,44 @@ void main() {
   late NoteRepositoryImpl repository;
   late MockIsar mockIsar;
   late MockIsarCollection mockIsarCollection;
+  late MockQueryBuilder mockQueryBuilder;
+  late MockFilterBuilder mockFilterBuilder;
+  late MockIsarService mockIsarService;
   late MockFirebaseFirestore mockFirestore;
   late MockCollectionReference mockCollectionRef;
   late MockDocumentReference mockDocumentRef;
 
   setUpAll(() {
     // Register fallback values for mocktail
-    registerFallbackValue(NoteIsarModel(
-      id: 'test-id',
-      title: 'Test Title',
-      content: 'Test Content',
-      createdAt: DateTime.now(),
-      updatedAt: DateTime.now(),
-      pinned: false,
-      syncStatus: SyncStatus.synced,
-      reminderTime: null,
-    ));
+    final testModel = NoteIsarModel()
+      ..id = 'test-id'
+      ..title = 'Test Title'
+      ..content = 'Test Content'
+      ..createdAt = DateTime.now()
+      ..updatedAt = DateTime.now()
+      ..pinned = false
+      ..syncStatus = SyncStatus.synced;
+    
+    registerFallbackValue(testModel);
   });
 
   setUp(() {
     mockIsar = MockIsar();
     mockIsarCollection = MockIsarCollection();
+    mockQueryBuilder = MockQueryBuilder();
+    mockFilterBuilder = MockFilterBuilder();
+    mockIsarService = MockIsarService();
     mockFirestore = MockFirebaseFirestore();
     mockCollectionRef = MockCollectionReference();
     mockDocumentRef = MockDocumentReference();
 
     // Setup mock behavior
-    when(() => mockIsar.notes).thenReturn(mockIsarCollection);
+    when(() => mockIsarService.db).thenAnswer((_) async => mockIsar);
+    when(() => mockIsar.noteIsarModels).thenReturn(mockIsarCollection);
     when(() => mockFirestore.collection('notes')).thenReturn(mockCollectionRef);
     when(() => mockCollectionRef.doc(any())).thenReturn(mockDocumentRef);
 
-    repository = NoteRepositoryImpl(mockIsar, mockFirestore);
+    repository = NoteRepositoryImpl(mockIsarService, mockFirestore);
   });
 
   group('NoteRepositoryImpl', () {
@@ -67,11 +77,13 @@ void main() {
         );
 
         when(() => mockIsarCollection.putById(any())).thenAnswer((_) async => 1);
+        when(() => mockIsar.writeTxn(any())).thenAnswer((_) async => null);
 
         // Act
         await repository.saveNote(note);
 
         // Assert
+        verify(() => mockIsar.writeTxn(any())).called(1);
         verify(() => mockIsarCollection.putById(any(that: predicate((model) => 
           model is NoteIsarModel && 
           model.syncStatus == SyncStatus.pending
@@ -92,13 +104,14 @@ void main() {
         );
 
         when(() => mockIsarCollection.putById(any())).thenAnswer((_) async => 1);
+        when(() => mockIsar.writeTxn(any())).thenAnswer((_) async => null);
         when(() => mockDocumentRef.set(any())).thenAnswer((_) async {});
 
         // Act
         await repository.saveNote(note);
 
         // Assert
-        verify(() => mockDocumentRef.set(any())).called(1);
+        verify(() => mockIsar.writeTxn(any())).called(1);
         verify(() => mockIsarCollection.putById(any(that: predicate((model) => 
           model is NoteIsarModel && 
           model.syncStatus == SyncStatus.synced
@@ -136,29 +149,25 @@ void main() {
       test('should return notes from Isar', () async {
         // Arrange
         final now = DateTime.now();
-        final note1 = NoteIsarModel(
-          id: 'id1',
-          title: 'Title 1',
-          content: 'Content 1',
-          createdAt: now,
-          updatedAt: now,
-          pinned: false,
-          syncStatus: SyncStatus.synced,
-          reminderTime: null,
-        );
-        final note2 = NoteIsarModel(
-          id: 'id2',
-          title: 'Title 2',
-          content: 'Content 2',
-          createdAt: now,
-          updatedAt: now,
-          pinned: true,
-          syncStatus: SyncStatus.pending,
-          reminderTime: now.add(Duration(hours: 1)),
-        );
+        final note1 = NoteIsarModel()
+          ..id = 'id1'
+          ..title = 'Title 1'
+          ..content = 'Content 1'
+          ..createdAt = now
+          ..updatedAt = now
+          ..pinned = false
+          ..syncStatus = SyncStatus.synced;
+        final note2 = NoteIsarModel()
+          ..id = 'id2'
+          ..title = 'Title 2'
+          ..content = 'Content 2'
+          ..createdAt = now
+          ..updatedAt = now
+          ..pinned = true
+          ..syncStatus = SyncStatus.pending;
 
-        when(() => mockIsarCollection.where()).thenReturn(mockIsarCollection);
-        when(() => mockIsarCollection.findAll()).thenAnswer((_) async => [note1, note2]);
+        when(() => mockIsarCollection.where()).thenReturn(mockQueryBuilder);
+        when(() => mockQueryBuilder.findAll()).thenAnswer((_) async => [note1, note2]);
 
         // Act
         final result = await repository.getAllNotes();
@@ -174,8 +183,8 @@ void main() {
 
       test('should return empty list when no notes exist', () async {
         // Arrange
-        when(() => mockIsarCollection.where()).thenReturn(mockIsarCollection);
-        when(() => mockIsarCollection.findAll()).thenAnswer((_) async => []);
+        when(() => mockIsarCollection.where()).thenReturn(mockQueryBuilder);
+        when(() => mockQueryBuilder.findAll()).thenAnswer((_) async => []);
 
         // Act
         final result = await repository.getAllNotes();
@@ -214,20 +223,18 @@ void main() {
       test('should sync pending notes to Firestore', () async {
         // Arrange
         final now = DateTime.now();
-        final pendingNote = NoteIsarModel(
-          id: 'pending-id',
-          title: 'Pending Title',
-          content: 'Pending Content',
-          createdAt: now,
-          updatedAt: now,
-          pinned: false,
-          syncStatus: SyncStatus.pending,
-          reminderTime: null,
-        );
+        final pendingNote = NoteIsarModel()
+          ..id = 'pending-id'
+          ..title = 'Pending Title'
+          ..content = 'Pending Content'
+          ..createdAt = now
+          ..updatedAt = now
+          ..pinned = false
+          ..syncStatus = SyncStatus.pending;
 
-        when(() => mockIsarCollection.where()).thenReturn(mockIsarCollection);
-        when(() => mockIsarCollection.filter()).thenReturn(mockIsarCollection);
-        when(() => mockIsarCollection.findAll()).thenAnswer((_) async => [pendingNote]);
+        when(() => mockIsarCollection.where()).thenReturn(mockQueryBuilder);
+        when(() => mockQueryBuilder.filter()).thenReturn(mockFilterBuilder);
+        when(() => mockQueryBuilder.findAll()).thenAnswer((_) async => [pendingNote]);
         when(() => mockDocumentRef.set(any())).thenAnswer((_) async {});
         when(() => mockIsarCollection.putById(any())).thenAnswer((_) async => 1);
 

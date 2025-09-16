@@ -84,7 +84,7 @@ class TokensDemo extends StatelessWidget {
       decoration: BoxDecoration(
         color: color,
         borderRadius: PTokens.radius.card,
-        border: Border.all(color: AppColors.onSurface.withValues(alpha:(0.2)),
+        border: Border.all(color: AppColors.onSurface.withValues(alpha: 0.2)),
       ),
       child: Column(
         mainAxisAlignment: MainAxisAlignment.end,
@@ -93,7 +93,7 @@ class TokensDemo extends StatelessWidget {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(vertical: 4, horizontal: 8),
             decoration: BoxDecoration(
-              color: AppColors.surface.withValues(alpha:(0.9),
+              color: AppColors.surface.withValues(alpha: 0.9),
               borderRadius: const BorderRadius.only(
                 bottomLeft: Radius.circular(16),
                 bottomRight: Radius.circular(16),
@@ -210,7 +210,7 @@ class TokensDemo extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: color.withValues(alpha:(0.2),
+        color: color.withValues(alpha: 0.2),
         borderRadius: PTokens.radius.chip,
         border: Border.all(color: color),
       ),
@@ -253,7 +253,7 @@ class TokensDemo extends StatelessWidget {
             borderRadius: PTokens.radius.card,
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withValues(alpha:(0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: elevation * 2,
                 offset: Offset(0, elevation),
               ),
@@ -286,7 +286,7 @@ class TokensDemo extends StatelessWidget {
           width: 100,
           height: 20,
           decoration: BoxDecoration(
-            color: AppColors.primary.withValues(alpha:(opacity),
+            color: AppColors.primary.withValues(alpha: opacity),
             borderRadius: PTokens.radius.chip,
           ),
         ),

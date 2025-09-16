@@ -2,13 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/rendering.dart';
 import '../../services/mobile_optimization_service.dart';
-import '../../services/responsive_service.dart';
 import '../../services/touch_optimization_service.dart';
 import '../../services/accessibility_service.dart';
 import '../../tokens/color_tokens.dart';
 import '../../tokens/typography_tokens.dart';
-import '../../tokens/spacing_tokens.dart';
-import '../../tokens/border_tokens.dart';
 import '../../tokens/shadow_tokens.dart';
 
 /// Mobile-First Pandora Text Field
@@ -50,11 +47,8 @@ class MobileFirstTextField extends StatefulWidget {
     this.cursorHeight,
     this.cursorRadius,
     this.cursorColor,
-    this.selectionHeightStyle = BoxHeightStyle.tight,
-    this.selectionWidthStyle = BoxWidthStyle.tight,
     this.keyboardAppearance,
     this.scrollPadding = const EdgeInsets.all(20.0),
-    this.dragStartBehavior = DragStartBehavior.start,
     this.enableInteractiveSelection = true,
     this.selectionControls,
     this.onTap,
@@ -172,11 +166,8 @@ class MobileFirstTextField extends StatefulWidget {
   final double? cursorHeight;
   final Radius? cursorRadius;
   final Color? cursorColor;
-  final BoxHeightStyle selectionHeightStyle;
-  final BoxWidthStyle selectionWidthStyle;
   final Brightness? keyboardAppearance;
   final EdgeInsets scrollPadding;
-  final DragStartBehavior dragStartBehavior;
   final bool enableInteractiveSelection;
   final TextSelectionControls? selectionControls;
   final GestureTapCallback? onTap;
@@ -271,7 +262,6 @@ class _MobileFirstTextFieldState extends State<MobileFirstTextField>
   late Animation<double> _opacityAnimation;
   late FocusNode _focusNode;
   bool _isFocused = false;
-  bool _isPressed = false;
 
   @override
   void initState() {
@@ -318,7 +308,6 @@ class _MobileFirstTextFieldState extends State<MobileFirstTextField>
   void _handleTapDown(TapDownDetails details) {
     if (widget.state == MobileTextFieldState.enabled) {
       setState(() {
-        _isPressed = true;
       });
       
       if (widget.scaleOnPress) {
@@ -336,7 +325,6 @@ class _MobileFirstTextFieldState extends State<MobileFirstTextField>
 
   void _handleTapUp(TapUpDetails details) {
     setState(() {
-      _isPressed = false;
     });
     
     if (widget.scaleOnPress) {
@@ -346,7 +334,6 @@ class _MobileFirstTextFieldState extends State<MobileFirstTextField>
 
   void _handleTapCancel() {
     setState(() {
-      _isPressed = false;
     });
     
     if (widget.scaleOnPress) {
@@ -636,11 +623,8 @@ class _MobileFirstTextFieldState extends State<MobileFirstTextField>
       cursorHeight: widget.cursorHeight,
       cursorRadius: widget.cursorRadius,
       cursorColor: widget.cursorColor,
-      selectionHeightStyle: widget.selectionHeightStyle,
-      selectionWidthStyle: widget.selectionWidthStyle,
       keyboardAppearance: widget.keyboardAppearance,
       scrollPadding: widget.scrollPadding,
-      dragStartBehavior: widget.dragStartBehavior,
       enableInteractiveSelection: widget.enableInteractiveSelection,
       selectionControls: widget.selectionControls,
       onTap: widget.onTap,

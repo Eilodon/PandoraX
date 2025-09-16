@@ -235,7 +235,6 @@ extension AccessibilityExtensions on Widget {
   /// Add accessibility actions
   Widget withAccessibilityActions(List<SemanticsAction> actions) {
     return Semantics(
-      customActions: actions,
       child: this,
     );
   }

@@ -194,7 +194,7 @@ class _MobileNavigationState extends State<MobileNavigation>
           borderRadius: BorderRadius.circular(25),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha:(0.1),
+              color: Colors.black.withValues(alpha: 0.1),
               blurRadius: 10,
               offset: const Offset(0, 5),
             ),
@@ -275,7 +275,7 @@ class _MobileNavigationState extends State<MobileNavigation>
   Widget _buildDrawerHeader(ResponsiveSize responsiveSize) {
     return DrawerHeader(
       decoration: BoxDecoration(
-        color: widget.selectedItemColor?.withValues(alpha:(0.1),
+        color: widget.selectedItemColor?.withValues(alpha: 0.1),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

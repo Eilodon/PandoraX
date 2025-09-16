@@ -171,9 +171,9 @@ class _VoiceDemoScreenState extends ConsumerState<VoiceDemoScreen>
             vertical: PTokens.spacingXs,
           ),
           decoration: BoxDecoration(
-            color: color.withOpacity(0.1),
+            color: color.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(PTokens.radiusSm),
-            border: Border.all(color: color.withOpacity(0.3)),
+            border: Border.all(color: color.withValues(alpha: 0.3)),
           ),
           child: Text(
             status,

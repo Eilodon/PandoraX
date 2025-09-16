@@ -1,29 +1,28 @@
-/// App State Notifier for Phase 4 Architecture
-/// 
-/// This file contains the StateNotifier that manages the application state
-/// using a simplified approach with clear separation of concerns.
-library app_state_notifier;
-
-import 'package:note_domain/note_domain.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../entities/note.dart';
+import '../entities/user.dart';
+import '../repositories/note_repository.dart';
 import 'app_state.dart';
 
-/// StateNotifier for managing application state
+/// App State Notifier
+/// 
+/// Manages the global application state
 class AppStateNotifier extends StateNotifier<AppState> {
   AppStateNotifier() : super(const AppState());
 
   /// Set loading state
   void setLoading(bool loading) {
-    state = state.setLoading(loading);
+    state = state.copyWith(isLoading: loading);
   }
 
   /// Set error state
-  void setError(String error) {
-    state = state.setError(error);
+  void setError(String? error) {
+    state = state.copyWith(error: error);
   }
 
   /// Clear error state
   void clearError() {
-    state = state.clearError();
+    state = state.copyWith(error: null);
   }
 
   /// Set user
@@ -31,39 +30,47 @@ class AppStateNotifier extends StateNotifier<AppState> {
     state = state.copyWith(user: user);
   }
 
-  /// Add a new note
+  /// Add a note
   void addNote(Note note) {
-    state = state.addNote(note);
+    final notes = List<Note>.from(state.notes)..add(note);
+    state = state.copyWith(notes: notes);
   }
 
-  /// Update an existing note
+  /// Update a note
   void updateNote(Note note) {
-    state = state.updateNote(note);
+    final notes = List<Note>.from(state.notes);
+    final index = notes.indexWhere((n) => n.id == note.id);
+    if (index != -1) {
+      notes[index] = note;
+      state = state.copyWith(notes: notes);
+    }
   }
 
   /// Remove a note
   void removeNote(String noteId) {
-    state = state.removeNote(noteId);
+    final notes = List<Note>.from(state.notes)
+      ..removeWhere((note) => note.id == noteId);
+    state = state.copyWith(notes: notes);
   }
 
-  /// Select a note
-  void selectNote(Note? note) {
-    state = state.selectNote(note);
+  /// Set selected note
+  void setSelectedNote(Note? note) {
+    state = state.copyWith(selectedNote: note);
   }
 
-  /// Toggle dark mode
-  void toggleDarkMode() {
-    state = state.toggleDarkMode();
+  /// Set dark mode
+  void setDarkMode(bool isDarkMode) {
+    state = state.copyWith(isDarkMode: isDarkMode);
   }
 
-  /// Navigate to a screen
-  void navigateTo(String screen) {
-    state = state.navigateTo(screen);
+  /// Set current screen
+  void setCurrentScreen(String screen) {
+    state = state.copyWith(currentScreen: screen);
   }
 
-  /// Update user preferences
-  void updatePreferences(Map<String, dynamic> preferences) {
-    state = state.updatePreferences(preferences);
+  /// Set preferences
+  void setPreferences(Map<String, dynamic> preferences) {
+    state = state.copyWith(preferences: preferences);
   }
 
   /// Load notes from repository

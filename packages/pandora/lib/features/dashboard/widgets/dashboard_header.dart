@@ -63,7 +63,7 @@ class DashboardHeader extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: PandoraColors.primary200.withOpacity(0.5),
+              color: PandoraColors.primary200.withValues(alpha: 0.5),
               blurRadius: 10,
               spreadRadius: 2,
             ),
@@ -288,10 +288,10 @@ class DashboardHeader extends StatelessWidget {
         vertical: PTokens.spacingXs,
       ),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(
-          color: color.withOpacity(0.3),
+          color: color.withValues(alpha: 0.3),
           width: 1,
         ),
       ),

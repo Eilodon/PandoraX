@@ -322,7 +322,7 @@ class PandoraShadows {
   }) {
     final baseShadow = getShadow(size);
     return baseShadow.map((shadow) => BoxShadow(
-      color: color.withValues(alpha:(0.1),
+      color: color.withValues(alpha: 0.1),
       offset: shadow.offset,
       blurRadius: shadow.blurRadius,
       spreadRadius: shadow.spreadRadius,

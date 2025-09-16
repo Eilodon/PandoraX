@@ -913,8 +913,8 @@ class _SimpleVoiceScreenState extends State<SimpleVoiceScreen>
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: isRecording
-                              ? Colors.purple.withOpacity(0.3)
-                              : Colors.purple.withOpacity(0.1),
+                              ? Colors.purple.withValues(alpha: 0.3)
+                              : Colors.purple.withValues(alpha: 0.1),
                           border: Border.all(
                             color: Colors.purple,
                             width: 2,

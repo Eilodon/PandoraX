@@ -87,8 +87,8 @@ class _MascotEnvironmentWidgetState extends ConsumerState<MascotEnvironmentWidge
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            PandoraColors.primary50.withOpacity(0.3),
-            PandoraColors.primary100.withOpacity(0.1),
+            PandoraColors.primary50.withValues(alpha: 0.3),
+            PandoraColors.primary100.withValues(alpha: 0.1),
           ],
         ),
       ),
@@ -403,7 +403,7 @@ class EnvironmentBackgroundPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = PandoraColors.primary100.withOpacity(0.1)
+      ..color = PandoraColors.primary100.withValues(alpha: 0.1)
       ..style = PaintingStyle.fill;
 
     // Draw some decorative elements
@@ -418,7 +418,7 @@ class EnvironmentBackgroundPainter extends CustomPainter {
       canvas.drawCircle(
         Offset(x, y),
         radius,
-        paint..color = PandoraColors.primary200.withOpacity(0.1),
+        paint..color = PandoraColors.primary200.withValues(alpha: 0.1),
       );
     }
   }

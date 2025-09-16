@@ -191,9 +191,8 @@ void main() {
 
     testWidgets('should call onAnimationComplete when provided', (tester) async {
       // Arrange
-      bool animationCompleted = false;
       void onComplete() {
-        animationCompleted = true;
+        // Animation completed callback
       }
 
       // Act

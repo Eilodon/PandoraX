@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pandora_ui/pandora_ui.dart';
+import 'package:pandora_ui/src/components/buttons/pandora_button.dart' as button;
 
 /// Pandora 4 Demo Screen
 /// 
@@ -183,7 +184,7 @@ class _PandoraDemoScreenState extends State<PandoraDemoScreen>
               ),
               PandoraButton(
                 icon: const Icon(Icons.edit),
-                iconPosition: IconPosition.end,
+                iconPosition: button.IconPosition.end,
                 onPressed: () => _showSnackbar('Edit Button'),
                 child: const Text('Edit'),
               ),

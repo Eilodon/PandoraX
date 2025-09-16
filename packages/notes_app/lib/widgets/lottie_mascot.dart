@@ -29,12 +29,10 @@ class LottieMascot extends StatelessWidget {
       height: height,
       repeat: repeat,
       reverse: reverse,
-      duration: duration,
       onLoaded: (composition) {
         // Animation loaded successfully
         debugPrint('Lottie animation loaded: $animationPath');
       },
-      onAnimationComplete: onAnimationComplete,
       errorBuilder: (context, error, stackTrace) {
         // Fallback widget if animation fails to load
         return Container(

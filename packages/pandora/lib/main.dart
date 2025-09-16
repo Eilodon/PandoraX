@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:pandora_ui/pandora_ui.dart';
+import 'package:pandora_ui/pandora_ui.dart' hide TextButton;
 import 'package:firebase_core/firebase_core.dart';
 
 // Dependency Injection

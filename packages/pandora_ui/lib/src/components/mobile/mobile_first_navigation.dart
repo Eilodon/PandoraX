@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import '../../services/mobile_optimization_service.dart';
-import '../../services/responsive_service.dart';
 import '../../services/touch_optimization_service.dart';
 import '../../services/accessibility_service.dart';
 import '../../tokens/color_tokens.dart';
 import '../../tokens/typography_tokens.dart';
-import '../../tokens/spacing_tokens.dart';
-import '../../tokens/border_tokens.dart';
 import '../../tokens/shadow_tokens.dart';
 
 /// Mobile-First Pandora Navigation
@@ -148,7 +145,6 @@ class _MobileFirstNavigationState extends State<MobileFirstNavigation>
   late Animation<double> _opacityAnimation;
   late List<FocusNode> _focusNodes;
   bool _isFocused = false;
-  bool _isPressed = false;
 
   @override
   void initState() {
@@ -201,7 +197,6 @@ class _MobileFirstNavigationState extends State<MobileFirstNavigation>
   void _handleTapDown(TapDownDetails details) {
     if (widget.state == MobileNavigationState.enabled) {
       setState(() {
-        _isPressed = true;
       });
       
       if (widget.scaleOnPress) {
@@ -219,7 +214,6 @@ class _MobileFirstNavigationState extends State<MobileFirstNavigation>
 
   void _handleTapUp(TapUpDetails details) {
     setState(() {
-      _isPressed = false;
     });
     
     if (widget.scaleOnPress) {
@@ -229,7 +223,6 @@ class _MobileFirstNavigationState extends State<MobileFirstNavigation>
 
   void _handleTapCancel() {
     setState(() {
-      _isPressed = false;
     });
     
     if (widget.scaleOnPress) {

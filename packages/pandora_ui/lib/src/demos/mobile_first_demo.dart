@@ -168,7 +168,7 @@ class _MobileFirstDemoState extends State<MobileFirstDemo>
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: PandoraColors.neutral200.withValues(alpha:(0.5),
+            color: PandoraColors.neutral200.withValues(alpha: 0.5),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -204,7 +204,7 @@ class _MobileFirstDemoState extends State<MobileFirstDemo>
               Container(
                 padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
                 decoration: BoxDecoration(
-                  color: _getBreakpointColor(_currentBreakpoint).withValues(alpha:(0.1),
+                  color: _getBreakpointColor(_currentBreakpoint).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(6),
                 ),
                 child: Text(
@@ -230,7 +230,7 @@ class _MobileFirstDemoState extends State<MobileFirstDemo>
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: PandoraColors.neutral200.withValues(alpha:(0.5),
+            color: PandoraColors.neutral200.withValues(alpha: 0.5),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -375,7 +375,7 @@ class _MobileFirstDemoState extends State<MobileFirstDemo>
               Text(
                 card['subtitle'] as String,
                 style: PandoraTypography.bodySmall.copyWith(
-                  color: PandoraColors.white.withValues(alpha:(0.8),
+                  color: PandoraColors.white.withValues(alpha: 0.8),
                 ),
               ),
             ],
@@ -513,7 +513,7 @@ class _MobileFirstDemoState extends State<MobileFirstDemo>
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: PandoraColors.neutral200.withValues(alpha:(0.5),
+            color: PandoraColors.neutral200.withValues(alpha: 0.5),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),

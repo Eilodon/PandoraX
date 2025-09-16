@@ -1,5 +1,8 @@
 import 'dart:async';
+import 'dart:math';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pandora_ui/pandora_ui.dart';
 import 'decoration_system.dart';
 import 'mascot_service.dart';
 import 'mascot_enums.dart';
@@ -251,7 +254,7 @@ class GoldDisplayWidget extends ConsumerWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: PandoraColors.warning500.withOpacity(0.3),
+            color: PandoraColors.warning500.withValues(alpha: 0.3),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -371,7 +374,7 @@ class _GoldAnimationWidgetState extends State<GoldAnimationWidget>
                     borderRadius: BorderRadius.circular(25),
                     boxShadow: [
                       BoxShadow(
-                        color: PandoraColors.warning500.withOpacity(0.5),
+                        color: PandoraColors.warning500.withValues(alpha: 0.5),
                         blurRadius: 8,
                         offset: const Offset(0, 4),
                       ),

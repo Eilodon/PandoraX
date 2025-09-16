@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pandora_ui/pandora_ui.dart';
@@ -173,7 +174,7 @@ class _MascotEnvironmentState extends ConsumerState<MascotEnvironment>
               width: 40,
               height: 60,
               decoration: BoxDecoration(
-                color: color.withOpacity(0.8),
+                color: color.withValues(alpha: 0.8),
                 borderRadius: const BorderRadius.only(
                   topLeft: Radius.circular(20),
                   topRight: Radius.circular(20),
@@ -265,7 +266,7 @@ class _MascotEnvironmentState extends ConsumerState<MascotEnvironment>
               width: 20,
               height: 20,
               decoration: BoxDecoration(
-                color: color.withOpacity(0.8),
+                color: color.withValues(alpha: 0.8),
                 shape: BoxShape.circle,
               ),
               child: Center(
@@ -336,9 +337,9 @@ class _MascotEnvironmentState extends ConsumerState<MascotEnvironment>
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
             colors: [
-              Colors.green.shade100.withOpacity(0.3),
-              Colors.green.shade200.withOpacity(0.5),
-              Colors.green.shade300.withOpacity(0.7),
+              Colors.green.shade100.withValues(alpha: 0.3),
+              Colors.green.shade200.withValues(alpha: 0.5),
+              Colors.green.shade300.withValues(alpha: 0.7),
             ],
           ),
         ),
@@ -379,11 +380,11 @@ class _MascotEnvironmentState extends ConsumerState<MascotEnvironment>
                 width: object.size,
                 height: object.size,
                 decoration: BoxDecoration(
-                  color: object.color.withOpacity(0.8),
+                  color: object.color.withValues(alpha: 0.8),
                   borderRadius: BorderRadius.circular(object.size / 2),
                   boxShadow: [
                     BoxShadow(
-                      color: object.color.withOpacity(0.3),
+                      color: object.color.withValues(alpha: 0.3),
                       blurRadius: 8,
                       spreadRadius: 2,
                     ),
@@ -413,7 +414,7 @@ class _MascotEnvironmentState extends ConsumerState<MascotEnvironment>
           width: object.size,
           height: object.size,
           decoration: BoxDecoration(
-            color: Colors.grey.withOpacity(0.5),
+            color: Colors.grey.withValues(alpha: 0.5),
             borderRadius: BorderRadius.circular(object.size / 2),
             border: Border.all(
               color: Colors.grey.shade400,
@@ -473,7 +474,7 @@ class _MascotEnvironmentState extends ConsumerState<MascotEnvironment>
                   shape: BoxShape.circle,
                   boxShadow: [
                     BoxShadow(
-                      color: PandoraColors.primary200.withOpacity(0.5),
+                      color: PandoraColors.primary200.withValues(alpha: 0.5),
                       blurRadius: 20,
                       spreadRadius: 5,
                     ),
@@ -523,7 +524,7 @@ class _MascotEnvironmentState extends ConsumerState<MascotEnvironment>
             width: 4,
             height: 4,
             decoration: BoxDecoration(
-              color: Colors.white.withOpacity(0.6),
+              color: Colors.white.withValues(alpha: 0.6),
               shape: BoxShape.circle,
             ),
           ),
@@ -553,7 +554,7 @@ class _MascotEnvironmentState extends ConsumerState<MascotEnvironment>
             width: 12,
             height: 12,
             decoration: BoxDecoration(
-              color: Colors.yellow.withOpacity(0.8),
+              color: Colors.yellow.withValues(alpha: 0.8),
               shape: BoxShape.circle,
             ),
             child: const Icon(

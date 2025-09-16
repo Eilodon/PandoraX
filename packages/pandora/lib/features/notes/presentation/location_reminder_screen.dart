@@ -107,7 +107,7 @@ class _LocationReminderScreenState extends ConsumerState<LocationReminderScreen>
               ),
               const SizedBox(height: PTokens.spacingSm),
               DropdownButtonFormField<String>(
-                value: _selectedLocation.isEmpty ? null : _selectedLocation,
+                initialValue: _selectedLocation.isEmpty ? null : _selectedLocation,
                 decoration: const InputDecoration(
                   border: OutlineInputBorder(),
                   contentPadding: EdgeInsets.symmetric(

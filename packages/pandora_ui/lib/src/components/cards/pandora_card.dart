@@ -4,7 +4,6 @@ import '../../tokens/spacing_tokens.dart';
 import '../../tokens/border_tokens.dart';
 import '../../tokens/shadow_tokens.dart';
 import '../../tokens/typography_tokens.dart';
-import '../../utils/pandora_extensions.dart';
 
 /// Pandora 4 Card
 /// 
@@ -122,19 +121,6 @@ class _PandoraCardState extends State<PandoraCard>
     super.dispose();
   }
 
-  void _handleTapDown(TapDownDetails details) {
-    if (widget.onTap != null) {
-      _animationController.forward();
-    }
-  }
-
-  void _handleTapUp(TapUpDetails details) {
-    _animationController.reverse();
-  }
-
-  void _handleTapCancel() {
-    _animationController.reverse();
-  }
 
   @override
   Widget build(BuildContext context) {

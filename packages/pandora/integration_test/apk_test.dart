@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 import 'package:pandora/main.dart' as app;
-import 'package:pandora/demo/demo_mode.dart';
+import 'package:pandora/features/demo/demo_mode.dart';
 
 /// Integration tests specifically for APK testing
 /// These tests verify that the app works correctly when installed as APK
@@ -13,12 +13,12 @@ void main() {
     
     setUpAll(() async {
       // Enable demo mode for APK testing
-      await DemoModeManager.enableDemoMode();
+      DemoModeManager().enableDemoMode();
     });
 
     tearDownAll(() async {
       // Clean up demo mode after tests
-      await DemoModeManager.disableDemoMode();
+      DemoModeManager().disableDemoMode();
     });
 
     testWidgets('APK Launch and Basic Navigation', (tester) async {

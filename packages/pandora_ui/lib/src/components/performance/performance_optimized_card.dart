@@ -6,7 +6,6 @@ import '../../enums/common_enums.dart';
 import '../../tokens/color_tokens.dart';
 import '../../tokens/typography_tokens.dart';
 import '../../tokens/spacing_tokens.dart';
-import '../../tokens/border_tokens.dart';
 import '../../tokens/shadow_tokens.dart';
 
 /// Performance Optimized Pandora Card

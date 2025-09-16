@@ -388,7 +388,7 @@ class MemoryManagementService {
       return 500; // Estimated container memory
     } else if (widget is Card) {
       return 800; // Estimated card memory
-    } else if (widget is Button) {
+    } else if (widget is ElevatedButton || widget is TextButton || widget is OutlinedButton) {
       return 300; // Estimated button memory
     }
     

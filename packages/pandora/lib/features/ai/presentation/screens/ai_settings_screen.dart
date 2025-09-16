@@ -1,8 +1,91 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ai_core/ai_core.dart';
-import '../widgets/ai_mode_indicator.dart';
-import '../widgets/ai_health_status_widget.dart';
+import '../widgets/ai_mode_indicator.dart' as mode_indicator;
+import '../widgets/ai_health_status_widget.dart' as health_widget;
+
+/// AI Mode Provider
+final aiModeProvider = StateProvider<AIMode>((ref) => const AIMode(
+  isOnDevice: false,
+  modelName: 'Gemini',
+  status: 'Ready',
+  lastSwitch: null,
+));
+
+/// AI Settings class
+class AISettings {
+  final bool autoSwitch;
+  final String preferredModel;
+  final bool enableHealthMonitoring;
+  final bool autoDownload;
+  final bool useGpu;
+  final bool modelCaching;
+  final bool mobileData;
+  final bool compressResponses;
+  final int responseTimeout;
+  final int maxRetry;
+  final int healthCheckInterval;
+
+  const AISettings({
+    this.autoSwitch = false,
+    this.preferredModel = 'Gemini',
+    this.enableHealthMonitoring = true,
+    this.autoDownload = false,
+    this.useGpu = false,
+    this.modelCaching = false,
+    this.mobileData = false,
+    this.compressResponses = false,
+    this.responseTimeout = 30,
+    this.maxRetry = 3,
+    this.healthCheckInterval = 60,
+  });
+
+  AISettings copyWith({
+    bool? autoSwitch,
+    String? preferredModel,
+    bool? enableHealthMonitoring,
+    bool? autoDownload,
+    bool? useGpu,
+    bool? modelCaching,
+    bool? mobileData,
+    bool? compressResponses,
+    int? responseTimeout,
+    int? maxRetry,
+    int? healthCheckInterval,
+  }) {
+    return AISettings(
+      autoSwitch: autoSwitch ?? this.autoSwitch,
+      preferredModel: preferredModel ?? this.preferredModel,
+      enableHealthMonitoring: enableHealthMonitoring ?? this.enableHealthMonitoring,
+      autoDownload: autoDownload ?? this.autoDownload,
+      useGpu: useGpu ?? this.useGpu,
+      modelCaching: modelCaching ?? this.modelCaching,
+      mobileData: mobileData ?? this.mobileData,
+      compressResponses: compressResponses ?? this.compressResponses,
+      responseTimeout: responseTimeout ?? this.responseTimeout,
+      maxRetry: maxRetry ?? this.maxRetry,
+      healthCheckInterval: healthCheckInterval ?? this.healthCheckInterval,
+    );
+  }
+}
+
+/// AI Settings Provider
+final aiSettingsProvider = StateProvider<AISettings>((ref) => const AISettings());
+
+/// AI Mode class
+class AIMode {
+  final bool isOnDevice;
+  final String modelName;
+  final String status;
+  final DateTime? lastSwitch;
+
+  const AIMode({
+    required this.isOnDevice,
+    required this.modelName,
+    required this.status,
+    this.lastSwitch,
+  });
+}
 
 /// AI Settings Screen for managing AI preferences
 class AISettingsScreen extends ConsumerStatefulWidget {
@@ -16,7 +99,7 @@ class _AISettingsScreenState extends ConsumerState<AISettingsScreen> {
   @override
   Widget build(BuildContext context) {
     final aiMode = ref.watch(aiModeProvider);
-    final healthStatus = ref.watch(aiHealthStatusProvider);
+    final healthStatus = ref.watch(health_widget.aiHealthStatusProvider);
     final settings = ref.watch(aiSettingsProvider);
 
     return Scaffold(
@@ -71,18 +154,18 @@ class _AISettingsScreenState extends ConsumerState<AISettingsScreen> {
               ),
             ),
             const SizedBox(height: 16),
-            const DetailedAIModeIndicator(),
+            const mode_indicator.DetailedAIModeIndicator(),
             const SizedBox(height: 16),
             Row(
               children: [
                 Expanded(
                   child: ElevatedButton.icon(
                     onPressed: () {
-                      ref.read(aiModeProvider.notifier).state = const AIMode(
+                      ref.read(aiModeProvider.notifier).state = AIMode(
                         isOnDevice: true,
                         modelName: 'phi-3-mini',
                         status: 'Ready',
-                        lastSwitch: null,
+                        lastSwitch: DateTime.now(),
                       );
                     },
                     icon: const Icon(Icons.phone_android),
@@ -93,11 +176,11 @@ class _AISettingsScreenState extends ConsumerState<AISettingsScreen> {
                 Expanded(
                   child: ElevatedButton.icon(
                     onPressed: () {
-                      ref.read(aiModeProvider.notifier).state = const AIMode(
+                      ref.read(aiModeProvider.notifier).state = AIMode(
                         isOnDevice: false,
                         modelName: 'Gemini',
                         status: 'Ready',
-                        lastSwitch: null,
+                        lastSwitch: DateTime.now(),
                       );
                     },
                     icon: const Icon(Icons.cloud),
@@ -112,7 +195,7 @@ class _AISettingsScreenState extends ConsumerState<AISettingsScreen> {
     );
   }
 
-  Widget _buildHealthStatusSection(HealthStatus healthStatus, BuildContext context) {
+  Widget _buildHealthStatusSection(health_widget.HealthStatus healthStatus, BuildContext context) {
     return Card(
       child: Padding(
         padding: const EdgeInsets.all(16),
@@ -135,7 +218,7 @@ class _AISettingsScreenState extends ConsumerState<AISettingsScreen> {
               ],
             ),
             const SizedBox(height: 16),
-            const AIHealthStatusWidget(showDetails: true),
+            const health_widget.AIHealthStatusWidget(showDetails: true),
           ],
         ),
       ),
@@ -159,27 +242,27 @@ class _AISettingsScreenState extends ConsumerState<AISettingsScreen> {
             _buildSettingTile(
               'Auto-download Models',
               'Automatically download recommended models',
-              settings.autoDownloadModels,
+              settings.autoDownload,
               (value) {
-                ref.read(aiSettingsProvider.notifier).updateAutoDownload(value);
+                ref.read(aiSettingsProvider.notifier).state = ref.read(aiSettingsProvider).copyWith(autoDownload: value);
               },
               context,
             ),
             _buildSettingTile(
               'Use GPU Acceleration',
               'Use GPU for faster model execution',
-              settings.useGpuAcceleration,
+              settings.useGpu,
               (value) {
-                ref.read(aiSettingsProvider.notifier).updateUseGpu(value);
+                ref.read(aiSettingsProvider.notifier).state = ref.read(aiSettingsProvider).copyWith(useGpu: value);
               },
               context,
             ),
             _buildSettingTile(
               'Model Caching',
               'Cache models for faster loading',
-              settings.enableModelCaching,
+              settings.modelCaching,
               (value) {
-                ref.read(aiSettingsProvider.notifier).updateModelCaching(value);
+                ref.read(aiSettingsProvider.notifier).state = ref.read(aiSettingsProvider).copyWith(modelCaching: value);
               },
               context,
             ),
@@ -206,18 +289,18 @@ class _AISettingsScreenState extends ConsumerState<AISettingsScreen> {
             _buildSettingTile(
               'Auto-switch on Network Change',
               'Switch between on-device and cloud based on network',
-              settings.autoSwitchOnNetworkChange,
+              settings.autoSwitch,
               (value) {
-                ref.read(aiSettingsProvider.notifier).updateAutoSwitch(value);
+                ref.read(aiSettingsProvider.notifier).state = ref.read(aiSettingsProvider).copyWith(autoSwitch: value);
               },
               context,
             ),
             _buildSettingTile(
               'Use Mobile Data',
               'Allow AI operations on mobile data',
-              settings.allowMobileData,
+              settings.mobileData,
               (value) {
-                ref.read(aiSettingsProvider.notifier).updateMobileData(value);
+                ref.read(aiSettingsProvider.notifier).state = ref.read(aiSettingsProvider).copyWith(mobileData: value);
               },
               context,
             ),
@@ -226,7 +309,7 @@ class _AISettingsScreenState extends ConsumerState<AISettingsScreen> {
               'Compress AI responses to save bandwidth',
               settings.compressResponses,
               (value) {
-                ref.read(aiSettingsProvider.notifier).updateCompressResponses(value);
+                ref.read(aiSettingsProvider.notifier).state = ref.read(aiSettingsProvider).copyWith(compressResponses: value);
               },
               context,
             ),
@@ -252,31 +335,31 @@ class _AISettingsScreenState extends ConsumerState<AISettingsScreen> {
             const SizedBox(height: 16),
             _buildSliderSetting(
               'Response Timeout (seconds)',
-              settings.responseTimeoutSeconds,
+              settings.responseTimeout.toDouble(),
               5.0,
               60.0,
               (value) {
-                ref.read(aiSettingsProvider.notifier).updateResponseTimeout(value);
+                ref.read(aiSettingsProvider.notifier).state = ref.read(aiSettingsProvider).copyWith(responseTimeout: value.toInt());
               },
               context,
             ),
             _buildSliderSetting(
               'Max Retry Attempts',
-              settings.maxRetryAttempts.toDouble(),
+              settings.maxRetry.toDouble(),
               1.0,
               5.0,
               (value) {
-                ref.read(aiSettingsProvider.notifier).updateMaxRetry(value.round());
+                ref.read(aiSettingsProvider.notifier).state = ref.read(aiSettingsProvider).copyWith(maxRetry: value.round());
               },
               context,
             ),
             _buildSliderSetting(
               'Health Check Interval (minutes)',
-              settings.healthCheckIntervalMinutes.toDouble(),
+              settings.healthCheckInterval.toDouble(),
               1.0,
               60.0,
               (value) {
-                ref.read(aiSettingsProvider.notifier).updateHealthCheckInterval(value.round());
+                ref.read(aiSettingsProvider.notifier).state = ref.read(aiSettingsProvider).copyWith(healthCheckInterval: value.round());
               },
               context,
             ),
@@ -376,7 +459,7 @@ class _AISettingsScreenState extends ConsumerState<AISettingsScreen> {
       context: context,
       builder: (context) => AlertDialog(
         title: const Text('AI Health Details'),
-        content: const AIHealthStatusWidget(showDetails: true),
+        content: const health_widget.AIHealthStatusWidget(showDetails: true),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
@@ -452,7 +535,7 @@ class _AISettingsScreenState extends ConsumerState<AISettingsScreen> {
           ),
           TextButton(
             onPressed: () {
-              ref.read(aiSettingsProvider.notifier).resetToDefaults();
+              ref.read(aiSettingsProvider.notifier).state = const AISettings();
               Navigator.pop(context);
               ScaffoldMessenger.of(context).showSnackBar(
                 const SnackBar(content: Text('Settings reset to defaults')),
@@ -466,101 +549,3 @@ class _AISettingsScreenState extends ConsumerState<AISettingsScreen> {
   }
 }
 
-/// AI Settings data class
-class AISettings {
-  final bool autoDownloadModels;
-  final bool useGpuAcceleration;
-  final bool enableModelCaching;
-  final bool autoSwitchOnNetworkChange;
-  final bool allowMobileData;
-  final bool compressResponses;
-  final double responseTimeoutSeconds;
-  final int maxRetryAttempts;
-  final int healthCheckIntervalMinutes;
-
-  const AISettings({
-    this.autoDownloadModels = true,
-    this.useGpuAcceleration = true,
-    this.enableModelCaching = true,
-    this.autoSwitchOnNetworkChange = true,
-    this.allowMobileData = false,
-    this.compressResponses = true,
-    this.responseTimeoutSeconds = 30.0,
-    this.maxRetryAttempts = 3,
-    this.healthCheckIntervalMinutes = 5,
-  });
-
-  AISettings copyWith({
-    bool? autoDownloadModels,
-    bool? useGpuAcceleration,
-    bool? enableModelCaching,
-    bool? autoSwitchOnNetworkChange,
-    bool? allowMobileData,
-    bool? compressResponses,
-    double? responseTimeoutSeconds,
-    int? maxRetryAttempts,
-    int? healthCheckIntervalMinutes,
-  }) {
-    return AISettings(
-      autoDownloadModels: autoDownloadModels ?? this.autoDownloadModels,
-      useGpuAcceleration: useGpuAcceleration ?? this.useGpuAcceleration,
-      enableModelCaching: enableModelCaching ?? this.enableModelCaching,
-      autoSwitchOnNetworkChange: autoSwitchOnNetworkChange ?? this.autoSwitchOnNetworkChange,
-      allowMobileData: allowMobileData ?? this.allowMobileData,
-      compressResponses: compressResponses ?? this.compressResponses,
-      responseTimeoutSeconds: responseTimeoutSeconds ?? this.responseTimeoutSeconds,
-      maxRetryAttempts: maxRetryAttempts ?? this.maxRetryAttempts,
-      healthCheckIntervalMinutes: healthCheckIntervalMinutes ?? this.healthCheckIntervalMinutes,
-    );
-  }
-}
-
-/// AI Settings Provider
-final aiSettingsProvider = StateNotifierProvider<AISettingsNotifier, AISettings>((ref) {
-  return AISettingsNotifier();
-});
-
-/// AI Settings Notifier
-class AISettingsNotifier extends StateNotifier<AISettings> {
-  AISettingsNotifier() : super(const AISettings());
-
-  void updateAutoDownload(bool value) {
-    state = state.copyWith(autoDownloadModels: value);
-  }
-
-  void updateUseGpu(bool value) {
-    state = state.copyWith(useGpuAcceleration: value);
-  }
-
-  void updateModelCaching(bool value) {
-    state = state.copyWith(enableModelCaching: value);
-  }
-
-  void updateAutoSwitch(bool value) {
-    state = state.copyWith(autoSwitchOnNetworkChange: value);
-  }
-
-  void updateMobileData(bool value) {
-    state = state.copyWith(allowMobileData: value);
-  }
-
-  void updateCompressResponses(bool value) {
-    state = state.copyWith(compressResponses: value);
-  }
-
-  void updateResponseTimeout(double value) {
-    state = state.copyWith(responseTimeoutSeconds: value);
-  }
-
-  void updateMaxRetry(int value) {
-    state = state.copyWith(maxRetryAttempts: value);
-  }
-
-  void updateHealthCheckInterval(int value) {
-    state = state.copyWith(healthCheckIntervalMinutes: value);
-  }
-
-  void resetToDefaults() {
-    state = const AISettings();
-  }
-}

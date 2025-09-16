@@ -246,10 +246,10 @@ class DynamicBackground extends StatelessWidget {
         height: size,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: color.withOpacity(0.8),
+          color: color.withValues(alpha: 0.8),
           boxShadow: [
             BoxShadow(
-              color: color.withOpacity(0.3),
+              color: color.withValues(alpha: 0.3),
               blurRadius: 20,
               spreadRadius: 5,
             ),
@@ -270,10 +270,10 @@ class DynamicBackground extends StatelessWidget {
         height: size,
         decoration: BoxDecoration(
           shape: BoxShape.circle,
-          color: color.withOpacity(0.9),
+          color: color.withValues(alpha: 0.9),
           boxShadow: [
             BoxShadow(
-              color: color.withOpacity(0.2),
+              color: color.withValues(alpha: 0.2),
               blurRadius: 15,
               spreadRadius: 3,
             ),
@@ -295,7 +295,7 @@ class DynamicBackground extends StatelessWidget {
           width: 80,
           height: 40,
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.7),
+            color: Colors.white.withValues(alpha: 0.7),
             borderRadius: BorderRadius.circular(20),
           ),
           child: Stack(
@@ -450,8 +450,8 @@ class DynamicBackground extends StatelessWidget {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            overlayColor.withOpacity(opacity),
-            overlayColor.withOpacity(opacity * 0.5),
+            overlayColor.withValues(alpha: opacity),
+            overlayColor.withValues(alpha: opacity * 0.5),
             Colors.transparent,
           ],
           stops: const [0.0, 0.5, 1.0],

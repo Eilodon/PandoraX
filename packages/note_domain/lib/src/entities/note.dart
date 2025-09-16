@@ -13,6 +13,7 @@ class Note extends Equatable {
   final DateTime updatedAt;
   final bool isPinned;
   final bool pinned;
+  final bool isFavorite;
   final String? category;
   final Map<String, dynamic>? metadata;
   final SyncStatus syncStatus;
@@ -26,6 +27,7 @@ class Note extends Equatable {
     required this.updatedAt,
     this.isPinned = false,
     this.pinned = false,
+    this.isFavorite = false,
     this.category,
     this.metadata,
     this.syncStatus = SyncStatus.pending,
@@ -43,6 +45,7 @@ class Note extends Equatable {
     DateTime? updatedAt,
     bool? isPinned,
     bool? pinned,
+    bool? isFavorite,
     String? category,
     Map<String, dynamic>? metadata,
     SyncStatus? syncStatus,
@@ -56,6 +59,7 @@ class Note extends Equatable {
       updatedAt: updatedAt ?? this.updatedAt,
       isPinned: isPinned ?? this.isPinned,
       pinned: pinned ?? this.pinned,
+      isFavorite: isFavorite ?? this.isFavorite,
       category: category ?? this.category,
       metadata: metadata ?? this.metadata,
       syncStatus: syncStatus ?? this.syncStatus,
@@ -70,9 +74,10 @@ class Note extends Equatable {
         content,
         createdAt,
         updatedAt,
-        isPinned,
-        pinned,
-        category,
+      isPinned,
+      pinned,
+      isFavorite,
+      category,
         metadata,
         syncStatus,
         reminderTime,

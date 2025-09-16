@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
 import '../../services/mobile_optimization_service.dart';
-import '../../services/responsive_service.dart';
 import '../../services/touch_optimization_service.dart';
 import '../../services/accessibility_service.dart';
 import '../../tokens/color_tokens.dart';
 import '../../tokens/typography_tokens.dart';
 import '../../tokens/spacing_tokens.dart';
-import '../../tokens/border_tokens.dart';
 import '../../tokens/shadow_tokens.dart';
 
 /// Mobile-First Pandora Card
@@ -30,6 +28,8 @@ class MobileFirstCard extends StatefulWidget {
     this.backgroundColor,
     this.foregroundColor,
     this.borderColor,
+    this.hoverColor,
+    this.focusColor,
     this.shadowColor,
     this.elevation,
     this.borderRadius,
@@ -90,6 +90,8 @@ class MobileFirstCard extends StatefulWidget {
   final Color? backgroundColor;
   final Color? foregroundColor;
   final Color? borderColor;
+  final Color? hoverColor;
+  final Color? focusColor;
   final Color? shadowColor;
   final double? elevation;
   final BorderRadius? borderRadius;
@@ -146,7 +148,6 @@ class _MobileFirstCardState extends State<MobileFirstCard>
   late Animation<double> _opacityAnimation;
   late FocusNode _focusNode;
   bool _isFocused = false;
-  bool _isPressed = false;
 
   @override
   void initState() {
@@ -191,7 +192,6 @@ class _MobileFirstCardState extends State<MobileFirstCard>
   void _handleTapDown(TapDownDetails details) {
     if (widget.state == MobileCardState.enabled) {
       setState(() {
-        _isPressed = true;
       });
       
       if (widget.scaleOnPress) {
@@ -209,7 +209,6 @@ class _MobileFirstCardState extends State<MobileFirstCard>
 
   void _handleTapUp(TapUpDetails details) {
     setState(() {
-      _isPressed = false;
     });
     
     if (widget.scaleOnPress) {
@@ -219,7 +218,6 @@ class _MobileFirstCardState extends State<MobileFirstCard>
 
   void _handleTapCancel() {
     setState(() {
-      _isPressed = false;
     });
     
     if (widget.scaleOnPress) {
@@ -650,9 +648,8 @@ class _MobileFirstCardState extends State<MobileFirstCard>
       borderColor: widget.borderColor,
       hoverColor: widget.hoverColor,
       focusColor: widget.focusColor,
-      splashColor: widget.splashColor,
-      disabledColor: widget.disabledColor ?? 
-          (isDark ? PandoraColors.neutral600 : PandoraColors.neutral300),
+      splashColor: widget.hoverColor,
+      disabledColor: isDark ? PandoraColors.neutral600 : PandoraColors.neutral300,
     );
   }
 

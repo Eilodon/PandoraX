@@ -1,6 +1,9 @@
 name: pandora
 packages:
   - packages/**
+  - packages/cac_core
+  - packages/cac_data
+  - packages/common_entities
 
 scripts:
   get:

@@ -1,10 +1,33 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:ai_core/ai_core.dart';
-import '../widgets/ai_mode_indicator.dart';
+import '../widgets/ai_mode_indicator.dart' as mode_indicator;
 import '../widgets/chat_message_widget.dart';
 import '../widgets/ai_input_widget.dart';
-import '../widgets/ai_health_status_widget.dart';
+import '../widgets/ai_health_status_widget.dart' as health_widget;
+
+/// AI Mode Provider
+final aiModeProvider = StateProvider<AIMode>((ref) => const AIMode(
+  isOnDevice: false,
+  modelName: 'Gemini',
+  status: 'Ready',
+  lastSwitch: null,
+));
+
+/// AI Mode class
+class AIMode {
+  final bool isOnDevice;
+  final String modelName;
+  final String status;
+  final DateTime? lastSwitch;
+
+  const AIMode({
+    required this.isOnDevice,
+    required this.modelName,
+    required this.status,
+    this.lastSwitch,
+  });
+}
 
 /// Enhanced AI Chat Screen with on-device features
 class EnhancedAIChatScreen extends ConsumerStatefulWidget {
@@ -39,7 +62,7 @@ class _EnhancedAIChatScreenState extends ConsumerState<EnhancedAIChatScreen> {
   Widget build(BuildContext context) {
     final chatState = ref.watch(aiChatProvider);
     final aiMode = ref.watch(aiModeProvider);
-    final healthStatus = ref.watch(aiHealthStatusProvider);
+    final healthStatus = ref.watch(health_widget.aiHealthStatusProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -49,7 +72,7 @@ class _EnhancedAIChatScreenState extends ConsumerState<EnhancedAIChatScreen> {
           // AI Mode Indicator
           Padding(
             padding: const EdgeInsets.only(right: 16),
-            child: AIModeIndicator(
+            child: mode_indicator.AIModeIndicator(
               onTap: _showAIModeSettings,
               showDetails: true,
             ),
@@ -59,7 +82,7 @@ class _EnhancedAIChatScreenState extends ConsumerState<EnhancedAIChatScreen> {
       body: Column(
         children: [
           // Health Status Bar
-          if (healthStatus.isHealthy == false)
+          if (healthStatus != health_widget.HealthStatus.healthy)
             _buildHealthWarning(healthStatus),
           
           // Chat Messages
@@ -74,7 +97,7 @@ class _EnhancedAIChatScreenState extends ConsumerState<EnhancedAIChatScreen> {
     );
   }
 
-  Widget _buildHealthWarning(HealthStatus healthStatus) {
+  Widget _buildHealthWarning(health_widget.HealthStatus healthStatus) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
@@ -89,7 +112,7 @@ class _EnhancedAIChatScreenState extends ConsumerState<EnhancedAIChatScreen> {
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              healthStatus.recommendation,
+              'AI system needs attention',
               style: TextStyle(
                 color: Colors.orange.shade700,
                 fontSize: 12,
@@ -292,18 +315,18 @@ class _EnhancedAIChatScreenState extends ConsumerState<EnhancedAIChatScreen> {
             ),
           ),
           const SizedBox(height: 16),
-          const DetailedAIModeIndicator(),
+          const mode_indicator.DetailedAIModeIndicator(),
           const SizedBox(height: 16),
           Row(
             children: [
               Expanded(
                 child: ElevatedButton(
                   onPressed: () {
-                    ref.read(aiModeProvider.notifier).state = const AIMode(
+                    ref.read(aiModeProvider.notifier).state = AIMode(
                       isOnDevice: true,
                       modelName: 'phi-3-mini',
                       status: 'Ready',
-                      lastSwitch: null,
+                      lastSwitch: DateTime.now(),
                     );
                     Navigator.pop(context);
                   },
@@ -314,11 +337,11 @@ class _EnhancedAIChatScreenState extends ConsumerState<EnhancedAIChatScreen> {
               Expanded(
                 child: ElevatedButton(
                   onPressed: () {
-                    ref.read(aiModeProvider.notifier).state = const AIMode(
+                    ref.read(aiModeProvider.notifier).state = AIMode(
                       isOnDevice: false,
                       modelName: 'Gemini',
                       status: 'Ready',
-                      lastSwitch: null,
+                      lastSwitch: DateTime.now(),
                     );
                     Navigator.pop(context);
                   },

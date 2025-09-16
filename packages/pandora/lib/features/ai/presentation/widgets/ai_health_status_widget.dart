@@ -1,6 +1,26 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:ai_llm/src/datasources/adaptive_health_monitor.dart';
+
+/// Health Status enum for AI system
+enum HealthStatus {
+  healthy,
+  warning,
+  critical,
+  offline,
+}
+
+/// Health Sample class for AI system
+class HealthSample {
+  final DateTime timestamp;
+  final double value;
+  final String metric;
+  
+  const HealthSample({
+    required this.timestamp,
+    required this.value,
+    required this.metric,
+  });
+}
 
 /// AI Health Status Widget for displaying AI system health
 class AIHealthStatusWidget extends ConsumerWidget {
@@ -31,7 +51,7 @@ class AIHealthStatusWidget extends ConsumerWidget {
       child: Container(
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         decoration: BoxDecoration(
-          color: _getHealthColor(healthStatus.isHealthy).withOpacity(0.1),
+          color: _getHealthColor(healthStatus.isHealthy).withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(16),
           border: Border.all(
             color: _getHealthColor(healthStatus.isHealthy),
@@ -152,9 +172,9 @@ class AIHealthStatusWidget extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Column(
         children: [

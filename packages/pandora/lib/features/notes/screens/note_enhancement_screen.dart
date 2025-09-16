@@ -201,8 +201,8 @@ class _NoteEnhancementScreenState extends State<NoteEnhancementScreen> {
             width: double.infinity,
             padding: const EdgeInsets.all(16),
             color: _isAIAvailable 
-                ? Colors.green.withOpacity(0.1)
-                : Colors.orange.withOpacity(0.1),
+                ? Colors.green.withValues(alpha: 0.1)
+                : Colors.orange.withValues(alpha: 0.1),
             child: Row(
               children: [
                 Icon(
@@ -387,7 +387,7 @@ class _NoteEnhancementScreenState extends State<NoteEnhancementScreen> {
               color: Theme.of(context).cardColor,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 4,
                   offset: const Offset(0, -2),
                 ),
@@ -469,7 +469,7 @@ class _NoteEnhancementScreenState extends State<NoteEnhancementScreen> {
               width: double.infinity,
               padding: const EdgeInsets.all(12),
               decoration: BoxDecoration(
-                color: Colors.grey.withOpacity(0.1),
+                color: Colors.grey.withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(content),

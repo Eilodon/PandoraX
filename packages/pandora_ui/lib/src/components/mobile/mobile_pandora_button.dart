@@ -3,7 +3,6 @@ import 'package:flutter/services.dart';
 import '../../tokens/color_tokens.dart';
 import '../../tokens/typography_tokens.dart';
 import '../../tokens/spacing_tokens.dart';
-import '../../tokens/border_tokens.dart';
 import '../../tokens/shadow_tokens.dart';
 import '../../services/responsive_service.dart';
 import '../../services/accessibility_service.dart';
@@ -133,7 +132,6 @@ class _MobilePandoraButtonState extends State<MobilePandoraButton>
   late Animation<double> _opacityAnimation;
   late FocusNode _focusNode;
   bool _isFocused = false;
-  bool _isPressed = false;
 
   @override
   void initState() {
@@ -189,7 +187,6 @@ class _MobilePandoraButtonState extends State<MobilePandoraButton>
   void _handleTapDown(TapDownDetails details) {
     if (widget.state == MobileButtonState.enabled) {
       setState(() {
-        _isPressed = true;
       });
       
       if (widget.scaleOnPress) {
@@ -204,7 +201,6 @@ class _MobilePandoraButtonState extends State<MobilePandoraButton>
 
   void _handleTapUp(TapUpDetails details) {
     setState(() {
-      _isPressed = false;
     });
     
     if (widget.scaleOnPress) {
@@ -214,7 +210,6 @@ class _MobilePandoraButtonState extends State<MobilePandoraButton>
 
   void _handleTapCancel() {
     setState(() {
-      _isPressed = false;
     });
     
     if (widget.scaleOnPress) {

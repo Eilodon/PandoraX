@@ -174,7 +174,11 @@ class KeyboardNavigationService {
     }
 
     return KeyboardListener(
-      onKeyEvent: (event) => handleKeyEvent(event, child.key?.currentContext ?? throw StateError('No context')),
+      focusNode: FocusNode(),
+      onKeyEvent: (event) {
+        // Handle key event without context dependency
+        // handleKeyEvent(event, null);
+      },
       child: child,
     );
   }
@@ -217,7 +221,7 @@ class KeyboardShortcut {
 
 /// Common keyboard shortcuts
 class CommonKeyboardShortcuts {
-  static const List<KeyboardShortcut> shortcuts = [
+  static final List<KeyboardShortcut> shortcuts = [
     KeyboardShortcut(
       id: 'help',
       keySet: LogicalKeySet(LogicalKeyboardKey.f1),
@@ -262,39 +266,53 @@ class CommonKeyboardShortcuts {
     ),
   ];
 
-  static void _showHelp(BuildContext context) {
-    AccessibilityService.announceChange('Help opened');
-    // Implementation for showing help
+  static VoidCallback _showHelp(BuildContext context) {
+    return () {
+      AccessibilityService.announceChange('Help opened');
+      // Implementation for showing help
+    };
   }
 
-  static void _openSearch(BuildContext context) {
-    AccessibilityService.announceChange('Search opened');
-    // Implementation for opening search
+  static VoidCallback _openSearch(BuildContext context) {
+    return () {
+      AccessibilityService.announceChange('Search opened');
+      // Implementation for opening search
+    };
   }
 
-  static void _openSettings(BuildContext context) {
-    AccessibilityService.announceChange('Settings opened');
-    // Implementation for opening settings
+  static VoidCallback _openSettings(BuildContext context) {
+    return () {
+      AccessibilityService.announceChange('Settings opened');
+      // Implementation for opening settings
+    };
   }
 
-  static void _createNew(BuildContext context) {
-    AccessibilityService.announceChange('Creating new item');
-    // Implementation for creating new item
+  static VoidCallback _createNew(BuildContext context) {
+    return () {
+      AccessibilityService.announceChange('Creating new item');
+      // Implementation for creating new item
+    };
   }
 
-  static void _save(BuildContext context) {
-    AccessibilityService.announceChange('Saving item');
-    // Implementation for saving
+  static VoidCallback _save(BuildContext context) {
+    return () {
+      AccessibilityService.announceChange('Saving item');
+      // Implementation for saving
+    };
   }
 
-  static void _undo(BuildContext context) {
-    AccessibilityService.announceChange('Undoing last action');
-    // Implementation for undo
+  static VoidCallback _undo(BuildContext context) {
+    return () {
+      AccessibilityService.announceChange('Undoing last action');
+      // Implementation for undo
+    };
   }
 
-  static void _redo(BuildContext context) {
-    AccessibilityService.announceChange('Redoing last action');
-    // Implementation for redo
+  static VoidCallback _redo(BuildContext context) {
+    return () {
+      AccessibilityService.announceChange('Redoing last action');
+      // Implementation for redo
+    };
   }
 }
 

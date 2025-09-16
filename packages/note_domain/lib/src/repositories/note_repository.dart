@@ -13,4 +13,5 @@ abstract class NoteRepository {
   Future<List<Note>> getNotesByCategory(String category);
   Stream<List<Note>> watchAllNotes();
   Future<List<Note>> syncPendingNotes();
+  Future<void> syncNotes();
 }

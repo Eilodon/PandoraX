@@ -41,7 +41,7 @@ class _MemorySearchBarState extends State<MemorySearchBar> {
             border: Border.all(color: Colors.grey[300]!),
             boxShadow: [
               BoxShadow(
-                color: Colors.grey.withOpacity(0.1),
+                color: Colors.grey.withValues(alpha: 0.1),
                 spreadRadius: 1,
                 blurRadius: 3,
                 offset: const Offset(0, 1),
@@ -173,7 +173,7 @@ class _MemorySearchBarState extends State<MemorySearchBar> {
         ),
         const SizedBox(height: 4),
         DropdownButtonFormField<String>(
-          value: _selectedMemoryType,
+          initialValue: _selectedMemoryType,
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
             contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -211,7 +211,7 @@ class _MemorySearchBarState extends State<MemorySearchBar> {
         ),
         const SizedBox(height: 4),
         DropdownButtonFormField<String>(
-          value: _selectedSource,
+          initialValue: _selectedSource,
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
             contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
@@ -248,7 +248,7 @@ class _MemorySearchBarState extends State<MemorySearchBar> {
         ),
         const SizedBox(height: 4),
         DropdownButtonFormField<String>(
-          value: _selectedTimeRange,
+          initialValue: _selectedTimeRange,
           decoration: const InputDecoration(
             border: OutlineInputBorder(),
             contentPadding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),

@@ -1,119 +1,117 @@
-/// Service Locator for Phase 4 Architecture
-/// 
-/// This file provides a simplified dependency injection system
-/// using GetIt for better testability and maintainability.
-library service_locator;
-
 import 'package:get_it/get_it.dart';
-import 'package:note_domain/note_domain.dart';
-import 'package:note_data/note_data.dart';
-import 'app_state.dart';
-import 'app_state_notifier.dart';
+import '../repositories/note_repository.dart';
+import '../state/app_state_notifier.dart';
 
-/// Global service locator instance
-final GetIt _instance = GetIt.instance;
-
-/// Service Locator for dependency injection
+/// Service Locator
+/// 
+/// Manages dependency injection for the application
 class ServiceLocator {
-  /// Initialize all services
-  static void setup() {
-    // Core services
-    _instance.registerLazySingleton<AppStateNotifier>(() => AppStateNotifier());
-    
-    // Data services
-    _instance.registerLazySingleton<IsarService>(() => IsarService());
+  static final GetIt _instance = GetIt.instance;
+
+  /// Register all dependencies
+  static Future<void> registerDependencies() async {
+    // Register repositories
     _instance.registerLazySingleton<NoteRepository>(
-      () => NoteRepositoryImpl(_instance<IsarService>()),
+      () => throw UnimplementedError('NoteRepository must be registered'),
     );
-    
-    // Theme service
-    _instance.registerLazySingleton<ThemeService>(() => ThemeService());
-    
-    // Navigation service
-    _instance.registerLazySingleton<NavigationService>(() => NavigationService());
-    
-    // AI service
-    _instance.registerLazySingleton<AIService>(() => AIService());
-    
-    // Analytics service
-    _instance.registerLazySingleton<AnalyticsService>(() => AnalyticsService());
+
+    // Register state notifiers
+    _instance.registerLazySingleton<AppStateNotifier>(
+      () => AppStateNotifier(),
+    );
+
+    // Register services
+    _instance.registerLazySingleton<ThemeService>(
+      () => ThemeService(),
+    );
+
+    _instance.registerLazySingleton<NavigationService>(
+      () => NavigationService(),
+    );
+
+    _instance.registerLazySingleton<AIService>(
+      () => AIService(),
+    );
+
+    _instance.registerLazySingleton<AnalyticsService>(
+      () => AnalyticsService(),
+    );
   }
 
   /// Get a service by type
-  static T get<T extends Object>() => _instance.get<T>();
+  static T get<T extends Object>() {
+    return _instance.get<T>();
+  }
 
-  /// Check if a service is registered
-  static bool isRegistered<T extends Object>() => _instance.isRegistered<T>();
+  /// Register a service
+  static void register<T extends Object>(T service) {
+    _instance.registerSingleton<T>(service);
+  }
 
-  /// Reset all services (useful for testing)
+  /// Reset all services
   static void reset() {
     _instance.reset();
   }
 }
 
-/// Theme Service for managing app themes
+/// Theme Service
 class ThemeService {
   bool _isDarkMode = false;
-  
+
   bool get isDarkMode => _isDarkMode;
-  
-  void toggleTheme() {
-    _isDarkMode = !_isDarkMode;
+
+  void setDarkMode(bool isDarkMode) {
+    _isDarkMode = isDarkMode;
   }
-  
-  void setTheme(bool isDark) {
-    _isDarkMode = isDark;
+
+  void toggleDarkMode() {
+    _isDarkMode = !_isDarkMode;
   }
 }
 
-/// Navigation Service for managing app navigation
+/// Navigation Service
 class NavigationService {
-  String _currentScreen = 'welcome';
-  
+  String _currentScreen = 'home';
+
   String get currentScreen => _currentScreen;
-  
+
   void navigateTo(String screen) {
     _currentScreen = screen;
   }
-  
+
   void goBack() {
-    // Implement back navigation logic
+    // Implementation for going back
   }
 }
 
-/// AI Service for AI-related operations
+/// AI Service
 class AIService {
-  Future<String> generateSummary(String content) async {
-    // Implement AI summary generation
-    await Future.delayed(const Duration(seconds: 1));
-    return 'AI generated summary for: ${content.substring(0, 50)}...';
+  Future<String> generateResponse(String prompt) async {
+    // Implementation for AI response generation
+    return 'AI response for: $prompt';
   }
-  
-  Future<String> generateTitle(String content) async {
-    // Implement AI title generation
-    await Future.delayed(const Duration(milliseconds: 500));
-    return 'AI Generated Title';
+
+  Future<List<String>> getSuggestions(String input) async {
+    // Implementation for AI suggestions
+    return ['Suggestion 1', 'Suggestion 2'];
   }
-  
-  Future<List<String>> generateTags(String content) async {
-    // Implement AI tag generation
-    await Future.delayed(const Duration(milliseconds: 300));
-    return ['AI', 'Generated', 'Tags'];
+
+  Future<List<double>> createEmbedding(String content) async {
+    // Implementation for creating embeddings
+    // Return a dummy embedding vector
+    return List.generate(384, (index) => (index * 0.01).toDouble());
   }
 }
 
-/// Analytics Service for tracking user behavior
+/// Analytics Service
 class AnalyticsService {
-  void trackEvent(String eventName, Map<String, dynamic> properties) {
-    // Implement analytics tracking
-    print('Analytics: $eventName with properties: $properties');
+  void trackEvent(String eventName, Map<String, dynamic> parameters) {
+    // Implementation for analytics tracking
+    print('Analytics: $eventName - $parameters');
   }
-  
+
   void trackScreenView(String screenName) {
-    trackEvent('screen_view', {'screen_name': screenName});
-  }
-  
-  void trackUserAction(String action, Map<String, dynamic> context) {
-    trackEvent('user_action', {'action': action, 'context': context});
+    // Implementation for screen view tracking
+    print('Screen view: $screenName');
   }
 }

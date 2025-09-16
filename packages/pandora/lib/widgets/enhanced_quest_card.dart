@@ -5,6 +5,7 @@ import '../services/xp_level_system.dart';
 import '../services/gold_reward_system.dart';
 import '../services/mascot_service.dart';
 import '../services/mascot_enums.dart';
+import '../services/decoration_system.dart';
 import 'package:pandora_ui/pandora_ui.dart';
 
 /// Enhanced Quest Card with completion animation
@@ -290,7 +291,7 @@ class _EnhancedQuestCardState extends ConsumerState<EnhancedQuestCard>
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
         border: Border.all(color: color, width: 1),
       ),
@@ -341,7 +342,7 @@ class _EnhancedQuestCardState extends ConsumerState<EnhancedQuestCard>
     return Positioned.fill(
       child: Container(
         decoration: BoxDecoration(
-          color: PandoraColors.success500.withOpacity(0.1),
+          color: PandoraColors.success500.withValues(alpha: 0.1),
           borderRadius: BorderRadius.circular(16),
         ),
         child: Center(
@@ -357,7 +358,7 @@ class _EnhancedQuestCardState extends ConsumerState<EnhancedQuestCard>
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: PandoraColors.success500.withOpacity(0.3),
+                        color: PandoraColors.success500.withValues(alpha: 0.3),
                         blurRadius: 20,
                         spreadRadius: 5,
                       ),
@@ -499,7 +500,7 @@ class CompletionProgressPainter extends CustomPainter {
     
     // Background circle
     final backgroundPaint = Paint()
-      ..color = color.withOpacity(0.2)
+      ..color = color.withValues(alpha: 0.2)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
     

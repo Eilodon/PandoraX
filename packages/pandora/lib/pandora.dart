@@ -9,7 +9,7 @@ export 'services/mascot_task_integration.dart';
 export 'services/decoration_system.dart';
 export 'services/mascot_thought_bubbles.dart';
 export 'services/gold_reward_system.dart';
-export 'services/xp_level_system.dart';
+export 'services/xp_level_system.dart' hide AchievementType, sharedPreferencesProvider;
 export 'services/celebration_overlay_controller.dart';
 export 'services/sound_effects_service.dart';
 
@@ -25,6 +25,6 @@ export 'features/mascot/presentation/mascot_environment_demo_screen.dart';
 export 'features/mascot/presentation/celebration_demo_screen.dart';
 
 // Main Entry Points
-export 'main.dart';
-export 'main_demo.dart';
-export 'main_production.dart';
+export 'main.dart' hide main, MyApp;
+export 'main_demo.dart' hide main;
+export 'main_production.dart' hide main;

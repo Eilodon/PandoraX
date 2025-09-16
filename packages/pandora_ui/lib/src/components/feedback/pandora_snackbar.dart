@@ -3,8 +3,6 @@ import '../../tokens/color_tokens.dart';
 import '../../tokens/typography_tokens.dart';
 import '../../tokens/spacing_tokens.dart';
 import '../../tokens/border_tokens.dart';
-import '../../tokens/shadow_tokens.dart';
-import '../../utils/pandora_extensions.dart';
 
 /// Pandora 4 Snackbar
 /// 

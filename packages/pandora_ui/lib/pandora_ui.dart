@@ -107,10 +107,10 @@ export 'src/theme.dart';
 // Essential UI building blocks following Material Design principles
 
 /// Button components with multiple variants and sizes
-export 'src/components/buttons/pandora_button.dart';
+export 'src/components/buttons/pandora_button.dart' hide IconPosition, ButtonColors;
 
 /// Card components for content display
-export 'src/components/cards/pandora_card.dart';
+export 'src/components/cards/pandora_card.dart' hide CardColors, CardDimensions;
 
 /// Input components for user data entry
 export 'src/components/inputs/pandora_text_field.dart';
@@ -190,7 +190,7 @@ export 'src/services/animation_optimization_service.dart';
 // Enhanced components with full accessibility support
 
 /// Accessible button component
-export 'src/components/buttons/accessible_pandora_button.dart';
+export 'src/components/buttons/accessible_pandora_button.dart' hide IconPosition, ButtonColors, ButtonDimensions;
 
 // ============================================================================
 // MOBILE-FIRST COMPONENTS
@@ -198,16 +198,16 @@ export 'src/components/buttons/accessible_pandora_button.dart';
 // Advanced mobile-first components for Phase 2 development
 
 /// Mobile-first card component with responsive behavior
-export 'src/components/mobile/mobile_first_card.dart';
+export 'src/components/mobile/mobile_first_card.dart' hide CardColors, CardDimensions;
 
 /// Mobile-first text field with touch optimization
-export 'src/components/mobile/mobile_first_text_field.dart';
+export 'src/components/mobile/mobile_first_text_field.dart' hide MobileTextFieldVariant, MobileTextFieldSize, MobileTextFieldState, TextFieldColors, TextFieldDimensions;
 
 /// Mobile-first navigation with gesture support
-export 'src/components/mobile/mobile_first_navigation.dart';
+export 'src/components/mobile/mobile_first_navigation.dart' hide MobileNavigationType, MobileNavigationVariant, MobileNavigationSize, MobileNavigationState;
 
 /// Mobile-optimized button component
-export 'src/components/mobile/mobile_pandora_button.dart';
+export 'src/components/mobile/mobile_pandora_button.dart' hide IconPosition, ButtonColors, ButtonDimensions;
 
 // ============================================================================
 // PERFORMANCE OPTIMIZED COMPONENTS
@@ -215,7 +215,7 @@ export 'src/components/mobile/mobile_pandora_button.dart';
 // High-performance components for Phase 3 optimization
 
 /// Performance optimized card component with advanced optimization
-export 'src/components/performance/performance_optimized_card.dart';
+export 'src/components/performance/performance_optimized_card.dart' hide PerformanceCardVariant, PerformanceCardSize, PerformanceCardState, MemoryOptimizationLevel;
 
 // ============================================================================
 // UTILITIES

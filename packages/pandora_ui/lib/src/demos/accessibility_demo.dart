@@ -231,7 +231,7 @@ class _AccessibilityDemoScreenState extends State<AccessibilityDemoScreen> {
             ),
             const SizedBox(height: 16),
             DropdownButtonFormField<String>(
-              value: _selectedOption,
+              initialValue: _selectedOption,
               decoration: const InputDecoration(
                 labelText: 'Select Option',
                 border: OutlineInputBorder(),

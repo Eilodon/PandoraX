@@ -6,10 +6,10 @@ library app_providers;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:note_domain/note_domain.dart';
-import 'package:note_data/note_data.dart';
-import 'app_state.dart';
-import 'app_state_notifier.dart';
-import 'service_locator.dart';
+import '../state/app_state.dart';
+import '../state/app_state_notifier.dart';
+import '../services/service_locator.dart';
+import '../entities/user.dart';
 
 /// App state provider
 final appStateProvider = StateNotifierProvider<AppStateNotifier, AppState>(
@@ -153,8 +153,8 @@ final searchSuggestionsProvider = Provider<List<String>>((ref) {
     suggestions.addAll(titleWords.where((word) => word.length > 2));
     
     // Add category as suggestion
-    if (note.category.isNotEmpty) {
-      suggestions.add(note.category.toLowerCase());
+    if (note.category?.isNotEmpty == true) {
+      suggestions.add(note.category!.toLowerCase());
     }
   }
   

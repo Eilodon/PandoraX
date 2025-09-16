@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pandora_ui/pandora_ui.dart';
 import '../providers/dashboard_providers.dart';
 import '../../mascot/presentation/lottie_mascot.dart';
+import '../../mascot/providers/mascot_state.dart';
 import '../widgets/quest_panel.dart';
 import '../widgets/dashboard_header.dart';
 import '../widgets/dashboard_footer.dart';

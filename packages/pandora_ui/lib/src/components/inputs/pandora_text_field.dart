@@ -2,10 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../tokens/color_tokens.dart';
 import '../../tokens/typography_tokens.dart';
-import '../../tokens/spacing_tokens.dart';
 import '../../tokens/border_tokens.dart';
 import '../../tokens/shadow_tokens.dart';
-import '../../utils/pandora_extensions.dart';
 
 /// Pandora 4 Text Field
 /// 
@@ -238,11 +236,13 @@ class PandoraTextField extends StatefulWidget {
   final String? tooltip;
 
   @override
-  State<PandoraTextField> createState() => _PandoraTextFieldState();
+  State<PandoraTextField> createState() => _PandoraTextFieldState._();
 }
 
 class _PandoraTextFieldState extends State<PandoraTextField>
     with SingleTickerProviderStateMixin {
+  _PandoraTextFieldState._();
+  
   late AnimationController _animationController;
   late Animation<double> _scaleAnimation;
   late Animation<double> _elevationAnimation;
@@ -352,10 +352,10 @@ class _PandoraTextFieldState extends State<PandoraTextField>
             width: widget.width,
             height: widget.height,
             constraints: BoxConstraints(
-              minWidth: widget.minWidth ?? dimensions.minWidth,
-              minHeight: widget.minHeight ?? dimensions.minHeight,
-              maxWidth: widget.maxWidth ?? dimensions.maxWidth,
-              maxHeight: widget.maxHeight ?? dimensions.maxHeight,
+              minWidth: widget.minWidth ?? dimensions.minWidth ?? 0.0,
+              minHeight: widget.minHeight ?? dimensions.minHeight ?? 0.0,
+              maxWidth: widget.maxWidth ?? dimensions.maxWidth ?? double.infinity,
+              maxHeight: widget.maxHeight ?? dimensions.maxHeight ?? double.infinity,
             ),
             decoration: BoxDecoration(
               color: colors.fillColor,
@@ -500,13 +500,13 @@ class _PandoraTextFieldState extends State<PandoraTextField>
         borderSide: BorderSide(color: colors.disabledBorderColor ?? Colors.transparent),
       ),
       contentPadding: widget.padding ?? dimensions.padding,
-      labelStyle: dimensions.labelStyle.copyWith(color: colors.labelColor),
-      hintStyle: dimensions.hintStyle.copyWith(color: colors.hintColor),
-      helperStyle: dimensions.helperStyle.copyWith(color: colors.helperColor),
-      errorStyle: dimensions.errorStyle.copyWith(color: colors.errorColor),
-      counterStyle: dimensions.counterStyle.copyWith(color: colors.counterColor),
-      prefixStyle: dimensions.prefixStyle.copyWith(color: colors.prefixColor),
-      suffixStyle: dimensions.suffixStyle.copyWith(color: colors.suffixColor),
+      labelStyle: dimensions.labelStyle?.copyWith(color: colors.labelColor),
+      hintStyle: dimensions.hintStyle?.copyWith(color: colors.hintColor),
+      helperStyle: dimensions.helperStyle?.copyWith(color: colors.helperColor),
+      errorStyle: dimensions.errorStyle?.copyWith(color: colors.errorColor),
+      counterStyle: dimensions.counterStyle?.copyWith(color: colors.counterColor),
+      prefixStyle: dimensions.prefixStyle?.copyWith(color: colors.prefixColor),
+      suffixStyle: dimensions.suffixStyle?.copyWith(color: colors.suffixColor),
     );
   }
 
@@ -527,6 +527,9 @@ class _PandoraTextFieldState extends State<PandoraTextField>
               (isDark ? PandoraColors.error400 : PandoraColors.error500),
           disabledBorderColor: widget.disabledBorderColor ?? 
               (isDark ? PandoraColors.neutral600 : PandoraColors.neutral300),
+          counterColor: isDark ? PandoraColors.neutral400 : PandoraColors.neutral600,
+          prefixColor: isDark ? PandoraColors.neutral400 : PandoraColors.neutral600,
+          suffixColor: isDark ? PandoraColors.neutral400 : PandoraColors.neutral600,
           labelColor: widget.labelColor ?? 
               (isDark ? PandoraColors.neutral300 : PandoraColors.neutral700),
           focusedLabelColor: widget.focusedLabelColor ?? 
@@ -554,12 +557,9 @@ class _PandoraTextFieldState extends State<PandoraTextField>
           cursorColor: widget.cursorColor ?? 
               (isDark ? PandoraColors.primary400 : PandoraColors.primary500),
           selectionColor: widget.selectionColor ?? 
-              (isDark ? PandoraColors.primary400.withValues(alpha:(0.3) : PandoraColors.primary500.withValues(alpha:(0.3)),
+              (isDark ? PandoraColors.primary400.withValues(alpha: 0.3) : PandoraColors.primary500.withValues(alpha: 0.3)),
           errorColor: widget.errorText != null ? 
               (isDark ? PandoraColors.error400 : PandoraColors.error500) : null,
-          counterColor: isDark ? PandoraColors.neutral400 : PandoraColors.neutral600,
-          prefixColor: isDark ? PandoraColors.neutral400 : PandoraColors.neutral600,
-          suffixColor: isDark ? PandoraColors.neutral400 : PandoraColors.neutral600,
         );
       case PandoraTextFieldVariant.filled:
         return TextFieldColors(
@@ -571,6 +571,9 @@ class _PandoraTextFieldState extends State<PandoraTextField>
           errorBorderColor: widget.errorBorderColor ?? 
               (isDark ? PandoraColors.error400 : PandoraColors.error500),
           disabledBorderColor: widget.disabledBorderColor ?? Colors.transparent,
+          counterColor: isDark ? PandoraColors.neutral400 : PandoraColors.neutral600,
+          prefixColor: isDark ? PandoraColors.neutral400 : PandoraColors.neutral600,
+          suffixColor: isDark ? PandoraColors.neutral400 : PandoraColors.neutral600,
           labelColor: widget.labelColor ?? 
               (isDark ? PandoraColors.neutral300 : PandoraColors.neutral700),
           focusedLabelColor: widget.focusedLabelColor ?? 
@@ -598,12 +601,9 @@ class _PandoraTextFieldState extends State<PandoraTextField>
           cursorColor: widget.cursorColor ?? 
               (isDark ? PandoraColors.primary400 : PandoraColors.primary500),
           selectionColor: widget.selectionColor ?? 
-              (isDark ? PandoraColors.primary400.withValues(alpha:(0.3) : PandoraColors.primary500.withValues(alpha:(0.3)),
+              (isDark ? PandoraColors.primary400.withValues(alpha: 0.3) : PandoraColors.primary500.withValues(alpha: 0.3)),
           errorColor: widget.errorText != null ? 
               (isDark ? PandoraColors.error400 : PandoraColors.error500) : null,
-          counterColor: isDark ? PandoraColors.neutral400 : PandoraColors.neutral600,
-          prefixColor: isDark ? PandoraColors.neutral400 : PandoraColors.neutral600,
-          suffixColor: isDark ? PandoraColors.neutral400 : PandoraColors.neutral600,
         );
       case PandoraTextFieldVariant.underlined:
         return TextFieldColors(
@@ -616,6 +616,9 @@ class _PandoraTextFieldState extends State<PandoraTextField>
               (isDark ? PandoraColors.error400 : PandoraColors.error500),
           disabledBorderColor: widget.disabledBorderColor ?? 
               (isDark ? PandoraColors.neutral600 : PandoraColors.neutral300),
+          counterColor: isDark ? PandoraColors.neutral400 : PandoraColors.neutral600,
+          prefixColor: isDark ? PandoraColors.neutral400 : PandoraColors.neutral600,
+          suffixColor: isDark ? PandoraColors.neutral400 : PandoraColors.neutral600,
           labelColor: widget.labelColor ?? 
               (isDark ? PandoraColors.neutral300 : PandoraColors.neutral700),
           focusedLabelColor: widget.focusedLabelColor ?? 
@@ -643,12 +646,9 @@ class _PandoraTextFieldState extends State<PandoraTextField>
           cursorColor: widget.cursorColor ?? 
               (isDark ? PandoraColors.primary400 : PandoraColors.primary500),
           selectionColor: widget.selectionColor ?? 
-              (isDark ? PandoraColors.primary400.withValues(alpha:(0.3) : PandoraColors.primary500.withValues(alpha:(0.3)),
+              (isDark ? PandoraColors.primary400.withValues(alpha: 0.3) : PandoraColors.primary500.withValues(alpha: 0.3)),
           errorColor: widget.errorText != null ? 
               (isDark ? PandoraColors.error400 : PandoraColors.error500) : null,
-          counterColor: isDark ? PandoraColors.neutral400 : PandoraColors.neutral600,
-          prefixColor: isDark ? PandoraColors.neutral400 : PandoraColors.neutral600,
-          suffixColor: isDark ? PandoraColors.neutral400 : PandoraColors.neutral600,
         );
     }
   }
@@ -657,16 +657,15 @@ class _PandoraTextFieldState extends State<PandoraTextField>
     switch (widget.size) {
       case PandoraTextFieldSize.xs:
         return TextFieldDimensions(
-          padding: const EdgeInsets.symmetric(
-            horizontal: PandoraSpacing.space8,
-            vertical: PandoraSpacing.space4,
-          ),
-          minWidth: 120.0,
-          minHeight: 32.0,
-          maxWidth: double.infinity,
-          maxHeight: 40.0,
+          height: 32.0,
+          padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 4.0),
+          borderRadius: PandoraBorders.borderRadiusSm,
+          minWidth: widget.minWidth,
+          minHeight: widget.minHeight,
+          maxWidth: widget.maxWidth,
+          maxHeight: widget.maxHeight,
           textStyle: PandoraTypography.bodySmall,
-          labelStyle: PandoraTypography.labelSmall,
+          labelStyle: PandoraTypography.bodySmall,
           hintStyle: PandoraTypography.bodySmall,
           helperStyle: PandoraTypography.caption,
           errorStyle: PandoraTypography.caption,
@@ -676,16 +675,15 @@ class _PandoraTextFieldState extends State<PandoraTextField>
         );
       case PandoraTextFieldSize.sm:
         return TextFieldDimensions(
-          padding: const EdgeInsets.symmetric(
-            horizontal: PandoraSpacing.space12,
-            vertical: PandoraSpacing.space6,
-          ),
-          minWidth: 160.0,
-          minHeight: 36.0,
-          maxWidth: double.infinity,
-          maxHeight: 44.0,
+          height: 36.0,
+          padding: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 6.0),
+          borderRadius: PandoraBorders.borderRadiusSm,
+          minWidth: widget.minWidth,
+          minHeight: widget.minHeight,
+          maxWidth: widget.maxWidth,
+          maxHeight: widget.maxHeight,
           textStyle: PandoraTypography.bodyMedium,
-          labelStyle: PandoraTypography.labelMedium,
+          labelStyle: PandoraTypography.bodyMedium,
           hintStyle: PandoraTypography.bodyMedium,
           helperStyle: PandoraTypography.caption,
           errorStyle: PandoraTypography.caption,
@@ -695,16 +693,15 @@ class _PandoraTextFieldState extends State<PandoraTextField>
         );
       case PandoraTextFieldSize.md:
         return TextFieldDimensions(
-          padding: const EdgeInsets.symmetric(
-            horizontal: PandoraSpacing.space16,
-            vertical: PandoraSpacing.space8,
-          ),
-          minWidth: 200.0,
-          minHeight: 40.0,
-          maxWidth: double.infinity,
-          maxHeight: 48.0,
+          height: 40.0,
+          padding: const EdgeInsets.symmetric(horizontal: 16.0, vertical: 8.0),
+          borderRadius: PandoraBorders.borderRadiusMd,
+          minWidth: widget.minWidth,
+          minHeight: widget.minHeight,
+          maxWidth: widget.maxWidth,
+          maxHeight: widget.maxHeight,
           textStyle: PandoraTypography.bodyLarge,
-          labelStyle: PandoraTypography.labelLarge,
+          labelStyle: PandoraTypography.bodyLarge,
           hintStyle: PandoraTypography.bodyLarge,
           helperStyle: PandoraTypography.caption,
           errorStyle: PandoraTypography.caption,
@@ -714,39 +711,37 @@ class _PandoraTextFieldState extends State<PandoraTextField>
         );
       case PandoraTextFieldSize.lg:
         return TextFieldDimensions(
-          padding: const EdgeInsets.symmetric(
-            horizontal: PandoraSpacing.space20,
-            vertical: PandoraSpacing.space10,
-          ),
-          minWidth: 240.0,
-          minHeight: 44.0,
-          maxWidth: double.infinity,
-          maxHeight: 52.0,
+          height: 44.0,
+          padding: const EdgeInsets.symmetric(horizontal: 20.0, vertical: 10.0),
+          borderRadius: PandoraBorders.borderRadiusLg,
+          minWidth: widget.minWidth,
+          minHeight: widget.minHeight,
+          maxWidth: widget.maxWidth,
+          maxHeight: widget.maxHeight,
           textStyle: PandoraTypography.titleSmall,
           labelStyle: PandoraTypography.titleSmall,
           hintStyle: PandoraTypography.titleSmall,
-          helperStyle: PandoraTypography.caption,
-          errorStyle: PandoraTypography.caption,
-          counterStyle: PandoraTypography.caption,
+          helperStyle: PandoraTypography.bodySmall,
+          errorStyle: PandoraTypography.bodySmall,
+          counterStyle: PandoraTypography.bodySmall,
           prefixStyle: PandoraTypography.titleSmall,
           suffixStyle: PandoraTypography.titleSmall,
         );
       case PandoraTextFieldSize.xl:
         return TextFieldDimensions(
-          padding: const EdgeInsets.symmetric(
-            horizontal: PandoraSpacing.space24,
-            vertical: PandoraSpacing.space12,
-          ),
-          minWidth: 280.0,
-          minHeight: 48.0,
-          maxWidth: double.infinity,
-          maxHeight: 56.0,
+          height: 48.0,
+          padding: const EdgeInsets.symmetric(horizontal: 24.0, vertical: 12.0),
+          borderRadius: PandoraBorders.borderRadiusLg,
+          minWidth: widget.minWidth,
+          minHeight: widget.minHeight,
+          maxWidth: widget.maxWidth,
+          maxHeight: widget.maxHeight,
           textStyle: PandoraTypography.titleMedium,
           labelStyle: PandoraTypography.titleMedium,
           hintStyle: PandoraTypography.titleMedium,
-          helperStyle: PandoraTypography.caption,
-          errorStyle: PandoraTypography.caption,
-          counterStyle: PandoraTypography.caption,
+          helperStyle: PandoraTypography.bodyMedium,
+          errorStyle: PandoraTypography.bodyMedium,
+          counterStyle: PandoraTypography.bodyMedium,
           prefixStyle: PandoraTypography.titleMedium,
           suffixStyle: PandoraTypography.titleMedium,
         );
@@ -778,6 +773,42 @@ class _PandoraTextFieldState extends State<PandoraTextField>
         return 0.0;
     }
   }
+}
+
+class TextFieldDimensions {
+  const TextFieldDimensions({
+    required this.height,
+    required this.padding,
+    required this.borderRadius,
+    this.minWidth,
+    this.minHeight,
+    this.maxWidth,
+    this.maxHeight,
+    this.textStyle,
+    this.labelStyle,
+    this.hintStyle,
+    this.helperStyle,
+    this.errorStyle,
+    this.counterStyle,
+    this.prefixStyle,
+    this.suffixStyle,
+  });
+
+  final double height;
+  final EdgeInsets padding;
+  final BorderRadius borderRadius;
+  final double? minWidth;
+  final double? minHeight;
+  final double? maxWidth;
+  final double? maxHeight;
+  final TextStyle? textStyle;
+  final TextStyle? labelStyle;
+  final TextStyle? hintStyle;
+  final TextStyle? helperStyle;
+  final TextStyle? errorStyle;
+  final TextStyle? counterStyle;
+  final TextStyle? prefixStyle;
+  final TextStyle? suffixStyle;
 }
 
 class TextFieldColors {
@@ -830,36 +861,4 @@ class TextFieldColors {
   final Color counterColor;
   final Color prefixColor;
   final Color suffixColor;
-}
-
-class TextFieldDimensions {
-  const TextFieldDimensions({
-    required this.padding,
-    required this.minWidth,
-    required this.minHeight,
-    required this.maxWidth,
-    required this.maxHeight,
-    required this.textStyle,
-    required this.labelStyle,
-    required this.hintStyle,
-    required this.helperStyle,
-    required this.errorStyle,
-    required this.counterStyle,
-    required this.prefixStyle,
-    required this.suffixStyle,
-  });
-
-  final EdgeInsets padding;
-  final double minWidth;
-  final double minHeight;
-  final double maxWidth;
-  final double maxHeight;
-  final TextStyle textStyle;
-  final TextStyle labelStyle;
-  final TextStyle hintStyle;
-  final TextStyle helperStyle;
-  final TextStyle errorStyle;
-  final TextStyle counterStyle;
-  final TextStyle prefixStyle;
-  final TextStyle suffixStyle;
 }

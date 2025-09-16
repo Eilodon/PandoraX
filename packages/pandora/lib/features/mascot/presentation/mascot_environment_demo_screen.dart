@@ -4,6 +4,7 @@ import '../../../services/decoration_system.dart';
 import '../../../services/gold_reward_system.dart';
 import '../../../services/mascot_service.dart';
 import '../../../services/mascot_thought_bubbles.dart';
+import '../../../services/mascot_enums.dart';
 import '../../../widgets/mascot_environment_widget.dart';
 import 'package:pandora_ui/pandora_ui.dart';
 
@@ -245,13 +246,13 @@ class _MascotEnvironmentDemoScreenState extends ConsumerState<MascotEnvironmentD
       streakCount: streakCount,
     );
     
-    _showGoldAnimation();
+    _triggerGoldAnimation();
   }
 
   void _simulateAchievement(AchievementType achievement) {
     final goldSystem = ref.read(goldRewardSystemProvider);
     goldSystem.rewardSpecialAchievement(achievement);
-    _showGoldAnimation();
+    _triggerGoldAnimation();
   }
 
   void _touchMascot() {
@@ -316,7 +317,7 @@ class _MascotEnvironmentDemoScreenState extends ConsumerState<MascotEnvironmentD
     );
   }
 
-  void _showGoldAnimation() {
+  void _triggerGoldAnimation() {
     final currentGold = ref.read(decorationSystemWithPrefsProvider).gold;
     setState(() {
       _lastGoldAmount = currentGold - _lastGoldAmount;

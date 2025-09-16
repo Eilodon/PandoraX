@@ -1,7 +1,10 @@
 import 'dart:async';
+import 'dart:convert';
 import 'dart:math';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:pandora_ui/pandora_ui.dart';
 
 /// XP Level System State
 class XPLevelState {
@@ -45,6 +48,12 @@ class XPLevelState {
       isLoading: isLoading ?? this.isLoading,
       error: error ?? this.error,
     );
+  }
+
+  /// Get progress percentage to next level
+  double getProgressPercentage() {
+    if (xpToNextLevel == 0) return 1.0;
+    return currentXP / xpToNextLevel;
   }
 }
 
@@ -625,11 +634,6 @@ class XPLevelSystemService extends StateNotifier<XPLevelState> {
     await _saveState();
   }
 
-  /// Get progress percentage to next level
-  double getProgressPercentage() {
-    if (state.xpToNextLevel == 0) return 1.0;
-    return state.currentXP / state.xpToNextLevel;
-  }
 
   /// Get unlocked rewards for current level
   List<LevelReward> getUnlockedRewardsForLevel(int level) {
@@ -652,6 +656,11 @@ class XPLevelSystemService extends StateNotifier<XPLevelState> {
     state = state.copyWith(error: null);
   }
 }
+
+/// Provider for SharedPreferences
+final sharedPreferencesProvider = FutureProvider<SharedPreferences>((ref) async {
+  return await SharedPreferences.getInstance();
+});
 
 /// Provider for XP Level System Service
 final xpLevelSystemProvider = StateNotifierProvider<XPLevelSystemService, XPLevelState>((ref) {
@@ -688,7 +697,7 @@ class XPDisplayWidget extends ConsumerWidget {
         borderRadius: BorderRadius.circular(20),
         boxShadow: [
           BoxShadow(
-            color: PandoraColors.primary500.withOpacity(0.3),
+            color: PandoraColors.primary500.withValues(alpha: 0.3),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),

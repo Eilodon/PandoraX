@@ -104,14 +104,14 @@ class _QuestPanelState extends ConsumerState<QuestPanel>
           height: MediaQuery.of(context).size.height * 
                  (0.4 + (0.2 * _panelAnimation.value)),
           decoration: BoxDecoration(
-            color: Colors.white.withOpacity(0.95),
+            color: Colors.white.withValues(alpha: 0.95),
             borderRadius: const BorderRadius.only(
               topLeft: Radius.circular(24),
               topRight: Radius.circular(24),
             ),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withOpacity(0.1),
+                color: Colors.black.withValues(alpha: 0.1),
                 blurRadius: 20,
                 offset: const Offset(0, -5),
               ),
@@ -372,7 +372,7 @@ class _QuestPanelState extends ConsumerState<QuestPanel>
                 width: 50,
                 height: 50,
                 decoration: BoxDecoration(
-                  color: _getQuestColor(quest.status).withOpacity(0.1),
+                  color: _getQuestColor(quest.status).withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(

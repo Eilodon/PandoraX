@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:pandora_ui/src/services/accessibility_service.dart';
 import 'package:pandora_ui/src/services/accessibility_colors.dart';
@@ -82,7 +83,7 @@ void main() {
     test('isAccessibleContrast returns false for low contrast', () {
       final isAccessible = AccessibilityColors.isAccessibleContrast(
         Colors.grey,
-        Colors.lightGrey,
+          Colors.grey.shade300,
       );
       expect(isAccessible, isFalse);
     });
@@ -197,7 +198,7 @@ void main() {
     });
 
     test('registerShortcut adds shortcut to list', () {
-      const shortcut = KeyboardShortcut(
+      final shortcut = KeyboardShortcut(
         id: 'test',
         keySet: LogicalKeySet(LogicalKeyboardKey.keyA),
         action: _testAction,
@@ -211,7 +212,7 @@ void main() {
     });
 
     test('unregisterShortcut removes shortcut from list', () {
-      const shortcut = KeyboardShortcut(
+      final shortcut = KeyboardShortcut(
         id: 'test',
         keySet: LogicalKeySet(LogicalKeyboardKey.keyA),
         action: _testAction,
@@ -327,6 +328,8 @@ void main() {
   });
 }
 
-void _testAction(BuildContext context) {
-  // Test action implementation
+VoidCallback _testAction(BuildContext context) {
+  return () {
+    // Test action implementation
+  };
 }

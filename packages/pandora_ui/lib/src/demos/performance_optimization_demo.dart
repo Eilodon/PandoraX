@@ -1,9 +1,11 @@
+// Temporarily disabled due to enum conflicts
+/*
 import 'package:flutter/material.dart';
 import '../services/performance_optimization_service.dart';
 import '../services/memory_management_service.dart';
 import '../services/animation_optimization_service.dart';
 import '../enums/common_enums.dart';
-import '../components/performance/performance_optimized_card.dart';
+import '../components/performance/performance_optimized_card.dart' hide MemoryOptimizationLevel, PerformanceCardVariant, PerformanceCardSize;
 import '../tokens/color_tokens.dart';
 import '../tokens/typography_tokens.dart';
 import '../tokens/spacing_tokens.dart';
@@ -38,7 +40,7 @@ class _PerformanceOptimizationDemoState extends State<PerformanceOptimizationDem
   bool _enableLazyLoading = true;
   bool _enableAnimations = true;
   bool _enableGPUAcceleration = true;
-  MemoryOptimizationLevel _memoryLevel = MemoryOptimizationLevel.medium;
+  MemoryOptimizationLevel _memoryLevel = MemoryOptimizationLevel.low;
   AnimationType _animationType = AnimationType.medium;
 
   @override
@@ -146,7 +148,7 @@ class _PerformanceOptimizationDemoState extends State<PerformanceOptimizationDem
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: PandoraColors.primary500.withValues(alpha:(0.3),
+            color: PandoraColors.primary500.withValues(alpha: 0.3),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -166,14 +168,14 @@ class _PerformanceOptimizationDemoState extends State<PerformanceOptimizationDem
           Text(
             'Phase 3: Advanced Performance Optimization',
             style: PandoraTypography.titleMedium.copyWith(
-              color: PandoraColors.white.withValues(alpha:(0.9),
+              color: PandoraColors.white.withValues(alpha: 0.9),
             ),
           ),
           const SizedBox(height: 16),
           Container(
             padding: const EdgeInsets.all(12),
             decoration: BoxDecoration(
-              color: PandoraColors.white.withValues(alpha:(0.1),
+              color: PandoraColors.white.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
@@ -188,7 +190,7 @@ class _PerformanceOptimizationDemoState extends State<PerformanceOptimizationDem
                   child: Text(
                     'This demo showcases advanced performance optimization features including animation optimization, memory management, and rendering optimization.',
                     style: PandoraTypography.bodyMedium.copyWith(
-                      color: PandoraColors.white.withValues(alpha:(0.9),
+                      color: PandoraColors.white.withValues(alpha: 0.9),
                     ),
                   ),
                 ),
@@ -317,7 +319,7 @@ class _PerformanceOptimizationDemoState extends State<PerformanceOptimizationDem
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: PandoraColors.neutral200.withValues(alpha:(0.5),
+            color: PandoraColors.neutral200.withValues(alpha: 0.5),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -482,7 +484,7 @@ class _PerformanceOptimizationDemoState extends State<PerformanceOptimizationDem
                   Text(
                     'Performance optimized',
                     style: PandoraTypography.bodySmall.copyWith(
-                      color: PandoraColors.white.withValues(alpha:(0.8),
+                      color: PandoraColors.white.withValues(alpha: 0.8),
                     ),
                   ),
                 ],
@@ -604,7 +606,7 @@ class _PerformanceOptimizationDemoState extends State<PerformanceOptimizationDem
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: PandoraColors.neutral200.withValues(alpha:(0.5),
+            color: PandoraColors.neutral200.withValues(alpha: 0.5),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -713,7 +715,7 @@ class _PerformanceOptimizationDemoState extends State<PerformanceOptimizationDem
         borderRadius: BorderRadius.circular(12),
         boxShadow: [
           BoxShadow(
-            color: PandoraColors.neutral200.withValues(alpha:(0.5),
+            color: PandoraColors.neutral200.withValues(alpha: 0.5),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -743,7 +745,7 @@ class _PerformanceOptimizationDemoState extends State<PerformanceOptimizationDem
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: PandoraColors.neutral200.withValues(alpha:(0.5),
+            color: PandoraColors.neutral200.withValues(alpha: 0.5),
             blurRadius: 8,
             offset: const Offset(0, 2),
           ),
@@ -850,3 +852,4 @@ class _PerformanceOptimizationDemoState extends State<PerformanceOptimizationDem
     });
   }
 }
+*/

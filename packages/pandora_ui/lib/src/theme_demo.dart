@@ -310,25 +310,23 @@ class _ThemeDemoState extends State<ThemeDemo> with SingleTickerProviderStateMix
           // Radio Buttons
           const Text('Radio Buttons', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600)),
           const SizedBox(height: 8),
-          RadioListTile<bool>(
-            title: const Text('Option 1'),
-            value: true,
-            groupValue: _radioValue,
+          RadioGroup<bool>(
+            value: _radioValue,
             onChanged: (value) {
               setState(() {
                 _radioValue = value ?? false;
               });
             },
-          ),
-          RadioListTile<bool>(
-            title: const Text('Option 2'),
-            value: false,
-            groupValue: _radioValue,
-            onChanged: (value) {
-              setState(() {
-                _radioValue = value ?? false;
-              });
-            },
+            children: [
+              RadioListTile<bool>(
+                title: const Text('Option 1'),
+                value: true,
+              ),
+              RadioListTile<bool>(
+                title: const Text('Option 2'),
+                value: false,
+              ),
+            ],
           ),
           const SizedBox(height: 24),
           

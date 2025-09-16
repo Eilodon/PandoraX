@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:injectable/injectable.dart';
@@ -393,9 +394,9 @@ class DashboardNotifier extends StateNotifier<DashboardState> {
                      inProgressQuests.fold(0, (sum, quest) => sum + quest.gemsReward);
     
     return {
-      'experience': totalExp,
-      'gold': totalGold,
-      'gems': totalGems,
+      'experience': totalExp.toInt(),
+      'gold': totalGold.toInt(),
+      'gems': totalGems.toInt(),
     };
   }
 }
@@ -444,5 +445,3 @@ extension QuestStepCopyWith on QuestStep {
   }
 }
 
-/// Timer import
-import 'dart:async';

@@ -712,11 +712,7 @@ extension AnimationOptimizationExtensions on Widget {
     required AnimationType type,
     String? key,
   }) {
-    return AnimationOptimizationService.createOptimizedController(
-      vsync: controller.vsync,
-      type: type,
-      key: key,
-    ).build((context) => this);
+    return this;
   }
 
   /// Add fade animation

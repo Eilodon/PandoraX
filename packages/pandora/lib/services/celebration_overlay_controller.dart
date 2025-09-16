@@ -248,7 +248,7 @@ class CelebrationOverlay extends ConsumerWidget {
           children: [
             // Background overlay
             Container(
-              color: Colors.black.withOpacity(0.3),
+              color: Colors.black.withValues(alpha: 0.3),
             ),
             
             // Celebration content
@@ -309,9 +309,9 @@ class CelebrationOverlay extends ConsumerWidget {
         gradient: RadialGradient(
           colors: [
             Colors.transparent,
-            Colors.yellow.withOpacity(0.3),
-            Colors.orange.withOpacity(0.2),
-            Colors.red.withOpacity(0.1),
+            Colors.yellow.withValues(alpha: 0.3),
+            Colors.orange.withValues(alpha: 0.2),
+            Colors.red.withValues(alpha: 0.1),
           ],
         ),
       ),
@@ -367,7 +367,7 @@ class CelebrationOverlay extends ConsumerWidget {
         borderRadius: BorderRadius.circular(25),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
+            color: Colors.black.withValues(alpha: 0.2),
             blurRadius: 10,
             offset: const Offset(0, 5),
           ),
@@ -424,7 +424,7 @@ class CelebrationOverlay extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(20),
         border: Border.all(color: color, width: 2),
       ),
@@ -566,7 +566,7 @@ class _FloatingRewardWidgetState extends State<FloatingRewardWidget>
                   borderRadius: BorderRadius.circular(20),
                   boxShadow: [
                     BoxShadow(
-                      color: widget.color.withOpacity(0.3),
+                      color: widget.color.withValues(alpha: 0.3),
                       blurRadius: 8,
                       offset: const Offset(0, 4),
                     ),
@@ -606,7 +606,7 @@ class FireworksPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
       ..style = PaintingStyle.fill
-      ..color = Colors.yellow.withOpacity(0.8);
+      ..color = Colors.yellow.withValues(alpha: 0.8);
 
     final center = Offset(size.width / 2, size.height / 2);
     final radius = size.width / 2;
@@ -620,7 +620,7 @@ class FireworksPainter extends CustomPainter {
       canvas.drawCircle(
         Offset(x, y),
         3,
-        paint..color = Colors.yellow.withOpacity(0.6),
+        paint..color = Colors.yellow.withValues(alpha: 0.6),
       );
     }
   }

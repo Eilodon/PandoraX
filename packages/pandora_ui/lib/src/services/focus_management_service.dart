@@ -321,6 +321,7 @@ class FocusManagementService {
         onFocusChange?.call();
       },
       child: KeyboardListener(
+        focusNode: focusNode,
         onKeyEvent: (event) {
           if (handleKeyEvent(event)) {
             onActivate?.call();

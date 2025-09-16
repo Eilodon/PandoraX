@@ -59,7 +59,7 @@ class _LoadingSkeletonState extends State<LoadingSkeleton>
               width: 40,
               height: 40,
               decoration: BoxDecoration(
-                color: Colors.grey[300]?.withOpacity(_animation.value),
+                color: Colors.grey[300]?.withValues(alpha: _animation.value),
                 shape: BoxShape.circle,
               ),
             ),
@@ -74,7 +74,7 @@ class _LoadingSkeletonState extends State<LoadingSkeleton>
                     height: 16,
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: Colors.grey[300]?.withOpacity(_animation.value),
+                      color: Colors.grey[300]?.withValues(alpha: _animation.value),
                       borderRadius: BorderRadius.circular(4),
                     ),
                   ),
@@ -84,7 +84,7 @@ class _LoadingSkeletonState extends State<LoadingSkeleton>
                     height: 14,
                     width: double.infinity,
                     decoration: BoxDecoration(
-                      color: Colors.grey[300]?.withOpacity(_animation.value),
+                      color: Colors.grey[300]?.withValues(alpha: _animation.value),
                       borderRadius: BorderRadius.circular(4),
                     ),
                   ),
@@ -94,7 +94,7 @@ class _LoadingSkeletonState extends State<LoadingSkeleton>
                     height: 14,
                     width: MediaQuery.of(context).size.width * 0.6,
                     decoration: BoxDecoration(
-                      color: Colors.grey[300]?.withOpacity(_animation.value),
+                      color: Colors.grey[300]?.withValues(alpha: _animation.value),
                       borderRadius: BorderRadius.circular(4),
                     ),
                   ),
@@ -106,7 +106,7 @@ class _LoadingSkeletonState extends State<LoadingSkeleton>
                         height: 12,
                         width: 60,
                         decoration: BoxDecoration(
-                          color: Colors.grey[300]?.withOpacity(_animation.value),
+                          color: Colors.grey[300]?.withValues(alpha: _animation.value),
                           borderRadius: BorderRadius.circular(4),
                         ),
                       ),
@@ -115,7 +115,7 @@ class _LoadingSkeletonState extends State<LoadingSkeleton>
                         width: 16,
                         height: 16,
                         decoration: BoxDecoration(
-                          color: Colors.grey[300]?.withOpacity(_animation.value),
+                          color: Colors.grey[300]?.withValues(alpha: _animation.value),
                           shape: BoxShape.circle,
                         ),
                       ),

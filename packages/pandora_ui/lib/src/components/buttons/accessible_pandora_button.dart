@@ -5,10 +5,10 @@ import '../../tokens/typography_tokens.dart';
 import '../../tokens/spacing_tokens.dart';
 import '../../tokens/border_tokens.dart';
 import '../../tokens/shadow_tokens.dart';
-import '../../utils/pandora_extensions.dart';
 import '../../services/accessibility_service.dart';
 import '../../services/accessibility_colors.dart';
 import '../../services/focus_management_service.dart';
+import 'pandora_button_enums.dart';
 
 /// Accessible Pandora 4 Button
 /// 

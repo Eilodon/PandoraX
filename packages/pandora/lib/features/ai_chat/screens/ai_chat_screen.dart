@@ -238,8 +238,8 @@ class _AIChatScreenState extends ConsumerState<AIChatScreen> {
             width: double.infinity,
             padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
             color: _isInitialized 
-                ? Colors.green.withOpacity(0.1)
-                : Colors.orange.withOpacity(0.1),
+                ? Colors.green.withValues(alpha: 0.1)
+                : Colors.orange.withValues(alpha: 0.1),
             child: Row(
               children: [
                 Icon(
@@ -292,7 +292,7 @@ class _AIChatScreenState extends ConsumerState<AIChatScreen> {
               color: Theme.of(context).cardColor,
               boxShadow: [
                 BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
+                  color: Colors.black.withValues(alpha: 0.1),
                   blurRadius: 4,
                   offset: const Offset(0, -2),
                 ),
@@ -423,12 +423,12 @@ class _ChatBubble extends StatelessWidget {
                 color: message.isUser 
                     ? Theme.of(context).primaryColor
                     : message.isError
-                        ? Colors.red.withOpacity(0.1)
+                        ? Colors.red.withValues(alpha: 0.1)
                         : Theme.of(context).cardColor,
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: Colors.black.withOpacity(0.1),
+                    color: Colors.black.withValues(alpha: 0.1),
                     blurRadius: 4,
                     offset: const Offset(0, 2),
                   ),
@@ -453,7 +453,7 @@ class _ChatBubble extends StatelessWidget {
                     style: TextStyle(
                       fontSize: 10,
                       color: message.isUser 
-                          ? Colors.white.withOpacity(0.7)
+                          ? Colors.white.withValues(alpha: 0.7)
                           : Colors.grey,
                     ),
                   ),

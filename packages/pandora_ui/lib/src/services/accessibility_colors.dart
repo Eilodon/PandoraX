@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'package:flutter/material.dart';
 import '../tokens/color_tokens.dart';
 
@@ -27,7 +28,7 @@ class AccessibilityColors {
   static double _getLinearValue(double value) {
     return value <= 0.03928 
         ? value / 12.92 
-        : ((value + 0.055) / 1.055).pow(2.4);
+        : pow((value + 0.055) / 1.055, 2.4).toDouble();
   }
 
   /// Calculate contrast ratio between two colors

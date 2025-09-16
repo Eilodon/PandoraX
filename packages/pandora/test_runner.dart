@@ -5,6 +5,7 @@ import 'dart:async';
 import 'lib/demo/mock_services.dart';
 import 'lib/demo/demo_data.dart';
 import 'lib/demo/test_scenarios.dart';
+import 'lib/features/demo/test_scenarios.dart';
 
 /// Script chạy test scenarios tự động cho ứng dụng Notes
 /// 
@@ -294,7 +295,7 @@ void printLoopSummary(List<TestScenariosResult> results) {
         .reduce((a, b) => a + b) / totalTests;
     
     final statusIcon = stability >= 90 ? '🟢' : stability >= 70 ? '🟡' : '🔴';
-    print('$statusIcon ${scenarioName.padRight(20)} ${stability}% (${avgDuration.round()}ms avg)');
+    print('$statusIcon ${scenarioName.padRight(20)} $stability% (${avgDuration.round()}ms avg)');
   }
 }
 
@@ -364,7 +365,7 @@ String generateHtmlReport(TestScenariosResult result) {
                     <div>Total Scenarios</div>
                 </div>
                 <div class="stat-card">
-                    <div class="stat-number ${successRate >= 90 ? 'success' : successRate >= 70 ? 'warning' : 'danger'}">${successRate}%</div>
+                    <div class="stat-number ${successRate >= 90 ? 'success' : successRate >= 70 ? 'warning' : 'danger'}">$successRate%</div>
                     <div>Success Rate</div>
                 </div>
                 <div class="stat-card">

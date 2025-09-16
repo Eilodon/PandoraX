@@ -103,7 +103,7 @@ class MascotWidget extends ConsumerWidget {
         shape: BoxShape.circle,
         boxShadow: [
           BoxShadow(
-            color: _getMoodColor(state.mood).withOpacity(0.3),
+            color: _getMoodColor(state.mood).withValues(alpha: 0.3),
             blurRadius: 8,
             offset: const Offset(0, 4),
           ),

@@ -148,7 +148,7 @@ class MemoryCard extends StatelessWidget {
         Expanded(
           child: LinearProgressIndicator(
             value: similarityValue,
-            backgroundColor: similarityColor.withOpacity(0.2),
+            backgroundColor: similarityColor.withValues(alpha: 0.2),
             valueColor: AlwaysStoppedAnimation<Color>(similarityColor),
           ),
         ),
@@ -192,7 +192,7 @@ class MemoryCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(8.0),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: Icon(
@@ -207,9 +207,9 @@ class MemoryCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.blue.withOpacity(0.1),
+        color: Colors.blue.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.blue.withOpacity(0.3)),
+        border: Border.all(color: Colors.blue.withValues(alpha: 0.3)),
       ),
       child: Text(
         memory.source.toUpperCase(),
@@ -226,9 +226,9 @@ class MemoryCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.green.withOpacity(0.1),
+        color: Colors.green.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: Colors.green.withOpacity(0.3)),
+        border: Border.all(color: Colors.green.withValues(alpha: 0.3)),
       ),
       child: Text(
         '${memory.causalLinks.length} links',
@@ -248,9 +248,9 @@ class MemoryCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
+        color: color.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withOpacity(0.3)),
+        border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Text(
         '${(relevance * 100).toStringAsFixed(0)}%',
@@ -277,6 +277,8 @@ class MemoryCard extends StatelessWidget {
         return Icons.location_on;
       case MemoryType.social:
         return Icons.people;
+      case MemoryType.ai_generated:
+        return Icons.smart_toy;
     }
   }
 
@@ -294,6 +296,8 @@ class MemoryCard extends StatelessWidget {
         return Colors.green;
       case MemoryType.social:
         return Colors.teal;
+      case MemoryType.ai_generated:
+        return Colors.indigo;
     }
   }
 
@@ -311,6 +315,8 @@ class MemoryCard extends StatelessWidget {
         return 'Spatial Memory';
       case MemoryType.social:
         return 'Social Memory';
+      case MemoryType.ai_generated:
+        return 'AI Generated Memory';
     }
   }
 
