@@ -1,0 +1,54 @@
+name: advanced_federated_learning
+description: Advanced federated learning with privacy-preserving capabilities
+version: 1.0.0
+
+environment:
+  sdk: ">=3.9.2 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # Core dependencies
+  http: ^1.1.0
+  dio: ^5.4.0
+  uuid: ^4.4.0
+  logger: ^2.0.2+1
+  
+  # Cryptography
+  crypto: ^3.0.3
+  pointycastle: ^3.7.3
+  encrypt: ^5.0.1
+  
+  # Math and statistics
+  collection: ^1.18.0
+  vector_math: ^2.1.4
+  
+  # Data processing
+  json_annotation: ^4.9.0
+  
+  # Multi-cloud support
+  multi_cloud_support:
+    path: ../multi_cloud_support
+  
+  # Advanced cloud services
+  advanced_cloud_services:
+    path: ../advanced_cloud_services
+  
+  # Performance monitoring
+  performance_monitoring:
+    path: ../performance_monitoring
+  
+  # Async processing
+  rxdart: ^0.27.7
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  build_runner: ^2.4.8
+  json_serializable: ^6.8.0
+  freezed: ^2.4.7
+  freezed_annotation: ^2.4.1
+
+flutter:
+  uses-material-design: true

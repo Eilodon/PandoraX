@@ -1,0 +1,75 @@
+name: production_optimization
+description: Production optimization and performance tuning for Jarvis Workspace
+version: 1.0.0
+
+environment:
+  sdk: ">=3.9.2 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # Core dependencies
+  http: ^1.1.0
+  dio: ^5.4.0
+  uuid: ^4.4.0
+  logger: ^2.0.2+1
+  
+  # Performance monitoring
+  performance_monitoring:
+    path: ../performance_monitoring
+  
+  # Multi-cloud support
+  multi_cloud_support:
+    path: ../multi_cloud_support
+  
+  # Advanced cloud services
+  advanced_cloud_services:
+    path: ../advanced_cloud_services
+  
+  # Cost optimization
+  cost_optimization:
+    path: ../cost_optimization
+  
+  # Real-time collaboration
+  realtime_collaboration:
+    path: ../realtime_collaboration
+  
+  # Advanced federated learning
+  advanced_federated_learning:
+    path: ../advanced_federated_learning
+  
+  # Complete edge computing
+  complete_edge_computing:
+    path: ../complete_edge_computing
+  
+  # Performance optimization
+  flutter_performance: ^1.0.0
+  memory_info: ^1.0.0
+  
+  # Database optimization
+  isar: ^3.1.0+1
+  isar_flutter_libs: ^3.1.0+1
+  sqflite: ^2.3.0
+  
+  # Caching
+  shared_preferences: ^2.3.3
+  flutter_cache_manager: ^3.3.1
+  
+  # JSON handling
+  json_annotation: ^4.9.0
+  
+  # Async processing
+  rxdart: ^0.27.7
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  build_runner: ^2.4.8
+  json_serializable: ^6.8.0
+  freezed: ^2.4.7
+  freezed_annotation: ^2.4.1
+  isar_generator: ^3.1.0+1
+
+flutter:
+  uses-material-design: true

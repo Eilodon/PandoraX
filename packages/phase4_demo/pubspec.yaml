@@ -1,0 +1,28 @@
+name: phase4_demo
+description: Demo app for Phase 4 Advanced Features implementation
+version: 1.0.0
+
+environment:
+  sdk: ">=3.9.2 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # Phase 4 packages
+  realtime_collaboration:
+    path: ../realtime_collaboration
+  advanced_federated_learning:
+    path: ../advanced_federated_learning
+  complete_edge_computing:
+    path: ../complete_edge_computing
+  
+  # UI dependencies
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true

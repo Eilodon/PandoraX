@@ -1,0 +1,30 @@
+name: phase5_demo
+description: Demo app for Phase 5 Production Deployment implementation
+version: 1.0.0
+
+environment:
+  sdk: ">=3.9.2 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # Phase 5 packages
+  production_optimization:
+    path: ../production_optimization
+  security_hardening:
+    path: ../security_hardening
+  monitoring_alerting:
+    path: ../monitoring_alerting
+  documentation_deployment:
+    path: ../documentation_deployment
+  
+  # UI dependencies
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
