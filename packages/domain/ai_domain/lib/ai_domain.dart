@@ -13,6 +13,7 @@ export 'entities/voice_language.dart';
 export 'entities/voice_command.dart';
 export 'entities/sync_status.dart';
 export 'entities/security_config.dart';
+export 'entities/theme_config.dart';
 
 // Repositories
 export 'repositories/ai_repository.dart';
