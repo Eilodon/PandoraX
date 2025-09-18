@@ -11,6 +11,7 @@ export 'entities/content_template.dart';
 export 'entities/supported_language.dart';
 export 'entities/voice_language.dart';
 export 'entities/voice_command.dart';
+export 'entities/sync_status.dart';
 
 // Repositories
 export 'repositories/ai_repository.dart';
