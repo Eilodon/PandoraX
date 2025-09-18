@@ -1,0 +1,40 @@
+name: ai_data
+description: AI data layer for PandoraX
+version: 1.0.0+1
+homepage: https://github.com/pandora/ai_data
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  common_entities:
+    path: ../../foundation/common_entities
+  core_utils:
+    path: ../../foundation/core_utils
+  ai_domain:
+    path: ../../domain/ai_domain
+  google_generative_ai: ^0.2.2
+  http: ^1.1.2
+  dio: ^5.4.0
+  shared_preferences: ^2.2.2
+  isar: ^3.1.0+1
+  isar_flutter_libs: ^3.1.0+1
+  equatable: ^2.0.5
+  freezed_annotation: ^2.4.4
+  json_annotation: ^4.8.1
+  injectable: ^2.3.2
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  build_runner: ^2.4.7
+  freezed: ^2.4.7
+  json_serializable: ^6.7.1
+  injectable_generator: ^2.4.1
+  isar_generator: ^3.1.0+1
+  flutter_lints: ^3.0.1
+
+flutter:
+  uses-material-design: true

@@ -1,0 +1,13 @@
+name: pandora_rebuilt
+description: PandoraX - AI-powered notes app rebuilt with Clean Architecture
+version: 1.0.0+1
+homepage: https://github.com/pandora/pandora_rebuilt
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.10.0"
+
+dev_dependencies:
+  melos: ^7.1.1
+# This is a workspace root, no dependencies here
+# All dependencies are managed in individual packages

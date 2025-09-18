@@ -1,0 +1,29 @@
+name: pandora_ui
+description: Pandora UI components for PandoraX
+version: 1.0.0+1
+homepage: https://github.com/pandora/pandora_ui
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  design_tokens:
+    path: ../../foundation/design_tokens
+  core_utils:
+    path: ../../foundation/core_utils
+  common_entities:
+    path: ../../foundation/common_entities
+  material_color_utilities: ^0.11.1
+  lottie: ^2.7.0
+  shimmer: ^3.0.0
+  cached_network_image: ^3.3.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^3.0.1
+
+flutter:
+  uses-material-design: true

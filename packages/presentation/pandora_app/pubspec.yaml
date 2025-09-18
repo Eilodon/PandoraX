@@ -1,0 +1,110 @@
+name: pandora_app
+description: PandoraX main application
+version: 1.0.0+1
+homepage: https://github.com/pandora/pandora_app
+
+environment:
+  sdk: ">=3.0.0 <4.0.0"
+  flutter: ">=3.10.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Foundation packages
+  common_entities:
+    path: ../../foundation/common_entities
+  core_utils:
+    path: ../../foundation/core_utils
+  design_tokens:
+    path: ../../foundation/design_tokens
+
+  # Domain packages
+  ai_domain:
+    path: ../../domain/ai_domain
+  note_domain:
+    path: ../../domain/note_domain
+
+  # Data packages
+  ai_data:
+    path: ../../data/ai_data
+  note_data:
+    path: ../../data/note_data
+
+  # Presentation packages
+  pandora_ui:
+    path: ../pandora_ui
+
+  # External dependencies
+  flutter_riverpod: ^2.4.9
+  get_it: ^7.6.7
+  injectable: ^2.3.2
+  shared_preferences: ^2.2.2
+  path_provider: ^2.1.2
+  connectivity_plus: ^5.0.2
+  device_info_plus: ^9.1.1
+  permission_handler: ^11.1.0
+  isar: ^3.1.0+1
+  isar_flutter_libs: ^3.1.0+1
+  google_generative_ai: ^0.2.2
+  http: ^1.1.2
+  dio: ^5.4.0
+  
+  # Firebase dependencies
+  firebase_core: ^2.24.2
+  firebase_auth: ^4.15.3
+  cloud_firestore: ^4.13.6
+  firebase_storage: ^11.5.6
+  firebase_analytics: ^10.7.4
+  firebase_crashlytics: ^3.4.9
+  lottie: ^2.7.0
+  shimmer: ^3.0.0
+  cached_network_image: ^3.3.0
+  speech_to_text: ^7.0.0
+  flutter_tts: ^3.8.5
+  # record: ^5.0.4  # Temporarily disabled due to Linux compatibility issues
+  file_picker: ^8.0.0+1
+  image_picker: ^1.0.4
+  encrypt: ^5.0.1
+  crypto: ^3.0.3
+  uuid: ^4.2.1
+  intl: ^0.19.0
+  logger: ^2.0.2+1
+  equatable: ^2.0.5
+  collection: ^1.17.2
+  meta: ^1.11.0
+  rxdart: ^0.27.7
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  integration_test:
+    sdk: flutter
+  build_runner: ^2.4.7
+  freezed: ^2.4.7
+  json_serializable: ^6.7.1
+  injectable_generator: ^2.4.1
+  isar_generator: ^3.1.0+1
+  flutter_lints: ^3.0.1
+  mockito: ^5.4.4
+  mocktail: ^1.0.1
+
+flutter:
+  uses-material-design: true
+
+  assets:
+    - assets/images/
+    - assets/animations/
+    - assets/models/
+    - assets/sounds/
+
+  fonts:
+    - family: Inter
+      fonts:
+        - asset: assets/fonts/Inter-Regular.ttf
+        - asset: assets/fonts/Inter-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/Inter-SemiBold.ttf
+          weight: 600
+        - asset: assets/fonts/Inter-Bold.ttf
+          weight: 700

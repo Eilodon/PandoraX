@@ -1,0 +1,96 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.24.0'
+        channel: 'stable'
+        
+    - name: Setup Melos
+      run: dart pub global activate melos
+      
+    - name: Add Melos to PATH
+      run: echo "$HOME/.pub-cache/bin" >> $GITHUB_PATH
+      
+    - name: Bootstrap workspace
+      run: melos bootstrap
+      
+    - name: Run code generation
+      run: melos exec -- "flutter pub run build_runner build --delete-conflicting-outputs"
+      
+    - name: Run tests
+      run: melos exec -- "flutter test"
+      
+    - name: Run tests with coverage
+      run: melos exec -- "flutter test --coverage"
+      
+    - name: Analyze code
+      run: melos exec -- "flutter analyze"
+      
+    - name: Format check
+      run: melos exec -- "dart format --set-exit-if-changed ."
+      
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        files: ./coverage/lcov.info
+        fail_ci_if_error: true
+
+  build:
+    runs-on: ubuntu-latest
+    needs: test
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Flutter
+      uses: subosito/flutter-action@v2
+      with:
+        flutter-version: '3.24.0'
+        channel: 'stable'
+        
+    - name: Setup Melos
+      run: dart pub global activate melos
+      
+    - name: Add Melos to PATH
+      run: echo "$HOME/.pub-cache/bin" >> $GITHUB_PATH
+      
+    - name: Bootstrap workspace
+      run: melos bootstrap
+      
+    - name: Build Android APK
+      run: |
+        cd packages/presentation/pandora_app
+        flutter build apk --release
+        
+    - name: Build Web
+      run: |
+        cd packages/presentation/pandora_app
+        flutter build web --release
+        
+    - name: Upload APK artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: pandora-app-apk
+        path: packages/presentation/pandora_app/build/app/outputs/flutter-apk/app-release.apk
+        
+    - name: Upload Web artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: pandora-app-web
+        path: packages/presentation/pandora_app/build/web/

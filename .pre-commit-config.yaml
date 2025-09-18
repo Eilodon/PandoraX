@@ -1,0 +1,32 @@
+repos:
+  - repo: local
+    hooks:
+      - id: flutter-format
+        name: Flutter Format
+        entry: dart format
+        language: system
+        files: \.dart$
+        args: [--set-exit-if-changed]
+        
+      - id: flutter-analyze
+        name: Flutter Analyze
+        entry: flutter analyze
+        language: system
+        files: \.dart$
+        
+      - id: flutter-test
+        name: Flutter Test
+        entry: flutter test
+        language: system
+        files: \.dart$
+        pass_filenames: false
+        always_run: true
+        
+      - id: melos-check
+        name: Melos Check
+        entry: melos
+        language: system
+        files: \.dart$
+        args: [exec, --, "flutter analyze"]
+        pass_filenames: false
+        always_run: true
