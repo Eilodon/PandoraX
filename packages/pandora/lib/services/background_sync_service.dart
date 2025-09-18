@@ -1,6 +1,6 @@
 import 'package:workmanager/workmanager.dart';
 import '../config/environment.dart';
-import 'sync_service_production.dart';
+import 'unified_sync_service.dart';
 import 'state_persistence_service.dart';
 
 /// Background sync service using WorkManager
@@ -209,7 +209,8 @@ void callbackDispatcher() {
 
       // Initialize required services
       await StatePersistenceService.initialize();
-      await SyncServiceProduction.initialize();
+      final syncService = UnifiedSyncService();
+      await syncService.initialize(productionMode: true);
 
       // Check if background sync is enabled
       final isEnabled = await BackgroundSyncService.isBackgroundSyncEnabled();
@@ -226,10 +227,10 @@ void callbackDispatcher() {
           ['notes', 'settings', 'chat_history'];
       final requiresNetwork = inputData?['requires_network'] ?? true;
 
-      // Check network requirement (accessing private field correctly)
+      // Check network requirement
       if (requiresNetwork) {
-        final syncStats = await SyncServiceProduction.getSyncStats();
-        if (!(syncStats['hasInternetConnection'] as bool? ?? false)) {
+        final syncService = UnifiedSyncService();
+        if (!syncService.isOnline) {
           if (Environment.enableLogging) {
             print('📱 No internet connection, skipping sync');
           }
@@ -243,12 +244,15 @@ void callbackDispatcher() {
       await StatePersistenceService.saveState('background_sync_count', runCount + 1);
 
       // Perform sync
-      final result = await SyncServiceProduction.syncData(
-        collections: collections,
-        forceSync: taskType == 'onetime',
-      );
+      final syncService = UnifiedSyncService();
+      try {
+        await syncService.syncNow();
+        final result = {
+          'success': true,
+          'syncType': taskType,
+          'timestamp': DateTime.now().toIso8601String(),
+        };
 
-      if (result.success) {
         // Clear any previous error
         await StatePersistenceService.removeState('last_background_sync_error');
         

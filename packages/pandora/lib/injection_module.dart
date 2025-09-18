@@ -14,8 +14,8 @@ import 'package:note_data/src/datasources/local/isar_service.dart';
 import 'config/environment.dart';
 import 'services/production_encryption_service.dart';
 import 'services/simple_validation_service.dart';
-import 'services/production_error_service.dart';
-import 'services/performance_optimization_service.dart';
+import 'services/unified_error_service.dart';
+import 'services/unified_performance_service.dart';
 import 'services/ui_optimization_service.dart';
 import 'services/build_optimization_service.dart';
 
@@ -113,8 +113,8 @@ abstract class InjectableModule {
   @lazySingleton
   BuildOptimizationService get buildOptimizationService => BuildOptimizationService();
   
-  // Performance & Error Services (Initialized separately due to static nature)
-  // PerformanceOptimizationService, ProductionErrorService are initialized in main.dart
+  // Performance & Error Services (Unified services initialized in injection.dart)
+  // UnifiedPerformanceService, UnifiedErrorService are initialized in configureDependencies()
 }
 
 // Environment constants are provided by injectable package automatically

@@ -16,7 +16,7 @@ import 'features/notes/presentation/notes_list_screen.dart';
 
 // Services
 import 'background_tasks/sync_task.dart';
-import 'services/sync_service.dart';
+import 'services/unified_sync_service.dart';
 import 'services/notification_service.dart';
 
 /// Production main entry point
