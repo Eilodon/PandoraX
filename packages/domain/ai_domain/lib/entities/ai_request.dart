@@ -1,5 +1,6 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:common_entities/common_entities.dart';
+import 'summarization_style.dart';
 
 part 'ai_request.freezed.dart';
 part 'ai_request.g.dart';
@@ -19,6 +20,8 @@ class AiRequest with _$AiRequest {
     @Default(false) bool isStreaming,
     @Default(0.7) double temperature,
     @Default(2048) int maxTokens,
+    SummarizationStyle? summarizationStyle,
+    Map<String, dynamic>? customParameters,
   }) = _AiRequest;
 
   const AiRequest._();
@@ -39,6 +42,12 @@ class AiRequest with _$AiRequest {
 
   /// Check if request has attachments
   bool get hasAttachments => attachments != null && attachments!.isNotEmpty;
+
+  /// Check if request has summarization style
+  bool get hasSummarizationStyle => summarizationStyle != null;
+
+  /// Check if request has custom parameters
+  bool get hasCustomParameters => customParameters != null && customParameters!.isNotEmpty;
 }
 
 /// AI request types

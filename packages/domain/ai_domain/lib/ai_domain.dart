@@ -6,6 +6,9 @@ library ai_domain;
 
 // Entities
 export 'entities/ai_request.dart';
+export 'entities/summarization_style.dart';
+export 'entities/content_template.dart';
+export 'entities/supported_language.dart';
 
 // Repositories
 export 'repositories/ai_repository.dart';
