@@ -1,0 +1,34 @@
+# Development Environment Configuration
+APP_NAME=Pandora Notes Dev
+APP_VERSION=1.0.0+1
+BUILD_NUMBER=1
+FLAVOR=development
+
+# API Configuration
+API_BASE_URL=https://dev-api.pandora-notes.com
+ENABLE_LOGGING=true
+
+# Firebase Configuration (Development)
+FIREBASE_PROJECT_ID=pandora-notes-dev
+FIREBASE_API_KEY=your-dev-firebase-api-key
+FIREBASE_AUTH_DOMAIN=pandora-notes-dev.firebaseapp.com
+FIREBASE_STORAGE_BUCKET=pandora-notes-dev.appspot.com
+FIREBASE_MESSAGING_SENDER_ID=your-dev-sender-id
+FIREBASE_APP_ID=your-dev-app-id
+
+# Google AI Configuration
+GEMINI_API_KEY=your-dev-gemini-api-key
+
+# Analytics & Monitoring
+ENABLE_ANALYTICS=false
+ENABLE_CRASHLYTICS=false
+
+# Features
+ENABLE_AI_FEATURES=true
+ENABLE_SPEECH_RECOGNITION=true
+ENABLE_CLOUD_SYNC=true
+ENABLE_NOTIFICATIONS=true
+
+# Development specific
+DEBUG_NETWORK_CALLS=true
+MOCK_SERVICES=false

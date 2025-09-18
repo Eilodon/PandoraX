@@ -1,0 +1,13 @@
+include: ../../analysis_options.yaml
+
+analyzer:
+  errors:
+    forbidden_imports: error
+  rules:
+    forbidden_imports:
+      forbidden:
+        - 'package:pandora/**'
+        - 'package:ai_llm/**'
+        - 'package:note_data/**'
+        - 'package:note_domain/**'
+        - 'package:pandora_ui/**'

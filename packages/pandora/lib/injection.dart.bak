@@ -1,0 +1,25 @@
+import 'package:get_it/get_it.dart';
+import 'package:injectable/injectable.dart';
+import 'package:note_data/note_data.dart';
+import 'package:note_domain/note_domain.dart';
+import 'package:note_data/src/repositories/note_repository_impl.dart';
+import 'package:note_data/src/datasources/local/isar_service.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'config/environment.dart';
+import 'services/implementations/ai_service_impl.dart';
+import 'injection.config.dart';
+
+final getIt = GetIt.instance;
+
+@InjectableInit()
+Future<void> configureDependencies() async {
+  await getIt.init();
+  
+  // Register NoteRepository manually since it's not auto-generated
+  getIt.registerLazySingleton<NoteRepository>(
+    () => NoteRepositoryImpl(
+      getIt<IsarService>(),
+      getIt<FirebaseFirestore>(),
+    ),
+  );
+}

@@ -1,0 +1,25 @@
+name: cac_data
+description: Data layer implementation for Pandora CAC
+
+environment:
+  sdk: '>=3.0.0 <4.0.0'
+
+dependencies:
+  cac_core:
+    path: ../cac_core
+  common_entities:
+    path: ../common_entities
+  isar: ^3.1.0
+  rxdart: ^0.27.0
+  get_it: ^7.6.0
+  injectable: ^2.3.2
+  logger: ^2.0.2+1
+  uuid: ^4.2.1
+
+dev_dependencies:
+  build_runner: ^2.4.7
+  isar_generator: ^3.1.0
+  injectable_generator: ^2.4.1
+  flutter_test:
+    sdk: flutter
+  mockito: ^5.4.2

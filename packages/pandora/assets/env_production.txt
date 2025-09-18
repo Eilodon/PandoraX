@@ -1,0 +1,34 @@
+# Production Environment Configuration
+APP_NAME=Pandora Notes
+APP_VERSION=1.0.0+1
+BUILD_NUMBER=1
+FLAVOR=production
+
+# API Configuration
+API_BASE_URL=https://api.pandora-notes.com
+ENABLE_LOGGING=false
+
+# Firebase Configuration (Production)
+FIREBASE_PROJECT_ID=pandora-notes-prod
+FIREBASE_API_KEY=your-prod-firebase-api-key
+FIREBASE_AUTH_DOMAIN=pandora-notes-prod.firebaseapp.com
+FIREBASE_STORAGE_BUCKET=pandora-notes-prod.appspot.com
+FIREBASE_MESSAGING_SENDER_ID=your-prod-sender-id
+FIREBASE_APP_ID=your-prod-app-id
+
+# Google AI Configuration
+GEMINI_API_KEY=your-prod-gemini-api-key
+
+# Analytics & Monitoring
+ENABLE_ANALYTICS=true
+ENABLE_CRASHLYTICS=true
+
+# Features
+ENABLE_AI_FEATURES=true
+ENABLE_SPEECH_RECOGNITION=true
+ENABLE_CLOUD_SYNC=true
+ENABLE_NOTIFICATIONS=true
+
+# Production specific
+DEBUG_NETWORK_CALLS=false
+MOCK_SERVICES=false

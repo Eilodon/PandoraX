@@ -1,0 +1,28 @@
+name: phase3_demo
+description: Demo app for Phase 3 Cloud Integration implementation
+version: 1.0.0
+
+environment:
+  sdk: ">=3.9.2 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # Phase 3 packages
+  multi_cloud_support:
+    path: ../multi_cloud_support
+  advanced_cloud_services:
+    path: ../advanced_cloud_services
+  cost_optimization:
+    path: ../cost_optimization
+  
+  # UI dependencies
+  cupertino_icons: ^1.0.8
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true

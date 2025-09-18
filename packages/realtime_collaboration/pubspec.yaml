@@ -1,0 +1,61 @@
+name: realtime_collaboration
+description: Real-time collaboration and live editing for Jarvis Workspace
+version: 1.0.0
+
+environment:
+  sdk: ">=3.9.2 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # Core dependencies
+  http: ^1.1.0
+  dio: ^5.4.0
+  uuid: ^4.4.0
+  logger: ^2.0.2+1
+  
+  # Real-time communication
+  websocket_channel: ^2.4.0
+  socket_io_client: ^2.0.3+1
+  web_socket_channel: ^2.4.0
+  
+  # State management
+  rxdart: ^0.27.7
+  bloc: ^8.1.4
+  flutter_bloc: ^8.1.4
+  
+  # Data persistence
+  shared_preferences: ^2.3.3
+  isar: ^3.1.0+1
+  isar_flutter_libs: ^3.1.0+1
+  
+  # Conflict resolution
+  diff_match_patch: ^1.0.0
+  
+  # Multi-cloud support
+  multi_cloud_support:
+    path: ../multi_cloud_support
+  
+  # Performance monitoring
+  performance_monitoring:
+    path: ../performance_monitoring
+  
+  # JSON handling
+  json_annotation: ^4.9.0
+  
+  # Encryption
+  crypto: ^3.0.3
+  encrypt: ^5.0.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  build_runner: ^2.4.8
+  json_serializable: ^6.8.0
+  freezed: ^2.4.7
+  freezed_annotation: ^2.4.1
+  isar_generator: ^3.1.0+1
+
+flutter:
+  uses-material-design: true

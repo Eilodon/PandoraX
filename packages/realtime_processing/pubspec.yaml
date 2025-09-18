@@ -1,0 +1,46 @@
+name: realtime_processing
+description: Real-time processing and event streaming for Jarvis Workspace
+version: 1.0.0
+
+environment:
+  sdk: ">=3.9.2 <4.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  
+  # Core dependencies
+  rxdart: ^0.27.7
+  stream_transform: ^2.1.0
+  
+  # WebSocket and real-time communication
+  websocket_channel: ^2.4.0
+  socket_io_client: ^2.0.3+1
+  
+  # HTTP and networking
+  http: ^1.1.0
+  dio: ^5.4.0
+  
+  # JSON handling
+  json_annotation: ^4.9.0
+  
+  # UUID generation
+  uuid: ^4.4.0
+  
+  # Logging
+  logger: ^2.0.2+1
+  
+  # Performance monitoring
+  performance_monitoring:
+    path: ../performance_monitoring
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  build_runner: ^2.4.8
+  json_serializable: ^6.8.0
+  freezed: ^2.4.7
+  freezed_annotation: ^2.4.1
+
+flutter:
+  uses-material-design: true
