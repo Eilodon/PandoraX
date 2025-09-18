@@ -1,6 +1,7 @@
 import 'package:speech_to_text/speech_to_text.dart';
 import 'package:flutter_tts/flutter_tts.dart';
 import 'package:core_utils/core_utils.dart';
+import 'package:ai_domain/ai_domain.dart';
 
 /// Service for voice recognition and text-to-speech functionality
 class VoiceService {
@@ -14,6 +15,8 @@ class VoiceService {
   bool _isListening = false;
   bool _isSpeaking = false;
   bool _isInitialized = false;
+  VoiceLanguage _currentLanguage = VoiceLanguages.vietnamese;
+  final Map<String, VoiceLanguage> _supportedLanguages = {};
 
   /// Initialize voice services
   Future<bool> initialize() async {
@@ -219,6 +222,133 @@ class VoiceService {
   bool get isSpeaking => _isSpeaking;
   bool get isInitialized => _isInitialized;
 
+  /// Get current language
+  VoiceLanguage get currentLanguage => _currentLanguage;
+
+  /// Set voice language
+  Future<void> setLanguage(VoiceLanguage language) async {
+    try {
+      AppLogger.info('Setting voice language to: ${language.displayName}');
+      
+      _currentLanguage = language;
+      
+      // Set TTS language
+      if (language.isTTSSupported) {
+        await _tts.setLanguage(language.ttsCode);
+        await _tts.setSpeechRate(language.defaultSpeechRate);
+        await _tts.setVolume(language.defaultVolume);
+        await _tts.setPitch(language.defaultPitch);
+      }
+      
+      AppLogger.success('Voice language set to: ${language.displayName}');
+    } catch (e) {
+      AppLogger.error('Failed to set voice language', e);
+    }
+  }
+
+  /// Get supported languages
+  List<VoiceLanguage> getSupportedLanguages() {
+    return VoiceLanguages.all;
+  }
+
+  /// Get languages by region
+  List<VoiceLanguage> getLanguagesByRegion(String region) {
+    return VoiceLanguages.getByRegion(region);
+  }
+
+  /// Get language by code
+  VoiceLanguage? getLanguageByCode(String code) {
+    return VoiceLanguages.getByCode(code);
+  }
+
+  /// Check if language is supported for STT
+  bool isSTTSupported(VoiceLanguage language) {
+    return language.isSTTSupported;
+  }
+
+  /// Check if language is supported for TTS
+  bool isTTSSupported(VoiceLanguage language) {
+    return language.isTTSSupported;
+  }
+
+  /// Start listening with specific language
+  Future<void> startListeningWithLanguage({
+    required Function(String) onResult,
+    Function(String)? onError,
+    VoiceLanguage? language,
+  }) async {
+    final targetLanguage = language ?? _currentLanguage;
+    await setLanguage(targetLanguage);
+    
+    await startListening(
+      onResult: onResult,
+      onError: onError,
+      localeId: targetLanguage.sttCode,
+    );
+  }
+
+  /// Speak text with specific language
+  Future<void> speakWithLanguage(
+    String text, {
+    VoiceLanguage? language,
+    double? speechRate,
+    double? volume,
+    double? pitch,
+  }) async {
+    final targetLanguage = language ?? _currentLanguage;
+    await setLanguage(targetLanguage);
+    
+    // Override with custom parameters if provided
+    if (speechRate != null) await _tts.setSpeechRate(speechRate);
+    if (volume != null) await _tts.setVolume(volume);
+    if (pitch != null) await _tts.setPitch(pitch);
+    
+    await speak(text);
+  }
+
+  /// Get voice configuration for current language
+  Map<String, dynamic> getVoiceConfig() {
+    return _currentLanguage.ttsConfig;
+  }
+
+  /// Set voice configuration
+  Future<void> setVoiceConfig({
+    double? speechRate,
+    double? volume,
+    double? pitch,
+  }) async {
+    try {
+      if (speechRate != null) await _tts.setSpeechRate(speechRate);
+      if (volume != null) await _tts.setVolume(volume);
+      if (pitch != null) await _tts.setPitch(pitch);
+      
+      AppLogger.info('Voice configuration updated');
+    } catch (e) {
+      AppLogger.error('Failed to set voice configuration', e);
+    }
+  }
+
+  /// Get available voices for current language
+  Future<List<dynamic>> getAvailableVoices() async {
+    try {
+      final voices = await _tts.getVoices;
+      return voices ?? [];
+    } catch (e) {
+      AppLogger.error('Failed to get available voices', e);
+      return [];
+    }
+  }
+
+  /// Set voice
+  Future<void> setVoice(String voice) async {
+    try {
+      await _tts.setVoice({'name': voice, 'locale': _currentLanguage.ttsCode});
+      AppLogger.info('Voice set to: $voice');
+    } catch (e) {
+      AppLogger.error('Failed to set voice', e);
+    }
+  }
+
   /// Dispose resources
   Future<void> dispose() async {
     try {
@@ -227,6 +357,7 @@ class VoiceService {
       _isListening = false;
       _isSpeaking = false;
       _isInitialized = false;
+      _supportedLanguages.clear();
       AppLogger.info('Voice Service disposed');
     } catch (e) {
       AppLogger.error('Error disposing Voice Service', e);

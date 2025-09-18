@@ -9,6 +9,8 @@ export 'entities/ai_request.dart';
 export 'entities/summarization_style.dart';
 export 'entities/content_template.dart';
 export 'entities/supported_language.dart';
+export 'entities/voice_language.dart';
+export 'entities/voice_command.dart';
 
 // Repositories
 export 'repositories/ai_repository.dart';
