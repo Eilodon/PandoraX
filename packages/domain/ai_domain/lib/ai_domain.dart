@@ -15,6 +15,7 @@ export 'entities/sync_status.dart';
 export 'entities/security_config.dart';
 export 'entities/theme_config.dart';
 export 'entities/performance_config.dart';
+export 'entities/ml_config.dart';
 
 // Repositories
 export 'repositories/ai_repository.dart';
