@@ -11,6 +11,10 @@ import 'package:pandora/services/voice_interaction_service.dart';
 import 'package:pandora/services/voice_commands_service.dart';
 import 'package:pandora/services/fpt_tts_service.dart';
 import 'package:pandora/services/pho_whisper_service.dart';
+// Unified Services
+import 'package:pandora/services/unified_sync_service.dart';
+import 'package:pandora/services/unified_error_service.dart';
+import 'package:pandora/services/unified_performance_service.dart';
 // AI Core packages
 import 'package:ai_core/ai_core.dart';
 import 'package:ai_llm/ai_llm.dart';
@@ -34,14 +38,19 @@ Future<void> configureDependencies() async {
       ),
     );
     
-    // Register AiService with demo API key
-    getIt.registerLazySingleton<ai_feature.AiService>(
-      () => ai_feature.AiService('AIzaSyDemo_Google_Generative_AI_Key_For_Development_Only'),
+    // Register unified AIService - consolidate all AI functionality
+    // Use the feature-level AiService that implements the unified interface
+    getIt.registerLazySingleton<ai_service.AIService>(
+      () {
+        final service = ai_feature.AiService('AIzaSyDemo_Google_Generative_AI_Key_For_Development_Only');
+        service.initialize(); // Initialize the service
+        return service;
+      },
     );
     
-    // Register AIService interface with implementation
-    getIt.registerLazySingleton<ai_service.AIService>(
-      () => AIServiceImpl(),
+    // Legacy registration for backward compatibility
+    getIt.registerLazySingleton<ai_feature.AiService>(
+      () => getIt<ai_service.AIService>() as ai_feature.AiService,
     );
     
     // Register SpeechRecognitionService
@@ -65,6 +74,25 @@ Future<void> configureDependencies() async {
     getIt.registerLazySingleton<PhoWhisperService>(
       () => PhoWhisperService(),
     );
+    
+    // Register Unified Services - consolidating duplicate services
+    getIt.registerLazySingleton<UnifiedSyncService>(
+      () => UnifiedSyncService(),
+    );
+    
+    getIt.registerLazySingleton<UnifiedErrorService>(
+      () => UnifiedErrorService(),
+    );
+    
+    getIt.registerLazySingleton<UnifiedPerformanceService>(
+      () => UnifiedPerformanceService(),
+    );
+    
+    // Initialize unified services
+    await UnifiedErrorService.initialize(productionMode: false);
+    await UnifiedPerformanceService.initialize(productionMode: false);
+    final syncService = getIt<UnifiedSyncService>();
+    await syncService.initialize(productionMode: false);
     
     // Register AI Core services - temporarily disable ModelStorageRepository
     // getIt.registerLazySingleton<ModelStorageRepository>(
