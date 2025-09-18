@@ -257,7 +257,7 @@ class SecurityService {
 
     try {
       final encrypted = Encrypted(encryptedData);
-      return _encrypter.decryptBytes(encrypted, iv: _iv);
+      return Uint8List.fromList(_encrypter.decryptBytes(encrypted, iv: _iv));
     } catch (e) {
       AppLogger.error('Failed to decrypt file', e);
       rethrow;

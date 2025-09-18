@@ -1,11 +1,12 @@
 import 'package:isar/isar.dart';
 import 'package:common_entities/common_entities.dart';
 
+part 'note_model.g.dart';
+
 /// Isar model for Note entity
 @collection
 class NoteModel {
-  @Id()
-  String id = '';
+  Id id = Isar.autoIncrement;
 
   @Index()
   String title = '';
@@ -18,9 +19,6 @@ class NoteModel {
 
   @Index()
   DateTime updatedAt = DateTime.now();
-
-  @Index()
-  bool isActive = true;
 
   String? category;
 
@@ -39,6 +37,7 @@ class NoteModel {
 
   String? icon;
 
+  @ignore
   Map<String, dynamic>? metadata;
 
   @Index()
@@ -47,12 +46,11 @@ class NoteModel {
   /// Convert from Note entity
   static NoteModel fromNote(Note note) {
     return NoteModel()
-      ..id = note.id
+      ..id = int.tryParse(note.id) ?? 0
       ..title = note.title
       ..content = note.content
       ..createdAt = note.createdAt
       ..updatedAt = note.updatedAt
-      ..isActive = note.isActive
       ..category = note.category
       ..tags = note.tags ?? []
       ..isEncrypted = note.isEncrypted
@@ -66,12 +64,11 @@ class NoteModel {
   /// Convert to Note entity
   Note toNote() {
     return Note(
-      id: id,
+      id: id.toString(),
       title: title,
       content: content,
       createdAt: createdAt,
       updatedAt: updatedAt,
-      isActive: isActive,
       category: category,
       tags: tags,
       isEncrypted: isEncrypted,

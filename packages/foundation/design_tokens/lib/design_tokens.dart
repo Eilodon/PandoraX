@@ -8,3 +8,4 @@ library design_tokens;
 export 'colors.dart';
 export 'typography.dart';
 export 'spacing.dart';
+export 'text_styles.dart';

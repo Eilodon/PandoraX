@@ -3,7 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:core_utils/core_utils.dart';
 import 'package:design_tokens/design_tokens.dart';
 import 'package:pandora_ui/pandora_ui.dart';
-import 'screens/home_screen.dart';
+import 'screens/simple_home_screen.dart';
+import 'services/service_locator.dart';
 
 /// PandoraX main application
 ///
@@ -37,13 +38,9 @@ void main() async {
 /// Initialize all core services
 Future<void> _initializeServices() async {
   AppLogger.info('🚀 Initializing PandoraX services...');
-
-  // Initialize dependency injection
-  await ServiceLocator.initialize();
-
-  // Initialize other services here
-  // await ServiceLocator.get<EncryptionService>().initialize();
-  // await ServiceLocator.get<AiRepository>().initialize();
+  
+  // Initialize service locator
+  await initializeServices();
 
   AppLogger.success('PandoraX services initialized successfully');
 }
@@ -64,7 +61,7 @@ class PandoraApp extends StatelessWidget {
       themeMode: ThemeMode.system,
 
       // Home screen
-      home: const HomeScreen(),
+      home: const SimpleHomeScreen(),
 
       // Error handling
       builder: (context, child) {

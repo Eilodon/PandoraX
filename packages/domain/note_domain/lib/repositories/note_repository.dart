@@ -57,7 +57,7 @@ abstract class NoteRepository {
   Future<List<String>> importNotes(String data, String format);
 
   /// Get note statistics
-  Future<NoteStatistics> getStatistics();
+  Future<Map<String, dynamic>> getStatistics();
 
   /// Sync notes with remote
   Future<void> syncNotes();
@@ -66,25 +66,3 @@ abstract class NoteRepository {
   Future<bool> isSynced();
 }
 
-/// Note statistics
-class NoteStatistics {
-  final int totalNotes;
-  final int pinnedNotes;
-  final int archivedNotes;
-  final int totalWords;
-  final int totalCharacters;
-  final Map<String, int> categoryCounts;
-  final Map<String, int> tagCounts;
-  final DateTime lastUpdated;
-
-  const NoteStatistics({
-    required this.totalNotes,
-    required this.pinnedNotes,
-    required this.archivedNotes,
-    required this.totalWords,
-    required this.totalCharacters,
-    required this.categoryCounts,
-    required this.tagCounts,
-    required this.lastUpdated,
-  });
-}

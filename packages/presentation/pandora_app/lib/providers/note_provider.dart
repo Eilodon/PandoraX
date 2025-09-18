@@ -2,11 +2,16 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:common_entities/common_entities.dart';
 import 'package:note_domain/note_domain.dart';
 import 'package:core_utils/core_utils.dart';
+import '../services/service_locator.dart';
 
 /// Note provider for state management
 final noteRepositoryProvider = Provider<NoteRepository>((ref) {
-  // TODO: Get from dependency injection
-  throw UnimplementedError('NoteRepository not registered');
+  try {
+    return serviceLocator<NoteRepository>();
+  } catch (e) {
+    AppLogger.error('Failed to get NoteRepository from service locator', e);
+    throw Exception('NoteRepository not available. Please initialize services first.');
+  }
 });
 
 /// Note list provider
@@ -36,7 +41,8 @@ final filteredNotesProvider = Provider<List<Note>>((ref) {
 /// Note statistics provider
 final noteStatisticsProvider = FutureProvider<NoteStatistics>((ref) async {
   final repository = ref.read(noteRepositoryProvider);
-  return await repository.getStatistics();
+  final statsMap = await repository.getStatistics();
+  return NoteStatistics.fromJson(statsMap);
 });
 
 /// Note categories provider

@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:common_entities/common_entities.dart';
 import 'package:note_domain/note_domain.dart';
 import 'package:core_utils/core_utils.dart';

@@ -584,9 +584,9 @@ class AccessibilityConfig {
     this.customSettings,
   });
 
-  factory AccessibilityConfig.defaultConfig => const AccessibilityConfig();
+  factory AccessibilityConfig.defaultConfig() => const AccessibilityConfig();
 
-  factory AccessibilityConfig.highAccessibility => const AccessibilityConfig(
+  factory AccessibilityConfig.highAccessibility() => const AccessibilityConfig(
     enabledFeatures: [
       AccessibilityFeature.highContrast,
       AccessibilityFeature.screenReader,

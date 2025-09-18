@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pandora_app/main.dart';
 import 'package:common_entities/common_entities.dart';
 
@@ -11,7 +12,11 @@ void main() {
   group('Note Flow Integration Tests', () {
     testWidgets('Complete note creation and management flow', (WidgetTester tester) async {
       // Start the app
-      await tester.pumpWidget(const PandoraApp());
+      await tester.pumpWidget(
+        const ProviderScope(
+          child: PandoraApp(),
+        ),
+      );
       await tester.pumpAndSettle();
 
       // Verify home screen is displayed
@@ -35,7 +40,11 @@ void main() {
     });
 
     testWidgets('AI features integration test', (WidgetTester tester) async {
-      await tester.pumpWidget(const PandoraApp());
+      await tester.pumpWidget(
+        const ProviderScope(
+          child: PandoraApp(),
+        ),
+      );
       await tester.pumpAndSettle();
 
       // Navigate to AI tab
@@ -48,7 +57,11 @@ void main() {
     });
 
     testWidgets('Voice features integration test', (WidgetTester tester) async {
-      await tester.pumpWidget(const PandoraApp());
+      await tester.pumpWidget(
+        const ProviderScope(
+          child: PandoraApp(),
+        ),
+      );
       await tester.pumpAndSettle();
 
       // Navigate to Voice tab
@@ -61,7 +74,11 @@ void main() {
     });
 
     testWidgets('Profile tab integration test', (WidgetTester tester) async {
-      await tester.pumpWidget(const PandoraApp());
+      await tester.pumpWidget(
+        const ProviderScope(
+          child: PandoraApp(),
+        ),
+      );
       await tester.pumpAndSettle();
 
       // Navigate to Profile tab

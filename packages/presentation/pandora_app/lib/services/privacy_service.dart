@@ -469,9 +469,9 @@ class PrivacyConfig {
     this.customSettings,
   });
 
-  factory PrivacyConfig.defaultConfig => const PrivacyConfig();
+  factory PrivacyConfig.defaultConfig() => const PrivacyConfig();
 
-  factory PrivacyConfig.highPrivacy => const PrivacyConfig(
+  factory PrivacyConfig.highPrivacy() => const PrivacyConfig(
     enablePrivacyMode: true,
     anonymizeData: true,
     removeTimestamps: true,
@@ -481,7 +481,7 @@ class PrivacyConfig {
     enableAuditLogging: true,
   );
 
-  factory PrivacyConfig.lowPrivacy => const PrivacyConfig(
+  factory PrivacyConfig.lowPrivacy() => const PrivacyConfig(
     enablePrivacyMode: false,
     anonymizeData: false,
     removeTimestamps: false,

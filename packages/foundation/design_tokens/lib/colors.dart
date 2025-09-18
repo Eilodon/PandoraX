@@ -62,6 +62,10 @@ class PandoraColors {
   static const Color onPrimary = Color(0xFFFFFFFF);
   static const Color onSecondary = Color(0xFFFFFFFF);
   static const Color onAccent = Color(0xFFFFFFFF);
+  
+  // Secondary text colors
+  static const Color textSecondary = Color(0xFF64748B);
+  static const Color textTertiary = Color(0xFF94A3B8);
 
   // Border Colors
   static const Color outline = Color(0xFFE2E8F0);

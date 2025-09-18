@@ -1,6 +1,7 @@
 import 'package:isar/isar.dart';
 import 'package:common_entities/common_entities.dart';
 import 'package:core_utils/core_utils.dart';
+import 'package:path_provider/path_provider.dart';
 import '../models/note_model.dart';
 
 /// Local data source for note operations using Isar database
@@ -12,9 +13,11 @@ class NoteLocalDataSource {
     try {
       AppLogger.info('📝 Initializing note local data source...');
 
-      _isar = await Isar.open([
-        NoteModelSchema,
-      ]);
+      final dir = await getApplicationDocumentsDirectory();
+      _isar = await Isar.open(
+        [NoteModelSchema],
+        directory: dir.path,
+      );
 
       AppLogger.success('Note local data source initialized successfully');
     } catch (e, stackTrace) {
@@ -45,7 +48,7 @@ class NoteLocalDataSource {
     }
 
     try {
-      final model = await _isar!.noteModels.get(id);
+      final model = await _isar!.noteModels.get(int.tryParse(id) ?? 0);
       return model?.toNote();
     } catch (e, stackTrace) {
       AppLogger.error('Failed to get note by ID', e, stackTrace);
@@ -102,7 +105,7 @@ class NoteLocalDataSource {
 
     try {
       await _isar!.writeTxn(() async {
-        await _isar!.noteModels.delete(id);
+        await _isar!.noteModels.delete(int.tryParse(id) ?? 0);
       });
 
       AppLogger.info('Note deleted successfully: $id');
@@ -120,8 +123,7 @@ class NoteLocalDataSource {
 
     try {
       final models = await _isar!.noteModels
-          .filter()
-          .or()
+          .where()
           .titleContains(query, caseSensitive: false)
           .or()
           .contentContains(query, caseSensitive: false)
@@ -241,7 +243,7 @@ class NoteLocalDataSource {
     try {
       final models = await _isar!.noteModels
           .where()
-          .categoryIsNotNull()
+          .categoryIsNotEmpty()
           .findAll();
 
       final categories = models
@@ -289,7 +291,7 @@ class NoteLocalDataSource {
     }
 
     try {
-      final model = await _isar!.noteModels.get(noteId);
+      final model = await _isar!.noteModels.get(int.tryParse(noteId) ?? 0);
       if (model != null) {
         model.isPinned = !model.isPinned;
         await _isar!.writeTxn(() async {
@@ -309,7 +311,7 @@ class NoteLocalDataSource {
     }
 
     try {
-      final model = await _isar!.noteModels.get(noteId);
+      final model = await _isar!.noteModels.get(int.tryParse(noteId) ?? 0);
       if (model != null) {
         model.isArchived = !model.isArchived;
         await _isar!.writeTxn(() async {
