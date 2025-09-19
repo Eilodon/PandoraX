@@ -5,6 +5,11 @@ import 'package:lottie/lottie.dart';
 import 'package:common_entities/common_entities.dart';
 import '../providers/note_provider_v2.dart';
 import '../widgets/note_editor_dialog.dart';
+import '../services/simple_navigation_service.dart';
+import 'enhanced_notes_screen.dart';
+import 'ai_chat_screen.dart';
+import 'voice_screen.dart';
+import 'settings_screen.dart';
 
 class PixelArtHomeScreen extends ConsumerStatefulWidget {
   const PixelArtHomeScreen({super.key});
@@ -196,25 +201,32 @@ class _PixelArtHomeScreenState extends ConsumerState<PixelArtHomeScreen>
           const Spacer(),
           
           // Settings button with pixel style
-          Container(
-            width: 40,
-            height: 40,
-            decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.2),
-              borderRadius: BorderRadius.circular(8),
-              border: Border.all(
-                color: Colors.white.withValues(alpha: 0.3),
-                width: 2,
-              ),
-            ),
-            child: IconButton(
-              onPressed: () {
-                // TODO: Navigate to settings
+          Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SettingsScreen()),
+                );
               },
-              icon: const Icon(
-                Icons.settings,
-                color: Colors.white,
-                size: 20,
+              borderRadius: BorderRadius.circular(8),
+              child: Container(
+                width: 40,
+                height: 40,
+                decoration: BoxDecoration(
+                  color: Colors.white.withValues(alpha: 0.2),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: Colors.white.withValues(alpha: 0.3),
+                    width: 2,
+                  ),
+                ),
+                child: const Icon(
+                  Icons.settings,
+                  color: Colors.white,
+                  size: 20,
+                ),
               ),
             ),
           ),
@@ -331,14 +343,20 @@ class _PixelArtHomeScreenState extends ConsumerState<PixelArtHomeScreen>
           icon: Icons.voice_over_off,
           label: 'Voice Note',
           onTap: () {
-            // TODO: Navigate to voice screen
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const VoiceScreen()),
+            );
           },
         ),
         _buildPixelButton(
           icon: Icons.smart_toy,
           label: 'AI Assistant',
           onTap: () {
-            // TODO: Navigate to AI screen
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const AIChatScreen()),
+            );
           },
         ),
       ],
@@ -350,44 +368,48 @@ class _PixelArtHomeScreenState extends ConsumerState<PixelArtHomeScreen>
     required String label,
     required VoidCallback onTap,
   }) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        width: 80,
-        height: 80,
-        decoration: BoxDecoration(
-          color: Colors.white.withValues(alpha: 0.2),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(
-            color: Colors.white.withValues(alpha: 0.4),
-            width: 2,
-          ),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withValues(alpha: 0.2),
-              blurRadius: 8,
-              offset: const Offset(0, 4),
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: onTap,
+        borderRadius: BorderRadius.circular(12),
+        child: Container(
+          width: 80,
+          height: 80,
+          decoration: BoxDecoration(
+            color: Colors.white.withValues(alpha: 0.2),
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(
+              color: Colors.white.withValues(alpha: 0.4),
+              width: 2,
             ),
-          ],
-        ),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            Icon(
-              icon,
-              color: Colors.white,
-              size: 24,
-            ),
-            const SizedBox(height: 4),
-            Text(
-              label,
-              style: PandoraTextStyles.bodySmall.copyWith(
-                color: Colors.white,
-                fontWeight: FontWeight.w500,
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withValues(alpha: 0.2),
+                blurRadius: 8,
+                offset: const Offset(0, 4),
               ),
-              textAlign: TextAlign.center,
-            ),
-          ],
+            ],
+          ),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Icon(
+                icon,
+                color: Colors.white,
+                size: 24,
+              ),
+              const SizedBox(height: 4),
+              Text(
+                label,
+                style: PandoraTextStyles.bodySmall.copyWith(
+                  color: Colors.white,
+                  fontWeight: FontWeight.w500,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
         ),
       ),
     );
@@ -426,23 +448,63 @@ class _PixelArtHomeScreenState extends ConsumerState<PixelArtHomeScreen>
   }
 
   Widget _buildNavItem(IconData icon, String label, bool isActive) {
-    return Column(
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        Icon(
-          icon,
-          color: isActive ? Colors.white : Colors.white.withValues(alpha: 0.7),
-          size: 20,
-        ),
-        const SizedBox(height: 4),
-        Text(
-          label,
-          style: PandoraTextStyles.bodySmall.copyWith(
-            color: isActive ? Colors.white : Colors.white.withValues(alpha: 0.7),
-            fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+    return Material(
+      color: Colors.transparent,
+      child: InkWell(
+        onTap: () {
+          switch (label) {
+            case 'Home':
+              // Already on home screen
+              break;
+            case 'Notes':
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const EnhancedNotesScreen()),
+              );
+              break;
+            case 'AI':
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const AIChatScreen()),
+              );
+              break;
+            case 'Voice':
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const VoiceScreen()),
+              );
+              break;
+            case 'Settings':
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const SettingsScreen()),
+              );
+              break;
+          }
+        },
+        borderRadius: BorderRadius.circular(8),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Icon(
+                icon,
+                color: isActive ? Colors.white : Colors.white.withValues(alpha: 0.7),
+                size: 20,
+              ),
+              const SizedBox(height: 4),
+              Text(
+                label,
+                style: PandoraTextStyles.bodySmall.copyWith(
+                  color: isActive ? Colors.white : Colors.white.withValues(alpha: 0.7),
+                  fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+                ),
+              ),
+            ],
           ),
         ),
-      ],
+      ),
     );
   }
 

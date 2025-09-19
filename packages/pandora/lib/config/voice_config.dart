@@ -2,12 +2,12 @@
 /// Centralized configuration for TTS and STT services
 class VoiceConfig {
   // FPT.AI Configuration
-  static const String fptApiKey = 'YOUR_FPT_API_KEY';
+  static const String fptApiKey = '0yIksLsjgseDhDBTi5Zfcxk7GD50H3RW';
   static const String fptTtsUrl = 'https://api.fpt.ai/hmi/tts/v5';
   static const String fptSttUrl = 'https://api.fpt.ai/hmi/asr/v1';
   
   // Google AI Configuration
-  static const String googleAiApiKey = 'YOUR_GOOGLE_AI_API_KEY';
+  static const String googleAiApiKey = 'AIzaSyCgP2ooYE6SuDoo1CWkp-NI4Dl67RhIK-0';
   
   // Voice Settings
   static const String defaultVoice = 'banmai'; // Vietnamese female voice

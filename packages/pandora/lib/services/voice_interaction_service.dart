@@ -17,7 +17,7 @@ class VoiceInteractionService {
   
   // Configuration
   static const String _fptTtsApiUrl = 'https://api.fpt.ai/hmi/tts/v5';
-  static const String _fptApiKey = 'YOUR_FPT_API_KEY'; // TODO: Move to config
+  static const String _fptApiKey = '0yIksLsjgseDhDBTi5Zfcxk7GD50H3RW'; // FPT TTS-STT API Key
   
   // State management
   bool _isInitialized = false;

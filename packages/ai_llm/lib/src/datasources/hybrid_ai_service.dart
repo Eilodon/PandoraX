@@ -12,7 +12,7 @@ class HybridAiService {
   final Connectivity _connectivity = Connectivity();
   
   // Configuration
-  static const String _apiKey = 'YOUR_GOOGLE_AI_API_KEY'; // Replace with actual API key
+  static const String _apiKey = 'AIzaSyCgP2ooYE6SuDoo1CWkp-NI4Dl67RhIK-0'; // Google AI API Key
   static const String _modelName = 'gemini-1.5-flash';
 
   bool get isInitialized => _isInitialized;

@@ -6,7 +6,7 @@ class ApiConfig {
   // 2. Create a new API key
   // 3. Replace the value below with your actual API key
   // 4. For production, use environment variables or secure storage
-  static const String geminiApiKey = 'YOUR_GEMINI_API_KEY_HERE';
+  static const String geminiApiKey = 'AIzaSyCgP2ooYE6SuDoo1CWkp-NI4Dl67RhIK-0';
   
   // OpenAI API Key (if needed in the future)
   static const String openAiApiKey = 'YOUR_OPENAI_API_KEY_HERE';

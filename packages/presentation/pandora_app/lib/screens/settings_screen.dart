@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:design_tokens/design_tokens.dart';
 import '../services/settings_service.dart';
 import '../providers/theme_provider.dart';
+import '../providers/language_provider.dart';
+import '../l10n/app_localizations.dart';
 
 class SettingsScreen extends ConsumerStatefulWidget {
   const SettingsScreen({super.key});
@@ -14,6 +16,7 @@ class SettingsScreen extends ConsumerStatefulWidget {
 class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   late SettingsService _settingsService;
   late ThemeNotifier _themeNotifier;
+  late LanguageNotifier _languageNotifier;
   
   bool _notifications = true;
   bool _biometricAuth = false;
@@ -27,6 +30,7 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     super.initState();
     _settingsService = SettingsService();
     _themeNotifier = ref.read(themeProvider.notifier);
+    _languageNotifier = ref.read(languageProvider.notifier);
     _loadSettings();
   }
 
@@ -44,9 +48,12 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context);
+    final currentLanguage = ref.watch(currentLanguageProvider);
+    
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Settings'),
+        title: Text(l10n.settings),
         backgroundColor: PandoraColors.primary,
         foregroundColor: PandoraColors.onPrimary,
         elevation: 0,
@@ -55,11 +62,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         padding: const EdgeInsets.all(16),
         children: [
           // Appearance Section
-          _buildSectionHeader('Appearance'),
+          _buildSectionHeader(l10n.appearance),
           _buildSwitchTile(
             icon: Icons.dark_mode,
-            title: 'Dark Mode',
-            subtitle: 'Switch between light and dark themes',
+            title: l10n.darkMode,
+            subtitle: l10n.darkModeSubtitle,
             value: _darkMode,
             onChanged: (value) async {
               setState(() => _darkMode = value);
@@ -69,8 +76,8 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
           _buildSliderTile(
             icon: Icons.text_fields,
-            title: 'Font Size',
-            subtitle: 'Adjust text size for better readability',
+            title: l10n.fontSize,
+            subtitle: l10n.fontSizeSubtitle,
             value: _fontSize,
             min: 0.8,
             max: 1.5,
@@ -84,11 +91,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           const SizedBox(height: 24),
           
           // Notifications Section
-          _buildSectionHeader('Notifications'),
+          _buildSectionHeader(l10n.notifications),
           _buildSwitchTile(
             icon: Icons.notifications,
-            title: 'Push Notifications',
-            subtitle: 'Receive notifications for reminders and updates',
+            title: l10n.pushNotifications,
+            subtitle: l10n.pushNotificationsSubtitle,
             value: _notifications,
             onChanged: (value) async {
               setState(() => _notifications = value);
@@ -99,11 +106,11 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           const SizedBox(height: 24),
           
           // Security Section
-          _buildSectionHeader('Security & Privacy'),
+          _buildSectionHeader(l10n.securityPrivacy),
           _buildSwitchTile(
             icon: Icons.fingerprint,
-            title: 'Biometric Authentication',
-            subtitle: 'Use fingerprint or face recognition to unlock',
+            title: l10n.biometricAuth,
+            subtitle: l10n.biometricAuthSubtitle,
             value: _biometricAuth,
             onChanged: (value) async {
               setState(() => _biometricAuth = value);
@@ -112,25 +119,25 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
           _buildListTile(
             icon: Icons.privacy_tip,
-            title: 'Privacy Settings',
-            subtitle: 'Manage data collection and usage',
+            title: l10n.privacySettings,
+            subtitle: l10n.privacySettingsSubtitle,
             onTap: () => _showPrivacySettings(),
           ),
           _buildListTile(
             icon: Icons.security,
-            title: 'Data Encryption',
-            subtitle: 'Encrypt your notes for maximum security',
+            title: l10n.dataEncryption,
+            subtitle: l10n.dataEncryptionSubtitle,
             onTap: () => _showEncryptionSettings(),
           ),
           
           const SizedBox(height: 24),
           
           // Sync Section
-          _buildSectionHeader('Sync & Backup'),
+          _buildSectionHeader(l10n.syncBackup),
           _buildSwitchTile(
             icon: Icons.sync,
-            title: 'Auto Sync',
-            subtitle: 'Automatically sync your notes to the cloud',
+            title: l10n.autoSync,
+            subtitle: l10n.autoSyncSubtitle,
             value: _autoSync,
             onChanged: (value) async {
               setState(() => _autoSync = value);
@@ -139,53 +146,53 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
           ),
           _buildListTile(
             icon: Icons.backup,
-            title: 'Backup & Restore',
-            subtitle: 'Create backups and restore your data',
+            title: l10n.backupRestore,
+            subtitle: l10n.backupRestoreSubtitle,
             onTap: () => _showBackupSettings(),
           ),
           
           const SizedBox(height: 24),
           
           // Language Section
-          _buildSectionHeader('Language & Region'),
+          _buildSectionHeader(l10n.languageRegion),
           _buildListTile(
             icon: Icons.language,
-            title: 'Language',
-            subtitle: _selectedLanguage,
+            title: l10n.language,
+            subtitle: currentLanguage,
             onTap: () => _showLanguageDialog(),
           ),
           
           const SizedBox(height: 24),
           
           // About Section
-          _buildSectionHeader('About'),
+          _buildSectionHeader(l10n.about),
           _buildListTile(
             icon: Icons.info,
-            title: 'App Version',
+            title: l10n.appVersion,
             subtitle: '1.0.0 (Build 100)',
             onTap: () => _showAboutDialog(),
           ),
           _buildListTile(
             icon: Icons.help,
-            title: 'Help & Support',
-            subtitle: 'Get help and contact support',
+            title: l10n.helpSupport,
+            subtitle: l10n.helpSupportSubtitle,
             onTap: () => _showHelpDialog(),
           ),
           _buildListTile(
             icon: Icons.star,
-            title: 'Rate App',
-            subtitle: 'Rate us on the Play Store',
+            title: l10n.rateApp,
+            subtitle: l10n.rateAppSubtitle,
             onTap: () => _rateApp(),
           ),
           
           const SizedBox(height: 24),
           
           // Danger Zone
-          _buildSectionHeader('Danger Zone'),
+          _buildSectionHeader(l10n.dangerZone),
           _buildListTile(
             icon: Icons.delete_forever,
-            title: 'Delete All Data',
-            subtitle: 'Permanently delete all notes and settings',
+            title: l10n.deleteAllData,
+            subtitle: l10n.deleteAllDataSubtitle,
             onTap: () => _showDeleteAllDialog(),
             textColor: PandoraColors.error,
             iconColor: PandoraColors.error,
@@ -422,89 +429,36 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
   }
 
   void _showLanguageDialog() {
+    final l10n = AppLocalizations.of(context);
+    final supportedLanguages = ref.read(supportedLanguagesProvider);
+    
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Select Language'),
+        title: Text(l10n.selectLanguage),
         content: Column(
           mainAxisSize: MainAxisSize.min,
-          children: [
-            RadioListTile<String>(
-              title: const Text('English'),
-              value: 'English',
+          children: supportedLanguages.map((language) {
+            return RadioListTile<String>(
+              title: Text(language),
+              value: language,
               groupValue: _selectedLanguage,
               onChanged: (value) async {
                 if (value != null) {
                   setState(() => _selectedLanguage = value);
-                  await _settingsService.setLanguage(value);
+                  await _languageNotifier.changeLanguage(value);
                   if (context.mounted) {
                     Navigator.pop(context);
                   }
                 }
               },
-            ),
-            RadioListTile<String>(
-              title: const Text('Tiếng Việt'),
-              value: 'Tiếng Việt',
-              groupValue: _selectedLanguage,
-              onChanged: (value) async {
-                if (value != null) {
-                  setState(() => _selectedLanguage = value);
-                  await _settingsService.setLanguage(value);
-                  if (context.mounted) {
-                    Navigator.pop(context);
-                  }
-                }
-              },
-            ),
-            RadioListTile<String>(
-              title: const Text('中文'),
-              value: '中文',
-              groupValue: _selectedLanguage,
-              onChanged: (value) async {
-                if (value != null) {
-                  setState(() => _selectedLanguage = value);
-                  await _settingsService.setLanguage(value);
-                  if (context.mounted) {
-                    Navigator.pop(context);
-                  }
-                }
-              },
-            ),
-            RadioListTile<String>(
-              title: const Text('日本語'),
-              value: '日本語',
-              groupValue: _selectedLanguage,
-              onChanged: (value) async {
-                if (value != null) {
-                  setState(() => _selectedLanguage = value);
-                  await _settingsService.setLanguage(value);
-                  if (context.mounted) {
-                    Navigator.pop(context);
-                  }
-                }
-              },
-            ),
-            RadioListTile<String>(
-              title: const Text('한국어'),
-              value: '한국어',
-              groupValue: _selectedLanguage,
-              onChanged: (value) async {
-                if (value != null) {
-                  setState(() => _selectedLanguage = value);
-                  await _settingsService.setLanguage(value);
-                  if (context.mounted) {
-                    Navigator.pop(context);
-                  }
-                }
-              },
-            ),
-          ],
+            );
+          }).toList(),
         ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context),
-            child: const Text('Cancel'),
+            child: Text(l10n.cancel),
           ),
         ],
       ),
