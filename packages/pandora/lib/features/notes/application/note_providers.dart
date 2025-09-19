@@ -2,7 +2,7 @@ import 'package:note_domain/note_domain.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:pandora/injection.dart';
 import 'package:cac_core/cac_core.dart';
-import 'package:pandora/features/services/interfaces/ai_service.dart' as ai;
+import 'package:pandora/services/interfaces/ai_service.dart' as ai;
 import 'note_watcher/note_watcher_notifier.dart';
 import 'note_watcher/note_watcher_state.dart';
 
