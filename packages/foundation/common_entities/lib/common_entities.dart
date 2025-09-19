@@ -15,14 +15,9 @@ export 'entities/chat_message.dart';
 
 // Performance entities
 export 'entities/performance_config.dart';
-export 'entities/performance_metrics.dart';
-export 'entities/performance_event.dart';
 
 // Sync entities
-export 'entities/sync_status.dart';
 export 'entities/sync_config.dart';
-export 'entities/sync_result.dart';
-export 'entities/sync_conflict.dart';
 
 // Theme entities
 export 'entities/theme_config.dart';
@@ -32,8 +27,7 @@ export 'entities/accessibility_config.dart';
 export 'entities/security_event.dart';
 
 // Voice entities
-export 'entities/voice_command.dart';
-export 'entities/voice_language.dart';
+export 'entities/voice_config.dart';
 
 // Reminder entities
 export 'entities/reminder.dart';

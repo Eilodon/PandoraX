@@ -24,6 +24,9 @@ _$NoteImpl _$$NoteImplFromJson(Map<String, dynamic> json) => _$NoteImpl(
       priority: (json['priority'] as num?)?.toInt() ?? 0,
       color: json['color'] as String?,
       icon: json['icon'] as String?,
+      reminderTime: json['reminderTime'] == null
+          ? null
+          : DateTime.parse(json['reminderTime'] as String),
       metadata: json['metadata'] as Map<String, dynamic>?,
     );
 
@@ -44,5 +47,6 @@ Map<String, dynamic> _$$NoteImplToJson(_$NoteImpl instance) =>
       'priority': instance.priority,
       'color': instance.color,
       'icon': instance.icon,
+      'reminderTime': instance.reminderTime?.toIso8601String(),
       'metadata': instance.metadata,
     };

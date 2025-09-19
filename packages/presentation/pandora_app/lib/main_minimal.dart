@@ -1,13 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'screens/simple_home_screen_v3.dart';
-import 'screens/pixel_art_homescreen.dart';
 import 'providers/theme_provider.dart';
 import 'services/settings_service.dart';
 import 'services/reminder_service.dart';
 import 'services/ai_service.dart';
-import 'services/simple_navigation_service.dart';
-import 'routes/simple_router.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,10 +28,7 @@ class PandoraApp extends ConsumerWidget {
       title: 'PandoraX - AI Note Assistant',
       debugShowCheckedModeBanner: false,
       theme: theme,
-      navigatorKey: SimpleNavigationService().navigatorKey,
-      onGenerateRoute: SimpleRouter.generateRoute,
-      initialRoute: SimpleRouter.home,
-      routes: SimpleRouter.routes,
+      home: const SimpleHomeScreenV3(),
     );
   }
 }

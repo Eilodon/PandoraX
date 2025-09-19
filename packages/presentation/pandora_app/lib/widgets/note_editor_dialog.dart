@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:design_tokens/design_tokens.dart';
 import 'package:common_entities/common_entities.dart';
+import '../services/reminder_service.dart';
 
 class NoteEditorDialog extends StatefulWidget {
   final Note? note;
@@ -27,6 +28,14 @@ class _NoteEditorDialogState extends State<NoteEditorDialog> {
   String? _icon;
   bool _isPinned = false;
   bool _isArchived = false;
+  
+  // Reminder fields
+  DateTime? _reminderDate;
+  TimeOfDay? _reminderTime;
+  String _reminderType = 'once';
+  int _repeatInterval = 1;
+  String _repeatFrequency = 'daily';
+  bool _hasReminder = false;
 
   @override
   void initState() {
@@ -43,6 +52,13 @@ class _NoteEditorDialogState extends State<NoteEditorDialog> {
       _icon = widget.note!.icon;
       _isPinned = widget.note!.isPinned;
       _isArchived = widget.note!.isArchived;
+      
+      // Initialize reminder fields
+      if (widget.note!.reminderTime != null) {
+        _hasReminder = true;
+        _reminderDate = widget.note!.reminderTime!;
+        _reminderTime = TimeOfDay.fromDateTime(widget.note!.reminderTime!);
+      }
     }
   }
 
@@ -196,6 +212,168 @@ class _NoteEditorDialogState extends State<NoteEditorDialog> {
                     
                     const SizedBox(height: 16),
                     
+                    // Reminder Section
+                    Card(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                const Icon(Icons.alarm, color: PandoraColors.primary),
+                                const SizedBox(width: 8),
+                                Text(
+                                  'Reminder',
+                                  style: PandoraTextStyles.titleMedium,
+                                ),
+                                const Spacer(),
+                                Switch(
+                                  value: _hasReminder,
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _hasReminder = value;
+                                      if (!value) {
+                                        _reminderDate = null;
+                                        _reminderTime = null;
+                                      } else {
+                                        _reminderDate = DateTime.now().add(const Duration(days: 1));
+                                        _reminderTime = const TimeOfDay(hour: 9, minute: 0);
+                                      }
+                                    });
+                                  },
+                                ),
+                              ],
+                            ),
+                            
+                            if (_hasReminder) ...[
+                              const SizedBox(height: 16),
+                              
+                              // Date and Time Selection
+                              Row(
+                                children: [
+                                  Expanded(
+                                    child: InkWell(
+                                      onTap: _selectReminderDate,
+                                      child: Container(
+                                        padding: const EdgeInsets.all(12),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(color: PandoraColors.outline),
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            const Icon(Icons.calendar_today, size: 20),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              _reminderDate != null
+                                                  ? '${_reminderDate!.day}/${_reminderDate!.month}/${_reminderDate!.year}'
+                                                  : 'Select Date',
+                                              style: PandoraTextStyles.bodyMedium,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                  const SizedBox(width: 12),
+                                  Expanded(
+                                    child: InkWell(
+                                      onTap: _selectReminderTime,
+                                      child: Container(
+                                        padding: const EdgeInsets.all(12),
+                                        decoration: BoxDecoration(
+                                          border: Border.all(color: PandoraColors.outline),
+                                          borderRadius: BorderRadius.circular(8),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            const Icon(Icons.access_time, size: 20),
+                                            const SizedBox(width: 8),
+                                            Text(
+                                              _reminderTime != null
+                                                  ? '${_reminderTime!.hour.toString().padLeft(2, '0')}:${_reminderTime!.minute.toString().padLeft(2, '0')}'
+                                                  : 'Select Time',
+                                              style: PandoraTextStyles.bodyMedium,
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              
+                              const SizedBox(height: 16),
+                              
+                              // Reminder Type
+                              DropdownButtonFormField<String>(
+                                value: _reminderType,
+                                decoration: const InputDecoration(
+                                  labelText: 'Reminder Type',
+                                  border: OutlineInputBorder(),
+                                ),
+                                items: const [
+                                  DropdownMenuItem(value: 'once', child: Text('Once')),
+                                  DropdownMenuItem(value: 'daily', child: Text('Daily')),
+                                  DropdownMenuItem(value: 'weekly', child: Text('Weekly')),
+                                  DropdownMenuItem(value: 'monthly', child: Text('Monthly')),
+                                ],
+                                onChanged: (value) {
+                                  setState(() {
+                                    _reminderType = value ?? 'once';
+                                  });
+                                },
+                              ),
+                              
+                              if (_reminderType != 'once') ...[
+                                const SizedBox(height: 16),
+                                Row(
+                                  children: [
+                                    Expanded(
+                                      child: TextFormField(
+                                        initialValue: _repeatInterval.toString(),
+                                        decoration: const InputDecoration(
+                                          labelText: 'Repeat Every',
+                                          border: OutlineInputBorder(),
+                                        ),
+                                        keyboardType: TextInputType.number,
+                                        onChanged: (value) {
+                                          _repeatInterval = int.tryParse(value) ?? 1;
+                                        },
+                                      ),
+                                    ),
+                                    const SizedBox(width: 12),
+                                    Expanded(
+                                      child: DropdownButtonFormField<String>(
+                                        value: _repeatFrequency,
+                                        decoration: const InputDecoration(
+                                          labelText: 'Frequency',
+                                          border: OutlineInputBorder(),
+                                        ),
+                                        items: const [
+                                          DropdownMenuItem(value: 'daily', child: Text('Days')),
+                                          DropdownMenuItem(value: 'weekly', child: Text('Weeks')),
+                                          DropdownMenuItem(value: 'monthly', child: Text('Months')),
+                                        ],
+                                        onChanged: (value) {
+                                          setState(() {
+                                            _repeatFrequency = value ?? 'daily';
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ],
+                          ],
+                        ),
+                      ),
+                    ),
+                    
+                    const SizedBox(height: 16),
+                    
                     // Options
                     Row(
                       children: [
@@ -248,7 +426,7 @@ class _NoteEditorDialogState extends State<NoteEditorDialog> {
     );
   }
 
-  void _saveNote() {
+  Future<void> _saveNote() async {
     if (_titleController.text.trim().isEmpty) {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please enter a title')),
@@ -262,6 +440,17 @@ class _NoteEditorDialogState extends State<NoteEditorDialog> {
         .where((tag) => tag.isNotEmpty)
         .toList();
 
+    DateTime? reminderDateTime;
+    if (_hasReminder && _reminderDate != null && _reminderTime != null) {
+      reminderDateTime = DateTime(
+        _reminderDate!.year,
+        _reminderDate!.month,
+        _reminderDate!.day,
+        _reminderTime!.hour,
+        _reminderTime!.minute,
+      );
+    }
+
     final note = Note(
       id: widget.note?.id ?? DateTime.now().millisecondsSinceEpoch.toString(),
       title: _titleController.text.trim(),
@@ -273,11 +462,106 @@ class _NoteEditorDialogState extends State<NoteEditorDialog> {
       icon: _icon,
       isPinned: _isPinned,
       isArchived: _isArchived,
+      reminderTime: reminderDateTime,
       createdAt: widget.note?.createdAt ?? DateTime.now(),
       updatedAt: DateTime.now(),
     );
 
+    // Save reminder if enabled
+    if (_hasReminder && reminderDateTime != null) {
+      await _saveReminder(note, reminderDateTime);
+    }
+
     widget.onSave(note);
     Navigator.pop(context);
+  }
+
+  Future<void> _selectReminderDate() async {
+    final now = DateTime.now();
+    final firstDate = now.subtract(const Duration(days: 1));
+    final lastDate = now.add(const Duration(days: 365));
+
+    final selectedDate = await showDatePicker(
+      context: context,
+      initialDate: _reminderDate ?? now.add(const Duration(days: 1)),
+      firstDate: firstDate,
+      lastDate: lastDate,
+    );
+
+    if (selectedDate != null && mounted) {
+      setState(() {
+        _reminderDate = selectedDate;
+      });
+    }
+  }
+
+  Future<void> _selectReminderTime() async {
+    final selectedTime = await showTimePicker(
+      context: context,
+      initialTime: _reminderTime ?? const TimeOfDay(hour: 9, minute: 0),
+    );
+
+    if (selectedTime != null && mounted) {
+      setState(() {
+        _reminderTime = selectedTime;
+      });
+    }
+  }
+
+  Future<void> _saveReminder(Note note, DateTime reminderDateTime) async {
+    try {
+      final reminderService = ReminderService();
+      await reminderService.initialize();
+      
+      // Convert repeat frequency to ReminderRepeat
+      ReminderRepeat repeatDays;
+      switch (_reminderType) {
+        case 'daily':
+          repeatDays = const ReminderRepeat.daily();
+          break;
+        case 'weekly':
+          repeatDays = const ReminderRepeat.weekly();
+          break;
+        case 'monthly':
+          repeatDays = const ReminderRepeat.monthly();
+          break;
+        default:
+          repeatDays = const ReminderRepeat.daily();
+      }
+      
+      final reminder = Reminder(
+        id: note.id,
+        noteId: note.id,
+        title: note.title,
+        description: note.content,
+        scheduledTime: reminderDateTime,
+        type: const ReminderType.notification(),
+        status: const ReminderStatus.pending(),
+        repeatDays: _reminderType == 'once' ? [] : [repeatDays],
+        isActive: true,
+        createdAt: DateTime.now(),
+        updatedAt: DateTime.now(),
+      );
+
+      await reminderService.addReminder(reminder);
+      
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Reminder set for ${_reminderDate!.day}/${_reminderDate!.month}/${_reminderDate!.year} at ${_reminderTime!.hour.toString().padLeft(2, '0')}:${_reminderTime!.minute.toString().padLeft(2, '0')}'),
+            backgroundColor: PandoraColors.primary,
+          ),
+        );
+      }
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Error setting reminder: $e'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 }

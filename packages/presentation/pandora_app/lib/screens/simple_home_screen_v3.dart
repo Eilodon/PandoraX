@@ -1,25 +1,60 @@
 import 'package:flutter/material.dart';
 import 'package:design_tokens/design_tokens.dart';
+import 'package:pandora_ui/pandora_ui.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'enhanced_notes_screen.dart';
 import 'ai_chat_screen.dart';
 import 'voice_screen.dart';
 import 'settings_screen.dart';
+import '../providers/theme_provider.dart';
+import '../widgets/animated_bottom_nav_bar.dart';
 
-class SimpleHomeScreenV3 extends StatefulWidget {
+class SimpleHomeScreenV3 extends ConsumerStatefulWidget {
   const SimpleHomeScreenV3({super.key});
 
   @override
-  State<SimpleHomeScreenV3> createState() => _SimpleHomeScreenV3State();
+  ConsumerState<SimpleHomeScreenV3> createState() => _SimpleHomeScreenV3State();
 }
 
-class _SimpleHomeScreenV3State extends State<SimpleHomeScreenV3> {
+class _SimpleHomeScreenV3State extends ConsumerState<SimpleHomeScreenV3> {
   int _selectedIndex = 0;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('PandoraX'),
+        title: Row(
+          children: [
+            Container(
+              width: 32,
+              height: 32,
+              decoration: BoxDecoration(
+                color: PandoraColors.onPrimary,
+                borderRadius: BorderRadius.circular(16),
+                boxShadow: [
+                  BoxShadow(
+                    color: PandoraColors.shadow.withValues(alpha: 0.2),
+                    blurRadius: 4,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
+              ),
+              child: const Icon(Icons.auto_awesome, color: PandoraColors.primary, size: 20),
+            ),
+            const SizedBox(width: 12),
+            const Text('PandoraX'),
+            const Spacer(),
+            Consumer(
+              builder: (context, ref, child) {
+                final themeNotifier = ref.watch(themeProvider.notifier);
+                return IconButton(
+                  icon: Icon(themeNotifier.isDarkMode ? Icons.light_mode : Icons.dark_mode),
+                  onPressed: () => themeNotifier.toggleTheme(),
+                );
+              },
+            ),
+          ],
+        ),
         backgroundColor: PandoraColors.primary,
         foregroundColor: PandoraColors.onPrimary,
         elevation: 0,
@@ -34,31 +69,33 @@ class _SimpleHomeScreenV3State extends State<SimpleHomeScreenV3> {
           const SettingsScreen(),
         ],
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
+      bottomNavigationBar: AnimatedBottomNavBar(
         currentIndex: _selectedIndex,
         onTap: (index) => setState(() => _selectedIndex = index),
-        selectedItemColor: PandoraColors.primary,
-        unselectedItemColor: PandoraColors.textSecondary,
         items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
+          BottomNavItem(
+            icon: Icons.home_outlined,
+            activeIcon: Icons.home,
             label: 'Home',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.note),
+          BottomNavItem(
+            icon: Icons.note_outlined,
+            activeIcon: Icons.note,
             label: 'Notes',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.smart_toy),
+          BottomNavItem(
+            icon: Icons.smart_toy_outlined,
+            activeIcon: Icons.smart_toy,
             label: 'AI',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.mic),
+          BottomNavItem(
+            icon: Icons.mic_outlined,
+            activeIcon: Icons.mic,
             label: 'Voice',
           ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.settings),
+          BottomNavItem(
+            icon: Icons.settings_outlined,
+            activeIcon: Icons.settings,
             label: 'Settings',
           ),
         ],
@@ -84,18 +121,46 @@ class _SimpleHomeScreenV3State extends State<SimpleHomeScreenV3> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(
-                'Welcome to PandoraX',
-                style: PandoraTextStyles.headlineLarge.copyWith(
-                  color: PandoraColors.onPrimary,
-                ),
-              ),
-              const SizedBox(height: 8),
-              Text(
-                'Your AI-powered note-taking assistant',
-                style: PandoraTextStyles.bodyLarge.copyWith(
-                  color: PandoraColors.onPrimary.withValues(alpha: 0.9),
-                ),
+              Row(
+                children: [
+                  Container(
+                    width: 48,
+                    height: 48,
+                    decoration: BoxDecoration(
+                      color: PandoraColors.onPrimary,
+                      borderRadius: BorderRadius.circular(24),
+                      boxShadow: [
+                        BoxShadow(
+                          color: PandoraColors.shadow.withValues(alpha: 0.3),
+                          blurRadius: 8,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: const Icon(Icons.auto_awesome, color: PandoraColors.primary, size: 28),
+                  ),
+                  const SizedBox(width: 16),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Welcome to PandoraX',
+                          style: PandoraTextStyles.headlineLarge.copyWith(
+                            color: PandoraColors.onPrimary,
+                          ),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          'Your AI-powered note-taking assistant',
+                          style: PandoraTextStyles.bodyLarge.copyWith(
+                            color: PandoraColors.onPrimary.withValues(alpha: 0.9),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
               const SizedBox(height: 32),
               Expanded(
@@ -146,13 +211,28 @@ class _SimpleHomeScreenV3State extends State<SimpleHomeScreenV3> {
     required VoidCallback onTap,
   }) {
     return Card(
-      elevation: 4,
+      elevation: 6,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       child: InkWell(
         onTap: onTap,
         borderRadius: BorderRadius.circular(16),
-        child: Padding(
+        child: Container(
+          width: double.infinity,
           padding: const EdgeInsets.all(20),
+          decoration: BoxDecoration(
+            color: PandoraColors.surface,
+            borderRadius: BorderRadius.circular(16),
+            border: Border.all(
+              color: PandoraColors.outline.withValues(alpha: 0.2),
+            ),
+            boxShadow: [
+              BoxShadow(
+                color: PandoraColors.shadow.withValues(alpha: 0.15),
+                blurRadius: 12,
+                offset: const Offset(0, 4),
+              ),
+            ],
+          ),
           child: Row(
             children: [
               Container(
@@ -160,11 +240,14 @@ class _SimpleHomeScreenV3State extends State<SimpleHomeScreenV3> {
                 decoration: BoxDecoration(
                   color: PandoraColors.primary.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(12),
+                  border: Border.all(
+                    color: PandoraColors.primary.withValues(alpha: 0.2),
+                  ),
                 ),
                 child: Icon(
                   icon,
-                  size: 24,
                   color: PandoraColors.primary,
+                  size: 24,
                 ),
               ),
               const SizedBox(width: 16),
@@ -174,7 +257,10 @@ class _SimpleHomeScreenV3State extends State<SimpleHomeScreenV3> {
                   children: [
                     Text(
                       title,
-                      style: PandoraTextStyles.titleMedium,
+                      style: PandoraTextStyles.titleMedium.copyWith(
+                        fontWeight: FontWeight.w600,
+                        color: PandoraColors.onSurface,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     Text(
@@ -186,10 +272,22 @@ class _SimpleHomeScreenV3State extends State<SimpleHomeScreenV3> {
                   ],
                 ),
               ),
-              Icon(
-                Icons.arrow_forward_ios,
-                size: 16,
-                color: PandoraColors.textSecondary,
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                decoration: BoxDecoration(
+                  color: PandoraColors.primary.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(16),
+                  border: Border.all(
+                    color: PandoraColors.primary.withValues(alpha: 0.3),
+                  ),
+                ),
+                child: Text(
+                  'Tap',
+                  style: PandoraTextStyles.bodySmall.copyWith(
+                    color: PandoraColors.primary,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
               ),
             ],
           ),

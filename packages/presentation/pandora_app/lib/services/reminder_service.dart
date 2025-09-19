@@ -18,322 +18,192 @@ class ReminderService {
 
   /// Initialize the reminder service
   Future<void> initialize() async {
-    try {
-      AppLogger.info('🔔 Initializing reminder service...');
-      
-      // Initialize timezone
-      tz.initializeTimeZones();
-      
-      // Request notification permission
-      await _requestNotificationPermission();
-      
-      // Initialize local notifications
-      await _initializeNotifications();
-      
-      // Start checking for due reminders
-      _startReminderChecker();
-      
-      AppLogger.success('✅ Reminder service initialized');
-    } catch (e, stackTrace) {
-      AppLogger.error('Failed to initialize reminder service', e, stackTrace);
-      rethrow;
-    }
+    AppLogger.info('🔔 Initializing ReminderService...');
+    
+    // Initialize timezone
+    tz.initializeTimeZones();
+    
+    // Request notification permission
+    await _requestNotificationPermission();
+    
+    // Initialize notifications
+    await _initializeNotifications();
+    
+    // Start checking for due reminders
+    _startReminderCheck();
+    
+    AppLogger.success('✅ ReminderService initialized');
   }
 
   /// Request notification permission
   Future<void> _requestNotificationPermission() async {
     final status = await Permission.notification.request();
-    if (status != PermissionStatus.granted) {
-      AppLogger.warning('Notification permission not granted');
+    if (status.isDenied) {
+      AppLogger.warning('⚠️ Notification permission denied');
     }
   }
 
   /// Initialize local notifications
   Future<void> _initializeNotifications() async {
-    const androidSettings = AndroidInitializationSettings('@mipmap/ic_launcher');
-    const iosSettings = DarwinInitializationSettings(
+    AppLogger.info('🔔 Initializing notifications...');
+    
+    const AndroidInitializationSettings initializationSettingsAndroid =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
+    
+    const DarwinInitializationSettings initializationSettingsIOS =
+        DarwinInitializationSettings(
       requestAlertPermission: true,
       requestBadgePermission: true,
       requestSoundPermission: true,
     );
     
-    const initSettings = InitializationSettings(
-      android: androidSettings,
-      iOS: iosSettings,
+    const InitializationSettings initializationSettings =
+        InitializationSettings(
+      android: initializationSettingsAndroid,
+      iOS: initializationSettingsIOS,
     );
-
+    
     await _notifications.initialize(
-      initSettings,
+      initializationSettings,
       onDidReceiveNotificationResponse: _onNotificationTapped,
     );
+    
+    AppLogger.info('✅ Notifications initialized successfully');
   }
 
   /// Handle notification tap
   void _onNotificationTapped(NotificationResponse response) {
-    AppLogger.info('🔔 Notification tapped: ${response.payload}');
-    // Handle notification tap - could navigate to specific note
+    AppLogger.info('🔔 Notification tapped: ${response.payload ?? 'N/A'}');
+    // Handle notification tap logic here
   }
 
   /// Start checking for due reminders
-  void _startReminderChecker() {
+  void _startReminderCheck() {
     _checkTimer = Timer.periodic(const Duration(minutes: 1), (timer) {
       _checkDueReminders();
     });
   }
 
   /// Check for due reminders
-  Future<void> _checkDueReminders() async {
+  void _checkDueReminders() {
     final now = DateTime.now();
     for (final reminder in _reminders) {
-      if (reminder.isActive && 
-          reminder.status is PendingReminder &&
-          reminder.scheduledTime.isBefore(now)) {
-        await _triggerReminder(reminder);
+      if (_isReminderDue(reminder, now)) {
+        _triggerReminder(reminder);
       }
     }
+  }
+
+  /// Check if a reminder is due
+  bool _isReminderDue(Reminder reminder, DateTime now) {
+    return reminder.isActive && 
+           reminder.scheduledTime.isBefore(now) && 
+           reminder.status == const ReminderStatus.pending();
   }
 
   /// Trigger a reminder
-  Future<void> _triggerReminder(Reminder reminder) async {
-    try {
-      AppLogger.info('🔔 Triggering reminder: ${reminder.title}');
-      
-      // Show notification
-      await _showNotification(reminder);
-      
-      // Update reminder status
-      final updatedReminder = reminder.copyWith(
-        status: const ReminderStatus.triggered(),
-        updatedAt: DateTime.now(),
-      );
-      
-      final index = _reminders.indexWhere((r) => r.id == reminder.id);
-      if (index != -1) {
-        _reminders[index] = updatedReminder;
-      }
-      
-      // Handle repeat
-      await _handleReminderRepeat(reminder);
-      
-    } catch (e, stackTrace) {
-      AppLogger.error('Failed to trigger reminder', e, stackTrace);
-    }
+  void _triggerReminder(Reminder reminder) {
+    AppLogger.info('🔔 Triggering reminder: ${reminder.title}');
+    _showNotification(reminder);
+    _updateReminderStatus(reminder, const ReminderStatus.triggered());
   }
 
-  /// Show notification
+  /// Show notification for reminder
   Future<void> _showNotification(Reminder reminder) async {
-    const androidDetails = AndroidNotificationDetails(
-      'pandora_reminders',
-      'PandoraX Reminders',
-      channelDescription: 'Reminders for your notes',
+    AppLogger.info('🔔 Showing notification for reminder: ${reminder.title}');
+    
+    const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+      'reminder_channel',
+      'Reminders',
+      channelDescription: 'Notifications for reminders and notes',
       importance: Importance.high,
       priority: Priority.high,
       showWhen: true,
-      enableVibration: true,
-      playSound: true,
     );
     
-    const iosDetails = DarwinNotificationDetails(
+    const DarwinNotificationDetails iosDetails = DarwinNotificationDetails(
       presentAlert: true,
       presentBadge: true,
       presentSound: true,
     );
     
-    const details = NotificationDetails(
+    const NotificationDetails notificationDetails = NotificationDetails(
       android: androidDetails,
       iOS: iosDetails,
     );
-
+    
     await _notifications.show(
       reminder.id.hashCode,
       reminder.title,
-      reminder.description,
-      details,
-      payload: reminder.noteId,
+      reminder.description ?? 'Reminder triggered',
+      notificationDetails,
+      payload: reminder.id,
     );
   }
 
-  /// Handle reminder repeat
-  Future<void> _handleReminderRepeat(Reminder reminder) async {
-    if (reminder.repeatDays.isNotEmpty) {
-      final nextTime = _calculateNextReminderTime(reminder);
-      if (nextTime != null) {
-        final updatedReminder = reminder.copyWith(
-          scheduledTime: nextTime,
-          status: const ReminderStatus.pending(),
-          updatedAt: DateTime.now(),
-        );
-        
-        final index = _reminders.indexWhere((r) => r.id == reminder.id);
-        if (index != -1) {
-          _reminders[index] = updatedReminder;
-        }
-      }
-    }
-  }
-
-  /// Calculate next reminder time based on repeat settings
-  DateTime? _calculateNextReminderTime(Reminder reminder) {
-    final now = DateTime.now();
-    final currentTime = reminder.scheduledTime;
-    
-    for (final repeat in reminder.repeatDays) {
-      switch (repeat) {
-        case DailyRepeat():
-          return DateTime(
-            now.year,
-            now.month,
-            now.day,
-            currentTime.hour,
-            currentTime.minute,
-          ).add(const Duration(days: 1));
-          
-        case WeeklyRepeat():
-          return DateTime(
-            now.year,
-            now.month,
-            now.day,
-            currentTime.hour,
-            currentTime.minute,
-          ).add(const Duration(days: 7));
-          
-        case MonthlyRepeat():
-          return DateTime(
-            now.year,
-            now.month + 1,
-            now.day,
-            currentTime.hour,
-            currentTime.minute,
-          );
-          
-        case YearlyRepeat():
-          return DateTime(
-            now.year + 1,
-            now.month,
-            now.day,
-            currentTime.hour,
-            currentTime.minute,
-          );
-          
-        case CustomRepeat():
-          // Calculate next occurrence based on days of week
-          final daysOfWeek = repeat.daysOfWeek;
-          final currentDayOfWeek = now.weekday;
-          
-          for (int i = 1; i <= 7; i++) {
-            final nextDay = (currentDayOfWeek + i - 1) % 7;
-            if (daysOfWeek.contains(nextDay)) {
-              return DateTime(
-                now.year,
-                now.month,
-                now.day + i,
-                currentTime.hour,
-                currentTime.minute,
-              );
-            }
-          }
-          break;
-      }
-    }
-    
-    return null;
-  }
-
-  /// Create a new reminder
-  Future<String> createReminder(Reminder reminder) async {
-    try {
-      AppLogger.info('🔔 Creating reminder: ${reminder.title}');
-      
-      final newReminder = reminder.copyWith(
-        id: DateTime.now().millisecondsSinceEpoch.toString(),
-        createdAt: DateTime.now(),
+  /// Update reminder status
+  void _updateReminderStatus(Reminder reminder, ReminderStatus status) {
+    final index = _reminders.indexWhere((r) => r.id == reminder.id);
+    if (index != -1) {
+      _reminders[index] = reminder.copyWith(
+        status: status,
         updatedAt: DateTime.now(),
       );
-      
-      _reminders.add(newReminder);
-      
-      // Schedule notification
-      await _scheduleNotification(newReminder);
-      
-      AppLogger.success('✅ Reminder created: ${newReminder.id}');
-      return newReminder.id;
-    } catch (e, stackTrace) {
-      AppLogger.error('Failed to create reminder', e, stackTrace);
-      rethrow;
     }
   }
 
-  /// Schedule notification
+  /// Add a new reminder
+  Future<void> addReminder(Reminder reminder) async {
+    _reminders.add(reminder);
+    AppLogger.info('➕ Added reminder: ${reminder.title}');
+    
+    // Schedule notification if reminder is active
+    if (reminder.isActive) {
+      await _scheduleNotification(reminder);
+    }
+  }
+
+  /// Schedule notification for reminder
   Future<void> _scheduleNotification(Reminder reminder) async {
-    const androidDetails = AndroidNotificationDetails(
-      'pandora_reminders',
-      'PandoraX Reminders',
-      channelDescription: 'Reminders for your notes',
-      importance: Importance.high,
-      priority: Priority.high,
-    );
+    AppLogger.info('🔔 Scheduling notification for reminder: ${reminder.title}');
     
-    const iosDetails = DarwinNotificationDetails(
-      presentAlert: true,
-      presentBadge: true,
-      presentSound: true,
-    );
-    
-    const details = NotificationDetails(
-      android: androidDetails,
-      iOS: iosDetails,
-    );
-
-    await _notifications.zonedSchedule(
-      reminder.id.hashCode,
-      reminder.title,
-      reminder.description,
-      tz.TZDateTime.from(reminder.scheduledTime, tz.local),
-      details,
-      payload: reminder.noteId,
-      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
-    );
-  }
-
-  /// Update a reminder
-  Future<void> updateReminder(Reminder reminder) async {
-    try {
-      AppLogger.info('🔔 Updating reminder: ${reminder.id}');
-      
-      final index = _reminders.indexWhere((r) => r.id == reminder.id);
-      if (index != -1) {
-        _reminders[index] = reminder.copyWith(updatedAt: DateTime.now());
-        
-        // Cancel old notification and schedule new one
-        await _notifications.cancel(reminder.id.hashCode);
-        await _scheduleNotification(reminder);
-        
-        AppLogger.success('✅ Reminder updated: ${reminder.id}');
-      }
-    } catch (e, stackTrace) {
-      AppLogger.error('Failed to update reminder', e, stackTrace);
-      rethrow;
+    if (reminder.scheduledTime.isAfter(DateTime.now())) {
+      await _notifications.zonedSchedule(
+        reminder.id.hashCode,
+        reminder.title,
+        reminder.description ?? 'Reminder triggered',
+        tz.TZDateTime.from(reminder.scheduledTime, tz.local),
+        const NotificationDetails(
+          android: AndroidNotificationDetails(
+            'reminder_channel',
+            'Reminders',
+            channelDescription: 'Notifications for reminders and notes',
+            importance: Importance.high,
+            priority: Priority.high,
+          ),
+          iOS: DarwinNotificationDetails(
+            presentAlert: true,
+            presentBadge: true,
+            presentSound: true,
+          ),
+        ),
+        payload: reminder.id,
+        androidAllowWhileIdle: true,
+        uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+      );
     }
   }
 
-  /// Delete a reminder
-  Future<void> deleteReminder(String reminderId) async {
-    try {
-      AppLogger.info('🔔 Deleting reminder: $reminderId');
-      
-      _reminders.removeWhere((r) => r.id == reminderId);
-      await _notifications.cancel(reminderId.hashCode);
-      
-      AppLogger.success('✅ Reminder deleted: $reminderId');
-    } catch (e, stackTrace) {
-      AppLogger.error('Failed to delete reminder', e, stackTrace);
-      rethrow;
-    }
+  /// Remove a reminder
+  Future<void> removeReminder(String reminderId) async {
+    _reminders.removeWhere((r) => r.id == reminderId);
+    await _notifications.cancel(reminderId.hashCode);
+    AppLogger.info('➖ Removed reminder: $reminderId');
   }
 
   /// Get all reminders
-  List<Reminder> getAllReminders() {
-    return List.from(_reminders);
+  List<Reminder> getReminders() {
+    return List.unmodifiable(_reminders);
   }
 
   /// Get reminders for a specific note
@@ -341,52 +211,42 @@ class ReminderService {
     return _reminders.where((r) => r.noteId == noteId).toList();
   }
 
-  /// Get active reminders
-  List<Reminder> getActiveReminders() {
-    return _reminders.where((r) => r.isActive).toList();
+  /// Get reminders for a specific date
+  List<Reminder> getRemindersForDate(DateTime date) {
+    return _reminders.where((r) => _isReminderScheduledFor(r, date)).toList();
   }
 
-  /// Get upcoming reminders
-  List<Reminder> getUpcomingReminders({int limit = 10}) {
-    final now = DateTime.now();
-    final upcoming = _reminders
-        .where((r) => r.isActive && r.scheduledTime.isAfter(now))
-        .toList();
-    
-    upcoming.sort((a, b) => a.scheduledTime.compareTo(b.scheduledTime));
-    return upcoming.take(limit).toList();
+  /// Check if a reminder is scheduled for a specific date
+  bool _isReminderScheduledFor(Reminder reminder, DateTime date) {
+    return reminder.isActive && 
+           reminder.scheduledTime.year == date.year &&
+           reminder.scheduledTime.month == date.month &&
+           reminder.scheduledTime.day == date.day;
   }
 
-  /// Toggle reminder active status
-  Future<void> toggleReminderActive(String reminderId) async {
-    try {
-      final index = _reminders.indexWhere((r) => r.id == reminderId);
-      if (index != -1) {
-        final reminder = _reminders[index];
-        final updatedReminder = reminder.copyWith(
-          isActive: !reminder.isActive,
-          updatedAt: DateTime.now(),
-        );
-        
-        _reminders[index] = updatedReminder;
-        
-        if (updatedReminder.isActive) {
-          await _scheduleNotification(updatedReminder);
-        } else {
-          await _notifications.cancel(reminderId.hashCode);
-        }
-        
-        AppLogger.success('✅ Reminder toggled: $reminderId');
+  /// Create a new reminder
+  Future<void> createReminder(Reminder reminder) async {
+    await addReminder(reminder);
+  }
+
+  /// Update an existing reminder
+  Future<void> updateReminder(Reminder reminder) async {
+    final index = _reminders.indexWhere((r) => r.id == reminder.id);
+    if (index != -1) {
+      _reminders[index] = reminder;
+      AppLogger.info('✏️ Updated reminder: ${reminder.title}');
+      
+      // Reschedule notification if reminder is active
+      if (reminder.isActive) {
+        await _notifications.cancel(reminder.id.hashCode);
+        await _scheduleNotification(reminder);
       }
-    } catch (e, stackTrace) {
-      AppLogger.error('Failed to toggle reminder', e, stackTrace);
-      rethrow;
     }
   }
 
-  /// Dispose the service
+  /// Dispose resources
   void dispose() {
     _checkTimer?.cancel();
-    _notifications.cancelAll();
+    _checkTimer = null;
   }
 }

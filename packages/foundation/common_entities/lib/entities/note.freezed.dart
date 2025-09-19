@@ -35,6 +35,7 @@ mixin _$Note {
   int get priority => throw _privateConstructorUsedError;
   String? get color => throw _privateConstructorUsedError;
   String? get icon => throw _privateConstructorUsedError;
+  DateTime? get reminderTime => throw _privateConstructorUsedError;
   Map<String, dynamic>? get metadata => throw _privateConstructorUsedError;
 
   /// Serializes this Note to a JSON map.
@@ -67,6 +68,7 @@ abstract class $NoteCopyWith<$Res> {
       int priority,
       String? color,
       String? icon,
+      DateTime? reminderTime,
       Map<String, dynamic>? metadata});
 }
 
@@ -100,6 +102,7 @@ class _$NoteCopyWithImpl<$Res, $Val extends Note>
     Object? priority = null,
     Object? color = freezed,
     Object? icon = freezed,
+    Object? reminderTime = freezed,
     Object? metadata = freezed,
   }) {
     return _then(_value.copyWith(
@@ -163,6 +166,10 @@ class _$NoteCopyWithImpl<$Res, $Val extends Note>
           ? _value.icon
           : icon // ignore: cast_nullable_to_non_nullable
               as String?,
+      reminderTime: freezed == reminderTime
+          ? _value.reminderTime
+          : reminderTime // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       metadata: freezed == metadata
           ? _value.metadata
           : metadata // ignore: cast_nullable_to_non_nullable
@@ -194,6 +201,7 @@ abstract class _$$NoteImplCopyWith<$Res> implements $NoteCopyWith<$Res> {
       int priority,
       String? color,
       String? icon,
+      DateTime? reminderTime,
       Map<String, dynamic>? metadata});
 }
 
@@ -224,6 +232,7 @@ class __$$NoteImplCopyWithImpl<$Res>
     Object? priority = null,
     Object? color = freezed,
     Object? icon = freezed,
+    Object? reminderTime = freezed,
     Object? metadata = freezed,
   }) {
     return _then(_$NoteImpl(
@@ -287,6 +296,10 @@ class __$$NoteImplCopyWithImpl<$Res>
           ? _value.icon
           : icon // ignore: cast_nullable_to_non_nullable
               as String?,
+      reminderTime: freezed == reminderTime
+          ? _value.reminderTime
+          : reminderTime // ignore: cast_nullable_to_non_nullable
+              as DateTime?,
       metadata: freezed == metadata
           ? _value._metadata
           : metadata // ignore: cast_nullable_to_non_nullable
@@ -314,6 +327,7 @@ class _$NoteImpl implements _Note {
       this.priority = 0,
       this.color,
       this.icon,
+      this.reminderTime,
       final Map<String, dynamic>? metadata})
       : _tags = tags,
         _metadata = metadata;
@@ -362,6 +376,8 @@ class _$NoteImpl implements _Note {
   final String? color;
   @override
   final String? icon;
+  @override
+  final DateTime? reminderTime;
   final Map<String, dynamic>? _metadata;
   @override
   Map<String, dynamic>? get metadata {
@@ -374,7 +390,7 @@ class _$NoteImpl implements _Note {
 
   @override
   String toString() {
-    return 'Note(id: $id, title: $title, content: $content, tags: $tags, isArchived: $isArchived, isPinned: $isPinned, createdAt: $createdAt, updatedAt: $updatedAt, aiSummary: $aiSummary, aiCategory: $aiCategory, category: $category, isEncrypted: $isEncrypted, priority: $priority, color: $color, icon: $icon, metadata: $metadata)';
+    return 'Note(id: $id, title: $title, content: $content, tags: $tags, isArchived: $isArchived, isPinned: $isPinned, createdAt: $createdAt, updatedAt: $updatedAt, aiSummary: $aiSummary, aiCategory: $aiCategory, category: $category, isEncrypted: $isEncrypted, priority: $priority, color: $color, icon: $icon, reminderTime: $reminderTime, metadata: $metadata)';
   }
 
   @override
@@ -406,6 +422,8 @@ class _$NoteImpl implements _Note {
                 other.priority == priority) &&
             (identical(other.color, color) || other.color == color) &&
             (identical(other.icon, icon) || other.icon == icon) &&
+            (identical(other.reminderTime, reminderTime) ||
+                other.reminderTime == reminderTime) &&
             const DeepCollectionEquality().equals(other._metadata, _metadata));
   }
 
@@ -428,6 +446,7 @@ class _$NoteImpl implements _Note {
       priority,
       color,
       icon,
+      reminderTime,
       const DeepCollectionEquality().hash(_metadata));
 
   /// Create a copy of Note
@@ -463,6 +482,7 @@ abstract class _Note implements Note {
       final int priority,
       final String? color,
       final String? icon,
+      final DateTime? reminderTime,
       final Map<String, dynamic>? metadata}) = _$NoteImpl;
 
   factory _Note.fromJson(Map<String, dynamic> json) = _$NoteImpl.fromJson;
@@ -497,6 +517,8 @@ abstract class _Note implements Note {
   String? get color;
   @override
   String? get icon;
+  @override
+  DateTime? get reminderTime;
   @override
   Map<String, dynamic>? get metadata;
 

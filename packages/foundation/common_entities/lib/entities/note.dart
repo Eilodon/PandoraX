@@ -21,6 +21,7 @@ class Note with _$Note {
     @Default(0) int priority,
     String? color,
     String? icon,
+    DateTime? reminderTime,
     Map<String, dynamic>? metadata,
   }) = _Note;
 

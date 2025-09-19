@@ -115,6 +115,16 @@ class VoiceService {
     }
   }
 
+  /// Start listening for speech (alias for startRecording)
+  Future<void> startListening() async {
+    await startRecording();
+  }
+
+  /// Stop listening for speech (alias for stopRecording)
+  Future<String> stopListening() async {
+    return await stopRecording();
+  }
+
   /// Play voice note (speak text)
   Future<void> playVoiceNote(String text) async {
     try {
